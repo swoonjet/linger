@@ -518,7 +518,7 @@ let hasStarted = false;
 
 const FADE_OUT = 800;
 const GAP = 500;
-const MAX_VOLUME = 0.45;
+const MAX_VOLUME = 0.7;
 
 // ═══ ROOM TONE — plain <audio> element, no Web Audio API ═══
 var ambientAudio = null;
@@ -530,7 +530,7 @@ var ambientFadeTimer = null;
   ambientAudio.src = 'ambient.mp3';
   ambientAudio.loop = true;
   ambientAudio.volume = 0;
-  ambientAudio.preload = 'none';
+  ambientAudio.preload = 'auto';
   ambientAudio.setAttribute('playsinline', '');
   ambientAudio.setAttribute('webkit-playsinline', '');
   ambientAudio.style.display = 'none';
