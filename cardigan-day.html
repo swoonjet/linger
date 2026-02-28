@@ -715,25 +715,25 @@ function fadeOutRoomTone() {
 // Pre-load audio immediately
 initAudio();
 
-// ═══ START PAGE ═══
-setTimeout(() => startPage.classList.add('active'), 100);
+// ═══ AUTO-START ═══
+// Skip interstitial — go straight into reading
+// Audio unlocks on first user interaction (tap/click/key)
+startPage.style.display = 'none';
+stage.classList.add('active');
+progressBar.classList.add('active');
+hasStarted = true;
 
-function beginExperience() {
-  if (hasStarted) return;
-  hasStarted = true;
-
-  startPage.classList.add('hidden');
+function unlockAudio() {
   startRoomTone();
-
-  setTimeout(() => {
-    stage.classList.add('active');
-    progressBar.classList.add('active');
-    startPage.style.display = 'none';
-    showCurrent();
-  }, 1800);
+  document.removeEventListener('click', unlockAudio);
+  document.removeEventListener('keydown', unlockAudio);
+  document.removeEventListener('touchstart', unlockAudio);
 }
+document.addEventListener('click', unlockAudio, { once: true });
+document.addEventListener('keydown', unlockAudio, { once: true });
+document.addEventListener('touchstart', unlockAudio, { once: true });
 
-btnBegin.addEventListener('click', beginExperience);
+setTimeout(() => showCurrent(), 400);
 
 // ═══ ENGINE ═══
 function renderTitleCard() {
