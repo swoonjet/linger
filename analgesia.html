@@ -702,18 +702,102 @@ btnRestart.addEventListener('click', () => {
 document.getElementById('btnShare').addEventListener('click', () => {
   // Pause the reading
   if (!isPaused) { isPaused = true; btnPause.textContent = 'Resume'; btnPause.classList.add('ctrl-btn--active'); clearTimeout(timeoutId); }
-  // Get current phrase text
   var el = document.getElementById('currentEl');
   var phrase = el ? el.textContent.trim() : '';
-  var shareData = { title: 'linger — ' + story.title, text: phrase ? '"' + phrase + '"' : story.title, url: window.location.href };
-  if (navigator.share) {
-    navigator.share(shareData).catch(function() {});
-  } else {
-    navigator.clipboard.writeText(shareData.text + ' — ' + shareData.url).then(function() {
-      var btn = document.getElementById('btnShare');
-      btn.textContent = 'Copied'; setTimeout(function() { btn.textContent = 'Share'; }, 1500);
-    });
+  if (!phrase) return;
+
+  var W = 1080, H = 1080;
+  var canvas = document.createElement('canvas');
+  canvas.width = W; canvas.height = H;
+  var ctx = canvas.getContext('2d');
+
+  // Background with subtle radial gradient
+  var bg = ctx.createRadialGradient(W/2, H/2, 0, W/2, H/2, W*0.7);
+  bg.addColorStop(0, '#111114');
+  bg.addColorStop(1, '#08080a');
+  ctx.fillStyle = bg;
+  ctx.fillRect(0, 0, W, H);
+
+  // Subtle pink orb top-right
+  var orb = ctx.createRadialGradient(W*0.8, H*0.15, 0, W*0.8, H*0.15, 300);
+  orb.addColorStop(0, 'rgba(212,160,160,0.06)');
+  orb.addColorStop(1, 'rgba(212,160,160,0)');
+  ctx.fillStyle = orb;
+  ctx.fillRect(0, 0, W, H);
+
+  // Word-wrap helper
+  function wrapText(text, maxW) {
+    var words = text.split(' '), lines = [], line = '';
+    for (var i = 0; i < words.length; i++) {
+      var test = line ? line + ' ' + words[i] : words[i];
+      if (ctx.measureText(test).width > maxW && line) { lines.push(line); line = words[i]; }
+      else { line = test; }
+    }
+    if (line) lines.push(line);
+    return lines;
   }
+
+  // Draw quote
+  document.fonts.ready.then(function() {
+    var margin = 120;
+    var maxTextW = W - margin * 2;
+
+    // Quote marks
+    ctx.fillStyle = 'rgba(212,160,160,0.15)';
+    ctx.font = 'italic 200px "Playfair Display", Georgia, serif';
+    ctx.textAlign = 'left';
+    ctx.fillText('\u201C', margin - 30, H * 0.32);
+
+    // Quote text
+    ctx.fillStyle = '#ede8df';
+    var fontSize = phrase.length > 120 ? 36 : phrase.length > 60 ? 44 : 52;
+    ctx.font = 'italic ' + fontSize + 'px "Source Serif 4", Georgia, serif';
+    ctx.textAlign = 'center';
+    var lines = wrapText(phrase, maxTextW);
+    var lineH = fontSize * 1.6;
+    var totalH = lines.length * lineH;
+    var startY = (H / 2) - (totalH / 2) + fontSize * 0.5;
+    for (var i = 0; i < lines.length; i++) {
+      ctx.fillText(lines[i], W / 2, startY + i * lineH);
+    }
+
+    // Thin accent line
+    var lineY = startY + lines.length * lineH + 40;
+    ctx.strokeStyle = 'rgba(212,160,160,0.3)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(W/2 - 40, lineY);
+    ctx.lineTo(W/2 + 40, lineY);
+    ctx.stroke();
+
+    // "from [title]"
+    ctx.fillStyle = 'rgba(212,160,160,0.5)';
+    ctx.font = 'italic 28px "Playfair Display", Georgia, serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('from ' + story.title, W / 2, lineY + 50);
+
+    // Brand wordmark at bottom
+    ctx.fillStyle = 'rgba(237,232,223,0.1)';
+    ctx.font = '400 32px "Playfair Display", Georgia, serif';
+    ctx.fillText('linger', W / 2, H - 60);
+
+    // Convert to blob and share
+    canvas.toBlob(function(blob) {
+      var file = new File([blob], 'linger-' + story.title.toLowerCase().replace(/\s+/g,'-') + '.png', { type: 'image/png' });
+      if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+        navigator.share({ files: [file], title: 'linger \u2014 ' + story.title }).catch(function() {});
+      } else {
+        // Desktop fallback: download
+        var a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = file.name;
+        a.click();
+        URL.revokeObjectURL(a.href);
+        var btn = document.getElementById('btnShare');
+        btn.textContent = 'Saved'; setTimeout(function() { btn.textContent = 'Share'; }, 1500);
+      }
+    }, 'image/png');
+  });
 });
 
 let mouseTimer;
