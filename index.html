@@ -26,7 +26,6 @@
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  html { scroll-behavior: smooth; }
 
   body {
     background: var(--void);
@@ -78,132 +77,52 @@
   @keyframes drift2 { to { transform: translate(15px, -10px); } }
   @keyframes drift3 { to { transform: translate(-10px, -15px); } }
 
-  /* ─── HERO ─── */
-  .hero {
+  /* ─── PAGE ─── */
+  .page {
     position: relative;
     z-index: 1;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 0 6vw;
+    padding: 12vh 6vw 80px;
   }
 
-  .hero-wordmark {
+  /* ─── HEADER ─── */
+  .header {
+    text-align: center;
+    margin-bottom: 64px;
+  }
+  .header-wordmark {
     font-family: var(--brand);
-    font-size: clamp(56px, 10vw, 100px);
+    font-size: clamp(48px, 8vw, 80px);
     font-weight: 400;
     color: var(--cream);
     letter-spacing: 0.04em;
-    margin-bottom: 16px;
+    margin-bottom: 12px;
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(8px);
     animation: fadeUp 1.6s ease 0.2s forwards;
   }
-
-  .hero-tagline {
+  .header-tagline {
     font-family: var(--brand);
-    font-size: clamp(16px, 2.5vw, 22px);
+    font-size: clamp(14px, 2vw, 19px);
     font-style: italic;
     color: var(--burnt-orange);
     opacity: 0;
-    animation: fadeUp 1.4s ease 0.8s forwards;
-    margin-bottom: 48px;
-  }
-
-  .hero-desc {
-    font-family: var(--reading);
-    font-size: clamp(15px, 1.8vw, 18px);
-    color: var(--cream-dim);
-    max-width: 480px;
-    line-height: 1.8;
-    opacity: 0;
-    animation: fadeUp 1.4s ease 1.3s forwards;
-    margin-bottom: 48px;
-  }
-
-  .hero-scroll {
-    opacity: 0;
-    animation: fadeUp 1s ease 2s forwards;
-  }
-  .hero-scroll span {
-    display: block;
-    font-family: var(--sans);
-    font-size: 10px;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--text-ghost);
-    margin-bottom: 12px;
-  }
-  .hero-scroll-line {
-    width: 1px;
-    height: 40px;
-    background: linear-gradient(to bottom, var(--text-ghost), transparent);
-    margin: 0 auto;
-    animation: pulse 2.5s ease-in-out infinite;
+    animation: fadeUp 1.4s ease 0.7s forwards;
   }
 
   @keyframes fadeUp {
     to { opacity: 1; transform: translateY(0); }
   }
-  @keyframes pulse {
-    0%, 100% { opacity: 0.3; }
-    50% { opacity: 0.8; }
-  }
-
-  /* ─── ABOUT ─── */
-  .about {
-    position: relative;
-    z-index: 1;
-    max-width: 560px;
-    margin: 0 auto;
-    padding: 120px 6vw 140px;
-    text-align: center;
-  }
-  .about-text {
-    font-family: var(--reading);
-    font-size: clamp(17px, 2vw, 20px);
-    color: var(--cream-dim);
-    line-height: 1.9;
-    margin-bottom: 24px;
-  }
-  .about-text em {
-    font-style: italic;
-    color: var(--cream);
-  }
-  .about-divider {
-    width: 40px;
-    height: 1px;
-    background: var(--cream-ghost);
-    margin: 40px auto;
-  }
-  .about-small {
-    font-family: var(--sans);
-    font-size: 13px;
-    color: rgba(237,232,223,0.3);
-    line-height: 1.8;
-    max-width: 400px;
-    margin: 0 auto;
-  }
 
   /* ─── STORIES ─── */
   .stories {
-    position: relative;
-    z-index: 1;
+    width: 100%;
     max-width: 900px;
-    margin: 0 auto;
-    padding: 0 6vw 160px;
-  }
-  .stories-label {
-    font-family: var(--sans);
-    font-size: 10px;
-    letter-spacing: 0.25em;
-    text-transform: uppercase;
-    color: var(--text-ghost);
-    text-align: center;
-    margin-bottom: 56px;
+    opacity: 0;
+    animation: fadeUp 1.2s ease 1.1s forwards;
   }
 
   .story-grid {
@@ -216,13 +135,13 @@
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: 6px;
-    padding: 40px 32px;
+    padding: 40px 28px;
     text-align: center;
     transition: border-color 0.5s ease, background 0.5s ease, transform 0.4s ease;
     display: flex;
     flex-direction: column;
     align-items: center;
-    min-height: 280px;
+    min-height: 260px;
     position: relative;
     overflow: hidden;
   }
@@ -250,7 +169,7 @@
     font-size: 9px;
     letter-spacing: 0.2em;
     text-transform: uppercase;
-    margin-bottom: 32px;
+    margin-bottom: 28px;
     padding: 4px 12px;
     border-radius: 2px;
   }
@@ -295,7 +214,7 @@
     text-transform: uppercase;
     padding: 10px 28px;
     border-radius: 3px;
-    margin-top: 32px;
+    margin-top: 28px;
     transition: all 0.4s ease;
   }
   .sc-cta--read {
@@ -314,80 +233,32 @@
     cursor: default;
   }
 
-  /* ─── FRAGMENT DEMO ─── */
-  .demo {
-    position: relative;
-    z-index: 1;
-    padding: 100px 6vw 120px;
+  /* ─── BOTTOM NOTE ─── */
+  .bottom {
+    margin-top: auto;
+    padding-top: 80px;
     text-align: center;
+    opacity: 0;
+    animation: fadeUp 1s ease 1.6s forwards;
   }
-  .demo-stage {
-    min-height: 120px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 32px;
-  }
-  .demo-frag {
+  .bottom-note {
     font-family: var(--reading);
-    font-size: clamp(22px, 3.2vw, 34px);
-    font-weight: 400;
-    color: var(--cream);
-    max-width: 560px;
-    line-height: 1.5;
-    text-wrap: balance;
-    opacity: 0;
-    transform: translateY(4px);
-    transition: opacity 1s ease, transform 1s ease;
-  }
-  .demo-frag.visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  .demo-frag.fading {
-    opacity: 0;
-    transform: translateY(-3px);
-    transition: opacity 0.9s ease, transform 0.9s ease;
-  }
-  .demo-hint {
-    font-family: var(--sans);
-    font-size: 10px;
-    letter-spacing: 0.15em;
-    color: var(--text-ghost);
-  }
-
-  /* ─── FOOTER ─── */
-  .footer {
-    position: relative;
-    z-index: 1;
-    border-top: 1px solid var(--border);
-    padding: 48px 6vw;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  .footer-mark {
-    font-family: var(--brand);
-    font-size: 16px;
-    color: var(--text-ghost);
-    letter-spacing: 0.03em;
-  }
-  .footer-right {
-    font-family: var(--sans);
-    font-size: 11px;
-    color: var(--text-ghost);
-    letter-spacing: 0.05em;
+    font-size: clamp(14px, 1.6vw, 16px);
+    font-style: italic;
+    color: rgba(237,232,223,0.2);
+    max-width: 360px;
   }
 
   /* ─── RESPONSIVE ─── */
   @media (max-width: 760px) {
+    .page { padding: 8vh 5vw 60px; }
+    .header { margin-bottom: 48px; }
     .story-grid {
       grid-template-columns: 1fr;
       gap: 16px;
     }
-    .story-card { min-height: auto; padding: 32px 24px; }
-    .about { padding: 80px 6vw 100px; }
-    .stories { padding: 0 6vw 100px; }
+    .story-card { min-height: auto; padding: 28px 24px; }
+    .bottom { padding-top: 48px; }
   }
 </style>
 </head>
@@ -399,115 +270,48 @@
   <div class="orb orb--3"></div>
 </div>
 
-<!-- ═══ HERO ═══ -->
-<section class="hero">
-  <div class="hero-wordmark">linger</div>
-  <div class="hero-tagline">Attention, rewarded.</div>
-  <p class="hero-desc">Short fiction, one fragment at a time. No scrolling. No skimming. Just you and the prose.</p>
-  <div class="hero-scroll">
-    <span>Stories</span>
-    <div class="hero-scroll-line"></div>
+<div class="page">
+
+  <div class="header">
+    <div class="header-wordmark">linger</div>
+    <div class="header-tagline">Attention, rewarded.</div>
   </div>
-</section>
 
-<!-- ═══ ABOUT ═══ -->
-<section class="about">
-  <p class="about-text">Linger gives each sentence the space it needs. Prose unfolds at the pace of thought, <em>fragment by fragment</em>, shaped by the emotional weight of the writing itself.</p>
-  <div class="about-divider"></div>
-  <p class="about-small">The ambient layer responds to mood. The rhythm adjusts to language. Your only job is to read.</p>
-</section>
+  <div class="stories">
+    <div class="story-grid">
 
-<!-- ═══ LIVE FRAGMENT DEMO ═══ -->
-<section class="demo">
-  <div class="demo-stage">
-    <div class="demo-frag" id="demoFrag"></div>
-  </div>
-  <div class="demo-hint">a fragment, breathing</div>
-</section>
+      <a href="cardigan-day.html" class="story-card story-card--live">
+        <span class="sc-accent sc-accent--live">Live</span>
+        <div class="sc-title">Cardigan Day</div>
+        <div class="sc-author">Jon Toews</div>
+        <div class="sc-duration">~12 min</div>
+        <span class="sc-cta sc-cta--read">Experience</span>
+      </a>
 
-<!-- ═══ STORIES ═══ -->
-<section class="stories">
-  <div class="stories-label">Now reading</div>
-  <div class="story-grid">
+      <div class="story-card story-card--soon">
+        <span class="sc-accent sc-accent--soon">Coming soon</span>
+        <div class="sc-title">Night At The Plaza</div>
+        <div class="sc-author">Jon Toews</div>
+        <div class="sc-duration">~8 min</div>
+        <span class="sc-cta sc-cta--soon">Soon</span>
+      </div>
 
-    <a href="cardigan-day.html" class="story-card story-card--live">
-      <span class="sc-accent sc-accent--live">Live</span>
-      <div class="sc-title">Cardigan Day</div>
-      <div class="sc-author">Jon Toews</div>
-      <div class="sc-duration">~12 min</div>
-      <span class="sc-cta sc-cta--read">Experience</span>
-    </a>
+      <div class="story-card story-card--soon2">
+        <span class="sc-accent sc-accent--soon">Coming soon</span>
+        <div class="sc-title">Chimera</div>
+        <div class="sc-author">Jon Toews</div>
+        <div class="sc-duration">~15 min</div>
+        <span class="sc-cta sc-cta--soon">Soon</span>
+      </div>
 
-    <div class="story-card story-card--soon">
-      <span class="sc-accent sc-accent--soon">Coming soon</span>
-      <div class="sc-title">Night At The Plaza</div>
-      <div class="sc-author">Jon Toews</div>
-      <div class="sc-duration">~8 min</div>
-      <span class="sc-cta sc-cta--soon">Soon</span>
     </div>
-
-    <div class="story-card story-card--soon2">
-      <span class="sc-accent sc-accent--soon">Coming soon</span>
-      <div class="sc-title">Chimera</div>
-      <div class="sc-author">Jon Toews</div>
-      <div class="sc-duration">~15 min</div>
-      <span class="sc-cta sc-cta--soon">Soon</span>
-    </div>
-
   </div>
-</section>
 
-<!-- ═══ FOOTER ═══ -->
-<footer class="footer">
-  <span class="footer-mark">linger</span>
-  <span class="footer-right">A reading experience</span>
-</footer>
+  <div class="bottom">
+    <p class="bottom-note">Short fiction that asks you to slow down.</p>
+  </div>
 
-<script>
-// ═══ FRAGMENT DEMO ═══
-const demoFragments = [
-  { text: "Thursday, is cardigan day.", hold: 3400 },
-  { text: "Beige.", hold: 2200 },
-  { text: "He winks, a trick of light.", hold: 3200 },
-  { text: "A film drifts in my vision.", hold: 3000 },
-  { text: "Splat.", hold: 2400 },
-];
-
-const demoEl = document.getElementById('demoFrag');
-let demoIndex = 0;
-
-function showDemo() {
-  const f = demoFragments[demoIndex];
-  demoEl.textContent = f.text;
-  demoEl.className = 'demo-frag';
-
-  requestAnimationFrame(() => {
-    requestAnimationFrame(() => {
-      demoEl.classList.add('visible');
-    });
-  });
-
-  setTimeout(() => {
-    demoEl.classList.remove('visible');
-    demoEl.classList.add('fading');
-    setTimeout(() => {
-      demoIndex = (demoIndex + 1) % demoFragments.length;
-      showDemo();
-    }, 1000);
-  }, f.hold);
-}
-
-// Start demo when section is in view
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach(e => {
-    if (e.isIntersecting) {
-      showDemo();
-      observer.disconnect();
-    }
-  });
-}, { threshold: 0.3 });
-observer.observe(document.querySelector('.demo'));
-</script>
+</div>
 
 </body>
 </html>
