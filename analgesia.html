@@ -16,10 +16,8 @@
     --cream: #ede8df;
     --cream-dim: rgba(237,232,223,0.6);
     --cream-ghost: rgba(237,232,223,0.15);
-    --burnt-orange: #d4663a;
-    --sage: #7a9e7e;
-    --lavender: #9b8ec4;
-    --ochre: #c9a84c;
+    --pink: #d4a0a0;
+    --green: #8bab90;
     --reading: 'Source Serif 4', Georgia, serif;
     --brand: 'Playfair Display', Georgia, serif;
     --sans: 'Space Grotesk', -apple-system, sans-serif;
@@ -33,10 +31,8 @@
     --cream: #2a2824;
     --cream-dim: rgba(42,40,36,0.55);
     --cream-ghost: rgba(42,40,36,0.15);
-    --burnt-orange: #c45a30;
-    --sage: #5a8a5e;
-    --lavender: #7a6daa;
-    --ochre: #b8962e;
+    --pink: #b87878;
+    --green: #6a8a6e;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -50,6 +46,7 @@
     overflow: hidden;
     height: 100vh;
     height: 100dvh;
+    height: var(--app-height, 100dvh);
     width: 100vw;
     user-select: none;
     cursor: none;
@@ -76,52 +73,52 @@
     opacity: 0;
     transition: opacity 8s ease, transform 14s ease, background 10s ease;
   }
-  .orb--1 { width: 500px; height: 500px; background: var(--lavender); top: -20%; right: -10%; }
-  .orb--2 { width: 400px; height: 400px; background: var(--burnt-orange); bottom: -25%; left: -10%; }
-  .orb--3 { width: 350px; height: 350px; background: #8a6a7a; top: 40%; left: 20%; }
+  .orb--1 { width: 500px; height: 500px; background: var(--pink); top: -20%; right: -10%; }
+  .orb--2 { width: 400px; height: 400px; background: var(--pink); bottom: -25%; left: -10%; }
+  .orb--3 { width: 350px; height: 350px; background: #a08888; top: 40%; left: 20%; }
 
   /* haze — waking, disoriented, sulfurous */
-  .mood-haze .orb--1 { opacity: 0.06; background: #7a7a6a; transform: translate(0,0); }
-  .mood-haze .orb--2 { opacity: 0.04; background: #6a6a5a; }
-  .mood-haze .orb--3 { opacity: 0.03; background: #7a7a6a; }
+  .mood-haze .orb--1 { opacity: 0.06; background: #7a8a7a; transform: translate(0,0); }
+  .mood-haze .orb--2 { opacity: 0.04; background: #6a7a6a; }
+  .mood-haze .orb--3 { opacity: 0.03; background: #7a8a7a; }
 
   /* presence — noticing her, purple underwear, cocoa neck */
-  .mood-presence .orb--1 { opacity: 0.08; background: var(--lavender); transform: translate(-5px, 3px); }
-  .mood-presence .orb--2 { opacity: 0.05; background: #8a6a7a; transform: translate(3px, -3px); }
-  .mood-presence .orb--3 { opacity: 0.04; background: var(--ochre); }
+  .mood-presence .orb--1 { opacity: 0.08; background: var(--pink); transform: translate(-5px, 3px); }
+  .mood-presence .orb--2 { opacity: 0.05; background: #a08888; transform: translate(3px, -3px); }
+  .mood-presence .orb--3 { opacity: 0.04; background: var(--green); }
 
   /* ache — body pain, wound, bandage */
-  .mood-ache .orb--1 { opacity: 0.1; background: var(--burnt-orange); transform: translate(-8px, 5px) scale(1.05); }
-  .mood-ache .orb--2 { opacity: 0.06; background: #8a5a5a; transform: translate(5px, -3px); }
+  .mood-ache .orb--1 { opacity: 0.1; background: var(--pink); transform: translate(-8px, 5px) scale(1.05); }
+  .mood-ache .orb--2 { opacity: 0.06; background: #8a6a6a; transform: translate(5px, -3px); }
   .mood-ache .orb--3 { opacity: 0.03; }
 
   /* tender — care, aloe, soothing */
-  .mood-tender .orb--1 { opacity: 0.06; background: var(--sage); transform: translate(-3px, 3px); }
-  .mood-tender .orb--2 { opacity: 0.06; background: var(--lavender); transform: translate(5px, -5px); }
-  .mood-tender .orb--3 { opacity: 0.05; background: var(--sage); transform: translate(-3px, 3px); }
+  .mood-tender .orb--1 { opacity: 0.06; background: var(--green); transform: translate(-3px, 3px); }
+  .mood-tender .orb--2 { opacity: 0.06; background: var(--pink); transform: translate(5px, -5px); }
+  .mood-tender .orb--3 { opacity: 0.05; background: var(--green); transform: translate(-3px, 3px); }
 
   /* heat — intimacy building, straddle, moaning */
-  .mood-heat .orb--1 { opacity: 0.12; background: #a06a7a; transform: translate(-10px, 8px) scale(1.06); }
-  .mood-heat .orb--2 { opacity: 0.08; background: var(--burnt-orange); transform: translate(8px, -5px) scale(1.03); }
-  .mood-heat .orb--3 { opacity: 0.06; background: var(--lavender); transform: translate(-5px, 5px); }
+  .mood-heat .orb--1 { opacity: 0.12; background: #b08888; transform: translate(-10px, 8px) scale(1.06); }
+  .mood-heat .orb--2 { opacity: 0.08; background: var(--pink); transform: translate(8px, -5px) scale(1.03); }
+  .mood-heat .orb--3 { opacity: 0.06; background: var(--pink); transform: translate(-5px, 5px); }
 
   /* drift — pills, slipping under, heavy body */
-  .mood-drift .orb--1 { opacity: 0.08; background: var(--lavender); transform: translate(-5px, 10px) scale(1.04); }
-  .mood-drift .orb--2 { opacity: 0.06; background: #7a6a8a; transform: translate(5px, -8px); }
-  .mood-drift .orb--3 { opacity: 0.04; background: #6a6a7a; }
+  .mood-drift .orb--1 { opacity: 0.08; background: var(--pink); transform: translate(-5px, 10px) scale(1.04); }
+  .mood-drift .orb--2 { opacity: 0.06; background: #7a8a80; transform: translate(5px, -8px); }
+  .mood-drift .orb--3 { opacity: 0.04; background: #6a7a70; }
 
   /* dread — scalpel, surgical tools, realization */
-  .mood-dread .orb--1 { opacity: 0.14; background: #5a6a8a; transform: translate(-12px, 5px) scale(1.08); }
-  .mood-dread .orb--2 { opacity: 0.04; background: #4a4a5a; }
+  .mood-dread .orb--1 { opacity: 0.14; background: #5a7a6a; transform: translate(-12px, 5px) scale(1.08); }
+  .mood-dread .orb--2 { opacity: 0.04; background: #4a5a4e; }
   .mood-dread .orb--3 { opacity: 0.02; }
 
   /* fever — final entanglement, Möbius, infinity */
-  .mood-fever .orb--1 { opacity: 0.16; background: #a06a7a; transform: translate(-15px, 10px) scale(1.1); }
-  .mood-fever .orb--2 { opacity: 0.1; background: var(--lavender); transform: translate(10px, -8px) scale(1.06); }
-  .mood-fever .orb--3 { opacity: 0.08; background: var(--burnt-orange); transform: translate(-8px, 8px) scale(1.03); }
+  .mood-fever .orb--1 { opacity: 0.16; background: #b08888; transform: translate(-15px, 10px) scale(1.1); }
+  .mood-fever .orb--2 { opacity: 0.1; background: var(--pink); transform: translate(10px, -8px) scale(1.06); }
+  .mood-fever .orb--3 { opacity: 0.08; background: var(--pink); transform: translate(-8px, 8px) scale(1.03); }
 
   /* close — end */
-  .mood-close .orb--1 { opacity: 0.03; background: var(--lavender); transform: translate(0, -3px); }
+  .mood-close .orb--1 { opacity: 0.03; background: var(--pink); transform: translate(0, -3px); }
   .mood-close .orb--2 { opacity: 0.02; }
   .mood-close .orb--3 { opacity: 0.02; }
 
@@ -159,7 +156,7 @@
   .end-card { text-align: center; opacity: 0; transition: opacity 2s ease; }
   .end-card.visible { opacity: 1; }
   .ec-wordmark { font-family: var(--brand); font-size: 28px; color: var(--cream-ghost); margin-bottom: 24px; letter-spacing: 0.03em; }
-  .ec-tagline { font-family: var(--brand); font-size: 18px; font-style: italic; color: var(--burnt-orange); opacity: 0.6; margin-bottom: 40px; }
+  .ec-tagline { font-family: var(--brand); font-size: 18px; font-style: italic; color: var(--pink); opacity: 0.6; margin-bottom: 40px; }
   .ec-back {
     font-family: var(--sans); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase;
     color: var(--text-ghost); text-decoration: none; border: 1px solid rgba(237,232,223,0.06);
@@ -171,7 +168,7 @@
 
   .progress-bar { position: fixed; bottom: 0; left: 0; right: 0; height: 2px; background: var(--text-ghost); z-index: 10; opacity: 0; transition: opacity 0.8s ease; }
   .progress-bar.active { opacity: 1; }
-  .progress-fill { height: 100%; width: 0%; background: var(--lavender); transition: width 0.6s ease; opacity: 0.6; }
+  .progress-fill { height: 100%; width: 0%; background: var(--pink); transition: width 0.6s ease; opacity: 0.6; }
 
   .top-bar { position: fixed; top: 0; left: 0; right: 0; z-index: 10; padding: 20px 6vw; display: flex; align-items: center; justify-content: space-between; opacity: 0; transition: opacity 0.6s; }
   .top-bar.visible { opacity: 1; }
@@ -186,7 +183,7 @@
     padding: 8px 18px; border-radius: 4px; cursor: pointer; transition: all 0.3s; -webkit-appearance: none;
   }
   .ctrl-btn:hover { background: rgba(255,255,255,0.1); color: var(--cream-dim); border-color: rgba(255,255,255,0.15); }
-  .ctrl-btn--active { background: rgba(155,142,196,0.15); border-color: rgba(155,142,196,0.3); color: var(--lavender); }
+  .ctrl-btn--active { background: rgba(212,160,160,0.06); border-color: rgba(212,160,160,0.3); color: var(--pink); }
 
   /* ─── LIGHT MODE OVERRIDES ─── */
   [data-theme="light"] .ctrl-btn {
@@ -198,8 +195,8 @@
     border-color: rgba(0,0,0,0.12);
   }
   [data-theme="light"] .ctrl-btn--active {
-    background: rgba(122,109,170,0.1);
-    border-color: rgba(122,109,170,0.25);
+    background: rgba(184,120,120,0.06);
+    border-color: rgba(184,120,120,0.35);
   }
   [data-theme="light"] .ec-back {
     border-color: rgba(42,40,36,0.1);
@@ -250,6 +247,31 @@
     .ctrl-btn { padding: 10px 20px; font-size: 12px; }
     .theme-toggle { bottom: 16px; right: 16px; }
   }
+
+  /* ─── MOBILE LANDSCAPE ─── */
+  @media (orientation: landscape) and (max-height: 500px) {
+    body { height: 100dvh; }
+    .stage { padding: 0 14vw; }
+    .fragment-display { min-height: 60px; }
+    .frag { font-size: clamp(15px, 3.5vh, 22px); line-height: 1.4; }
+    .tc-title { font-size: clamp(22px, 6vh, 36px); }
+    .tc-label { margin-bottom: 10px; font-size: 9px; }
+    .tc-author { font-size: 11px; }
+    .tc-duration { font-size: 9px; margin-top: 4px; }
+    .ec-wordmark { font-size: 18px; margin-bottom: 10px; }
+    .ec-tagline { font-size: 13px; margin-bottom: 16px; }
+    .ec-back { padding: 7px 18px; font-size: 10px; }
+    .top-bar { padding: 10px 4vw; }
+    .tb-mark { font-size: 13px; }
+    .tb-meta { font-size: 9px; }
+    .controls { bottom: 10px; gap: 8px; }
+    .ctrl-btn { padding: 5px 12px; font-size: 10px; }
+    .theme-toggle { bottom: 10px; right: 10px; }
+    .orb--1 { width: 280px; height: 280px; }
+    .orb--2 { width: 220px; height: 220px; }
+    .orb--3 { width: 180px; height: 180px; }
+    .progress-bar { height: 1.5px; }
+  }
 </style>
 </head>
 <body>
@@ -284,6 +306,19 @@
 </button>
 
 <script>
+// ═══ VIEWPORT HEIGHT FIX ═══
+// Some mobile browsers lag on dvh recalculation during orientation change
+(function() {
+  function setVH() {
+    document.documentElement.style.setProperty('--app-height', window.innerHeight + 'px');
+  }
+  setVH();
+  window.addEventListener('resize', setVH);
+  window.addEventListener('orientationchange', function() {
+    setTimeout(setVH, 150);
+  });
+})();
+
 // ═══ THEME TOGGLE ═══
 const themeToggle = document.getElementById('themeToggle');
 themeToggle.addEventListener('click', function(e) {
@@ -446,83 +481,93 @@ let hasStarted = false;
 
 const FADE_OUT = 700;
 const GAP = 400;
-const MAX_VOLUME = 0.12;
+const MAX_VOLUME = 0.15;
 
-// ═══ ROOM TONE — hybrid <audio> + Web Audio API for universal compat ═══
-let audioEl = null;
-let audioCtx = null;
-let gainNode = null;
-let audioConnected = false;
-let audioStarted = false;
+// ═══ ROOM TONE — plain <audio> element, no Web Audio API ═══
+// Simple and universal: works on file://, http, https, mobile, desktop.
+var ambientAudio = null;
+var ambientPlaying = false;
+var ambientFadeTimer = null;
 
-function initAudio() {
-  try {
-    audioEl = new Audio('room-tone.mp3');
-    audioEl.loop = true;
-    audioEl.volume = 0;
-    audioEl.preload = 'auto';
-  } catch (e) {}
-}
+(function createAmbient() {
+  ambientAudio = document.createElement('audio');
+  ambientAudio.src = 'ambient.mp3';
+  ambientAudio.loop = true;
+  ambientAudio.volume = 0;
+  ambientAudio.preload = 'auto';
+  ambientAudio.setAttribute('playsinline', '');
+  ambientAudio.setAttribute('webkit-playsinline', '');
+  // Append to DOM — some mobile browsers need this
+  ambientAudio.style.display = 'none';
+  document.body.appendChild(ambientAudio);
+  console.log('[linger] ambient audio element created, src: ambient.mp3');
+  ambientAudio.addEventListener('canplaythrough', function() {
+    console.log('[linger] ambient audio ready to play');
+  }, { once: true });
+  ambientAudio.addEventListener('error', function(e) {
+    console.warn('[linger] ambient audio error:', ambientAudio.error);
+  });
+})();
 
 function startRoomTone() {
-  if (!audioEl || audioStarted) return;
-  audioStarted = true;
-  try {
-    if (!audioCtx) {
-      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      gainNode = audioCtx.createGain();
-      gainNode.gain.value = 0;
-      var src = audioCtx.createMediaElementSource(audioEl);
-      src.connect(gainNode);
-      gainNode.connect(audioCtx.destination);
-      audioConnected = true;
-    }
-    if (audioCtx.state === 'suspended') audioCtx.resume();
-    audioEl.play().catch(function(){});
-    gainNode.gain.setValueAtTime(0, audioCtx.currentTime);
-    gainNode.gain.linearRampToValueAtTime(MAX_VOLUME, audioCtx.currentTime + 4);
-  } catch (e) {
-    audioEl.volume = 0;
-    audioEl.play().catch(function(){});
-    var v = 0;
-    var fade = setInterval(function() {
-      v += MAX_VOLUME / 40;
-      if (v >= MAX_VOLUME) { v = MAX_VOLUME; clearInterval(fade); }
-      audioEl.volume = v;
-    }, 100);
+  if (ambientPlaying || !ambientAudio) return;
+  ambientPlaying = true;
+  ambientAudio.volume = 0;
+  var playPromise = ambientAudio.play();
+  if (playPromise !== undefined) {
+    playPromise.then(function() {
+      console.log('[linger] ambient audio playing');
+      // Fade in over 4 seconds
+      var vol = 0;
+      ambientFadeTimer = setInterval(function() {
+        vol += MAX_VOLUME / 40;
+        if (vol >= MAX_VOLUME) {
+          vol = MAX_VOLUME;
+          clearInterval(ambientFadeTimer);
+          ambientFadeTimer = null;
+        }
+        try { ambientAudio.volume = vol; } catch(e) {}
+      }, 100);
+    }).catch(function(err) {
+      console.warn('[linger] ambient play blocked:', err.message);
+      ambientPlaying = false;
+      // Will retry on next user gesture
+    });
   }
 }
 
 function fadeOutRoomTone() {
-  if (!audioEl) return;
-  if (audioConnected && audioCtx && gainNode) {
-    gainNode.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 6);
-    setTimeout(function() { try { audioEl.pause(); } catch(e) {} }, 7000);
-  } else {
-    var fade = setInterval(function() {
-      var v = audioEl.volume - (MAX_VOLUME / 60);
-      if (v <= 0) { v = 0; clearInterval(fade); audioEl.pause(); }
-      audioEl.volume = v;
-    }, 100);
-  }
+  if (!ambientAudio || !ambientPlaying) return;
+  if (ambientFadeTimer) { clearInterval(ambientFadeTimer); ambientFadeTimer = null; }
+  var fade = setInterval(function() {
+    var v = ambientAudio.volume - (MAX_VOLUME / 60);
+    if (v <= 0) {
+      v = 0;
+      clearInterval(fade);
+      try { ambientAudio.pause(); } catch(e) {}
+      ambientPlaying = false;
+    }
+    try { ambientAudio.volume = v; } catch(e) {}
+  }, 100);
 }
-
-initAudio();
 
 // ═══ AUTO-START ═══
 stage.classList.add('active');
 progressBar.classList.add('active');
 hasStarted = true;
 
+// Try to play immediately (works if page was navigated to via user click)
+startRoomTone();
+
+// Also listen for first user gesture as fallback
 function unlockAudio() {
-  startRoomTone();
-  document.removeEventListener('click', unlockAudio);
-  document.removeEventListener('keydown', unlockAudio);
-  document.removeEventListener('touchstart', unlockAudio);
+  if (!ambientPlaying) startRoomTone();
 }
 document.addEventListener('click', unlockAudio, { once: true });
 document.addEventListener('keydown', unlockAudio, { once: true });
 document.addEventListener('touchstart', unlockAudio, { once: true });
+// Extra: touchend sometimes works when touchstart doesn't
+document.addEventListener('touchend', unlockAudio, { once: true });
 
 setTimeout(() => showCurrent(), 800);
 

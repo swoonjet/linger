@@ -16,10 +16,8 @@
     --cream: #ede8df;
     --cream-dim: rgba(237,232,223,0.6);
     --cream-ghost: rgba(237,232,223,0.15);
-    --burnt-orange: #d4663a;
-    --sage: #7a9e7e;
-    --lavender: #9b8ec4;
-    --ochre: #c9a84c;
+    --pink: #d4a0a0;
+    --green: #8bab90;
     --reading: 'Source Serif 4', Georgia, serif;
     --brand: 'Playfair Display', Georgia, serif;
     --sans: 'Space Grotesk', -apple-system, sans-serif;
@@ -33,10 +31,8 @@
     --cream: #2a2824;
     --cream-dim: rgba(42,40,36,0.55);
     --cream-ghost: rgba(42,40,36,0.15);
-    --burnt-orange: #c45a30;
-    --sage: #5a8a5e;
-    --lavender: #7a6daa;
-    --ochre: #b8962e;
+    --pink: #b87878;
+    --green: #6a8a6e;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -50,6 +46,7 @@
     overflow: hidden;
     height: 100vh;
     height: 100dvh;
+    height: var(--app-height, 100dvh);
     width: 100vw;
     user-select: none;
     cursor: none;
@@ -88,17 +85,17 @@
   }
   .start-ambient .s-orb--1 {
     width: 600px; height: 600px;
-    background: var(--ochre);
+    background: var(--green);
     top: -25%; right: -15%;
   }
   .start-ambient .s-orb--2 {
     width: 450px; height: 450px;
-    background: #6a5a4a;
+    background: #5a6a5a;
     bottom: -20%; left: -12%;
   }
   .start-ambient .s-orb--3 {
     width: 300px; height: 300px;
-    background: var(--burnt-orange);
+    background: var(--pink);
     top: 50%; left: 30%;
   }
   .start-page.active .s-orb--1 { opacity: 0.06; transform: translate(-10px, 10px); }
@@ -193,9 +190,9 @@
   }
   .start-page.active .start-begin { opacity: 1; }
   .start-begin:hover {
-    border-color: rgba(212,102,58,0.4);
+    border-color: rgba(212,160,160,0.3);
     color: var(--cream-dim);
-    background: rgba(212,102,58,0.06);
+    background: rgba(212,160,160,0.06);
   }
   .start-hint {
     font-family: var(--sans);
@@ -224,58 +221,58 @@
     opacity: 0;
     transition: opacity 7s ease, transform 12s ease, background 9s ease;
   }
-  .orb--1 { width: 500px; height: 500px; background: var(--ochre); top: -20%; right: -10%; }
-  .orb--2 { width: 400px; height: 400px; background: var(--lavender); bottom: -25%; left: -10%; }
-  .orb--3 { width: 350px; height: 350px; background: var(--sage); top: 40%; left: 20%; }
+  .orb--1 { width: 500px; height: 500px; background: var(--green); top: -20%; right: -10%; }
+  .orb--2 { width: 400px; height: 400px; background: var(--green); bottom: -25%; left: -10%; }
+  .orb--3 { width: 350px; height: 350px; background: var(--green); top: 40%; left: 20%; }
 
   /* night run — wary routine */
-  .mood-wary .orb--1 { opacity: 0.06; background: var(--ochre); transform: translate(0,0); }
-  .mood-wary .orb--2 { opacity: 0.03; background: #5a5a4a; }
-  .mood-wary .orb--3 { opacity: 0.04; background: #6a6a5a; }
+  .mood-wary .orb--1 { opacity: 0.06; background: var(--green); transform: translate(0,0); }
+  .mood-wary .orb--2 { opacity: 0.03; background: #5a6a5a; }
+  .mood-wary .orb--3 { opacity: 0.04; background: #6a7a6a; }
 
   /* efficiency / routine pride */
-  .mood-hustle .orb--1 { opacity: 0.08; background: var(--ochre); transform: translate(-5px, 5px); }
-  .mood-hustle .orb--2 { opacity: 0.05; background: var(--burnt-orange); }
+  .mood-hustle .orb--1 { opacity: 0.08; background: var(--green); transform: translate(-5px, 5px); }
+  .mood-hustle .orb--2 { opacity: 0.05; background: var(--pink); }
   .mood-hustle .orb--3 { opacity: 0.03; }
 
   /* tenderness — kimmy */
-  .mood-tender .orb--1 { opacity: 0.05; background: var(--ochre); }
-  .mood-tender .orb--2 { opacity: 0.06; background: var(--lavender); transform: translate(5px, -5px); }
-  .mood-tender .orb--3 { opacity: 0.04; background: var(--sage); }
+  .mood-tender .orb--1 { opacity: 0.05; background: var(--green); }
+  .mood-tender .orb--2 { opacity: 0.06; background: var(--green); transform: translate(5px, -5px); }
+  .mood-tender .orb--3 { opacity: 0.04; background: var(--green); }
 
   /* exposure — outside, alert */
-  .mood-exposed .orb--1 { opacity: 0.1; background: #8a7a4a; transform: translate(-10px, 10px) scale(1.05); }
-  .mood-exposed .orb--2 { opacity: 0.04; background: #5a5a5a; }
+  .mood-exposed .orb--1 { opacity: 0.1; background: #7a8a7a; transform: translate(-10px, 10px) scale(1.05); }
+  .mood-exposed .orb--2 { opacity: 0.04; background: #5a6a5e; }
   .mood-exposed .orb--3 { opacity: 0.03; }
 
   /* threat — danger */
-  .mood-threat .orb--1 { opacity: 0.16; background: var(--burnt-orange); transform: translate(-20px, 15px) scale(1.1); }
-  .mood-threat .orb--2 { opacity: 0.06; background: #7a4a4a; transform: translate(10px, -10px); }
+  .mood-threat .orb--1 { opacity: 0.16; background: var(--pink); transform: translate(-20px, 15px) scale(1.1); }
+  .mood-threat .orb--2 { opacity: 0.06; background: #8a6a6a; transform: translate(10px, -10px); }
   .mood-threat .orb--3 { opacity: 0.02; }
 
   /* defiant — told you so */
-  .mood-defiant .orb--1 { opacity: 0.08; background: var(--burnt-orange); }
-  .mood-defiant .orb--2 { opacity: 0.06; background: var(--ochre); transform: translate(5px, 0); }
-  .mood-defiant .orb--3 { opacity: 0.05; background: #8a6a4a; }
+  .mood-defiant .orb--1 { opacity: 0.08; background: var(--pink); }
+  .mood-defiant .orb--2 { opacity: 0.06; background: var(--green); transform: translate(5px, 0); }
+  .mood-defiant .orb--3 { opacity: 0.05; background: #7a8a7a; }
 
   /* paranoid — tingle, anxiety */
-  .mood-paranoid .orb--1 { opacity: 0.14; background: #7a6a3a; transform: translate(-15px, 10px) scale(1.08); }
-  .mood-paranoid .orb--2 { opacity: 0.08; background: #6a5a4a; transform: translate(10px, -8px); }
-  .mood-paranoid .orb--3 { opacity: 0.06; background: #5a5a4a; }
+  .mood-paranoid .orb--1 { opacity: 0.14; background: #6a7a6a; transform: translate(-15px, 10px) scale(1.08); }
+  .mood-paranoid .orb--2 { opacity: 0.08; background: #5a6a5a; transform: translate(10px, -8px); }
+  .mood-paranoid .orb--3 { opacity: 0.06; background: #5a6a5a; }
 
   /* sanctuary — inside the bus */
-  .mood-sanctuary .orb--1 { opacity: 0.05; background: var(--ochre); }
-  .mood-sanctuary .orb--2 { opacity: 0.04; background: var(--sage); }
-  .mood-sanctuary .orb--3 { opacity: 0.06; background: #7a7a6a; transform: translate(0, -5px); }
+  .mood-sanctuary .orb--1 { opacity: 0.05; background: var(--green); }
+  .mood-sanctuary .orb--2 { opacity: 0.04; background: var(--green); }
+  .mood-sanctuary .orb--3 { opacity: 0.06; background: #7a8a7a; transform: translate(0, -5px); }
 
   /* violence */
-  .mood-violence .orb--1 { opacity: 0.2; background: var(--burnt-orange); transform: translate(-25px, 15px) scale(1.15); }
-  .mood-violence .orb--2 { opacity: 0.08; background: #8a4a4a; transform: translate(15px, -10px); }
+  .mood-violence .orb--1 { opacity: 0.2; background: var(--pink); transform: translate(-25px, 15px) scale(1.15); }
+  .mood-violence .orb--2 { opacity: 0.08; background: #8a6a6a; transform: translate(15px, -10px); }
   .mood-violence .orb--3 { opacity: 0.02; }
 
   /* witness — still, watching */
-  .mood-witness .orb--1 { opacity: 0.04; background: #6a6a6a; }
-  .mood-witness .orb--2 { opacity: 0.03; background: #5a5a5a; }
+  .mood-witness .orb--1 { opacity: 0.04; background: #6a7a6a; }
+  .mood-witness .orb--2 { opacity: 0.03; background: #5a6a5e; }
   .mood-witness .orb--3 { opacity: 0.02; }
 
   /* end — closed curtain */
@@ -317,7 +314,7 @@
   .end-card { text-align: center; opacity: 0; transition: opacity 2s ease; }
   .end-card.visible { opacity: 1; }
   .ec-wordmark { font-family: var(--brand); font-size: 28px; color: var(--cream-ghost); margin-bottom: 24px; letter-spacing: 0.03em; }
-  .ec-tagline { font-family: var(--brand); font-size: 18px; font-style: italic; color: var(--burnt-orange); opacity: 0.6; margin-bottom: 40px; }
+  .ec-tagline { font-family: var(--brand); font-size: 18px; font-style: italic; color: var(--pink); opacity: 0.6; margin-bottom: 40px; }
   .ec-back {
     font-family: var(--sans); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase;
     color: var(--text-ghost); text-decoration: none; border: 1px solid rgba(237,232,223,0.06);
@@ -329,7 +326,7 @@
 
   .progress-bar { position: fixed; bottom: 0; left: 0; right: 0; height: 2px; background: var(--text-ghost); z-index: 10; opacity: 0; transition: opacity 0.8s ease; }
   .progress-bar.active { opacity: 1; }
-  .progress-fill { height: 100%; width: 0%; background: var(--burnt-orange); transition: width 0.6s ease; opacity: 0.6; }
+  .progress-fill { height: 100%; width: 0%; background: var(--green); transition: width 0.6s ease; opacity: 0.6; }
 
   .top-bar { position: fixed; top: 0; left: 0; right: 0; z-index: 10; padding: 20px 6vw; display: flex; align-items: center; justify-content: space-between; opacity: 0; transition: opacity 0.6s; }
   .top-bar.visible { opacity: 1; }
@@ -344,7 +341,7 @@
     padding: 8px 18px; border-radius: 4px; cursor: pointer; transition: all 0.3s; -webkit-appearance: none;
   }
   .ctrl-btn:hover { background: rgba(255,255,255,0.1); color: var(--cream-dim); border-color: rgba(255,255,255,0.15); }
-  .ctrl-btn--active { background: rgba(212,102,58,0.15); border-color: rgba(212,102,58,0.3); color: var(--burnt-orange); }
+  .ctrl-btn--active { background: rgba(212,160,160,0.08); border-color: rgba(212,160,160,0.15); color: var(--pink); }
 
   /* ─── LIGHT MODE OVERRIDES ─── */
   [data-theme="light"] .ctrl-btn {
@@ -356,8 +353,8 @@
     border-color: rgba(0,0,0,0.12);
   }
   [data-theme="light"] .ctrl-btn--active {
-    background: rgba(196,90,48,0.1);
-    border-color: rgba(196,90,48,0.25);
+    background: rgba(184,120,120,0.06);
+    border-color: rgba(184,120,120,0.18);
   }
   [data-theme="light"] .ec-back {
     border-color: rgba(42,40,36,0.1);
@@ -409,6 +406,36 @@
     .controls { bottom: 20px; }
     .ctrl-btn { padding: 10px 20px; font-size: 12px; }
     .theme-toggle { bottom: 16px; right: 16px; }
+  }
+
+  /* ─── MOBILE LANDSCAPE ─── */
+  @media (orientation: landscape) and (max-height: 500px) {
+    body { height: 100dvh; }
+    .start-page { padding: 3vh 10vw; }
+    .start-wordmark { font-size: clamp(24px, 5vh, 36px); margin-bottom: 8px; }
+    .start-story-title { font-size: clamp(18px, 4vh, 28px); margin-bottom: 8px; }
+    .start-author { font-size: 11px; }
+    .start-begin { padding: 8px 24px; font-size: 11px; margin-top: 12px; }
+    .stage { padding: 0 14vw; }
+    .fragment-display { min-height: 60px; }
+    .frag { font-size: clamp(15px, 3.5vh, 22px); line-height: 1.4; }
+    .tc-title { font-size: clamp(22px, 6vh, 36px); }
+    .tc-label { margin-bottom: 10px; font-size: 9px; }
+    .tc-author { font-size: 11px; }
+    .tc-duration { font-size: 9px; margin-top: 4px; }
+    .ec-wordmark { font-size: 18px; margin-bottom: 10px; }
+    .ec-tagline { font-size: 13px; margin-bottom: 16px; }
+    .ec-back { padding: 7px 18px; font-size: 10px; }
+    .top-bar { padding: 10px 4vw; }
+    .tb-mark { font-size: 13px; }
+    .tb-meta { font-size: 9px; }
+    .controls { bottom: 10px; gap: 8px; }
+    .ctrl-btn { padding: 5px 12px; font-size: 10px; }
+    .theme-toggle { bottom: 10px; right: 10px; }
+    .orb--1 { width: 280px; height: 280px; }
+    .orb--2 { width: 220px; height: 220px; }
+    .orb--3 { width: 180px; height: 180px; }
+    .progress-bar { height: 1.5px; }
   }
 </style>
 </head>
@@ -462,6 +489,18 @@
 </button>
 
 <script>
+// ═══ VIEWPORT HEIGHT FIX ═══
+(function() {
+  function setVH() {
+    document.documentElement.style.setProperty('--app-height', window.innerHeight + 'px');
+  }
+  setVH();
+  window.addEventListener('resize', setVH);
+  window.addEventListener('orientationchange', function() {
+    setTimeout(setVH, 150);
+  });
+})();
+
 // ═══ THEME TOGGLE ═══
 const themeToggle = document.getElementById('themeToggle');
 themeToggle.addEventListener('click', function(e) {
@@ -622,68 +661,71 @@ let hasStarted = false;
 
 const FADE_OUT = 700;
 const GAP = 400;
-const MAX_VOLUME = 0.12;
+const MAX_VOLUME = 0.15;
 
-// ═══ ROOM TONE — hybrid <audio> + Web Audio API for universal compat ═══
-let audioEl = null;
-let audioCtx = null;
-let gainNode = null;
-let audioConnected = false;
-let audioStarted = false;
+// ═══ ROOM TONE — plain <audio> element, no Web Audio API ═══
+var ambientAudio = null;
+var ambientPlaying = false;
+var ambientFadeTimer = null;
 
-function initAudio() {
-  try {
-    audioEl = new Audio('room-tone.mp3');
-    audioEl.loop = true;
-    audioEl.volume = 0;
-    audioEl.preload = 'auto';
-  } catch (e) {}
-}
+(function createAmbient() {
+  ambientAudio = document.createElement('audio');
+  ambientAudio.src = 'ambient.mp3';
+  ambientAudio.loop = true;
+  ambientAudio.volume = 0;
+  ambientAudio.preload = 'auto';
+  ambientAudio.setAttribute('playsinline', '');
+  ambientAudio.setAttribute('webkit-playsinline', '');
+  ambientAudio.style.display = 'none';
+  document.body.appendChild(ambientAudio);
+  console.log('[linger] ambient audio element created');
+  ambientAudio.addEventListener('canplaythrough', function() {
+    console.log('[linger] ambient audio ready to play');
+  }, { once: true });
+  ambientAudio.addEventListener('error', function(e) {
+    console.warn('[linger] ambient audio error:', ambientAudio.error);
+  });
+})();
 
 function startRoomTone() {
-  if (!audioEl || audioStarted) return;
-  audioStarted = true;
-  try {
-    if (!audioCtx) {
-      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      gainNode = audioCtx.createGain();
-      gainNode.gain.value = 0;
-      var src = audioCtx.createMediaElementSource(audioEl);
-      src.connect(gainNode);
-      gainNode.connect(audioCtx.destination);
-      audioConnected = true;
-    }
-    if (audioCtx.state === 'suspended') audioCtx.resume();
-    audioEl.play().catch(function(){});
-    gainNode.gain.setValueAtTime(0, audioCtx.currentTime);
-    gainNode.gain.linearRampToValueAtTime(MAX_VOLUME, audioCtx.currentTime + 4);
-  } catch (e) {
-    audioEl.volume = 0;
-    audioEl.play().catch(function(){});
-    var v = 0;
-    var fade = setInterval(function() {
-      v += MAX_VOLUME / 40;
-      if (v >= MAX_VOLUME) { v = MAX_VOLUME; clearInterval(fade); }
-      audioEl.volume = v;
-    }, 100);
+  if (ambientPlaying || !ambientAudio) return;
+  ambientPlaying = true;
+  ambientAudio.volume = 0;
+  var playPromise = ambientAudio.play();
+  if (playPromise !== undefined) {
+    playPromise.then(function() {
+      console.log('[linger] ambient audio playing');
+      var vol = 0;
+      ambientFadeTimer = setInterval(function() {
+        vol += MAX_VOLUME / 40;
+        if (vol >= MAX_VOLUME) {
+          vol = MAX_VOLUME;
+          clearInterval(ambientFadeTimer);
+          ambientFadeTimer = null;
+        }
+        try { ambientAudio.volume = vol; } catch(e) {}
+      }, 100);
+    }).catch(function(err) {
+      console.warn('[linger] ambient play blocked:', err.message);
+      ambientPlaying = false;
+    });
   }
 }
 
 function fadeOutRoomTone() {
-  if (!audioEl) return;
-  if (audioConnected && audioCtx && gainNode) {
-    gainNode.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 6);
-    setTimeout(function() { try { audioEl.pause(); } catch(e) {} }, 7000);
-  } else {
-    var fade = setInterval(function() {
-      var v = audioEl.volume - (MAX_VOLUME / 60);
-      if (v <= 0) { v = 0; clearInterval(fade); audioEl.pause(); }
-      audioEl.volume = v;
-    }, 100);
-  }
+  if (!ambientAudio || !ambientPlaying) return;
+  if (ambientFadeTimer) { clearInterval(ambientFadeTimer); ambientFadeTimer = null; }
+  var fade = setInterval(function() {
+    var v = ambientAudio.volume - (MAX_VOLUME / 60);
+    if (v <= 0) {
+      v = 0;
+      clearInterval(fade);
+      try { ambientAudio.pause(); } catch(e) {}
+      ambientPlaying = false;
+    }
+    try { ambientAudio.volume = v; } catch(e) {}
+  }, 100);
 }
-
-initAudio();
 
 // ═══ AUTO-START ═══
 startPage.style.display = 'none';
@@ -691,15 +733,15 @@ stage.classList.add('active');
 progressBar.classList.add('active');
 hasStarted = true;
 
+startRoomTone();
+
 function unlockAudio() {
-  startRoomTone();
-  document.removeEventListener('click', unlockAudio);
-  document.removeEventListener('keydown', unlockAudio);
-  document.removeEventListener('touchstart', unlockAudio);
+  if (!ambientPlaying) startRoomTone();
 }
 document.addEventListener('click', unlockAudio, { once: true });
 document.addEventListener('keydown', unlockAudio, { once: true });
 document.addEventListener('touchstart', unlockAudio, { once: true });
+document.addEventListener('touchend', unlockAudio, { once: true });
 
 setTimeout(() => showCurrent(), 800);
 
