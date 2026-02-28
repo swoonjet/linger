@@ -765,10 +765,10 @@ let audioStarted = false;
 
 function initAudio() {
   try {
-    audioEl = new Audio('room-tone.mp3');
+    audioEl = new Audio('room-tone-v2.mp3');
     audioEl.loop = true;
     audioEl.volume = 0;
-    audioEl.preload = 'auto';
+    audioEl.preload = 'none';
   } catch (e) {}
 }
 
