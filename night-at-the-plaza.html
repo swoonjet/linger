@@ -82,23 +82,23 @@
   .start-ambient .s-orb {
     position: absolute;
     border-radius: 50%;
-    filter: blur(160px);
     opacity: 0;
     transition: opacity 4s ease, transform 12s ease;
+    will-change: opacity, transform;
   }
   .start-ambient .s-orb--1 {
     width: 600px; height: 600px;
-    background: var(--green);
+    background: radial-gradient(circle, var(--green), transparent 70%);
     top: -25%; right: -15%;
   }
   .start-ambient .s-orb--2 {
     width: 450px; height: 450px;
-    background: #5a6a5a;
+    background: radial-gradient(circle, #5a6a5a, transparent 70%);
     bottom: -20%; left: -12%;
   }
   .start-ambient .s-orb--3 {
     width: 300px; height: 300px;
-    background: var(--pink);
+    background: radial-gradient(circle, var(--pink), transparent 70%);
     top: 50%; left: 30%;
   }
   .start-page.active .s-orb--1 { opacity: 0.06; transform: translate(-10px, 10px); }
@@ -220,66 +220,66 @@
   .ambient .orb {
     position: absolute;
     border-radius: 50%;
-    filter: blur(140px);
     opacity: 0;
-    transition: opacity 7s ease, transform 12s ease, background 9s ease;
+    transition: opacity 7s ease, transform 12s ease;
+    will-change: opacity, transform;
   }
-  .orb--1 { width: 500px; height: 500px; background: var(--green); top: -20%; right: -10%; }
-  .orb--2 { width: 400px; height: 400px; background: var(--green); bottom: -25%; left: -10%; }
-  .orb--3 { width: 350px; height: 350px; background: var(--green); top: 40%; left: 20%; }
+  .orb--1 { width: 500px; height: 500px; background: radial-gradient(circle, var(--green), transparent 70%); top: -20%; right: -10%; }
+  .orb--2 { width: 400px; height: 400px; background: radial-gradient(circle, var(--green), transparent 70%); bottom: -25%; left: -10%; }
+  .orb--3 { width: 350px; height: 350px; background: radial-gradient(circle, var(--green), transparent 70%); top: 40%; left: 20%; }
 
   /* night run — wary routine */
-  .mood-wary .orb--1 { opacity: 0.06; background: var(--green); transform: translate(0,0); }
-  .mood-wary .orb--2 { opacity: 0.03; background: #5a6a5a; }
-  .mood-wary .orb--3 { opacity: 0.04; background: #6a7a6a; }
+  .mood-wary .orb--1 { opacity: 0.06; background: radial-gradient(circle, var(--green), transparent 70%); transform: translate(0,0); }
+  .mood-wary .orb--2 { opacity: 0.03; background: radial-gradient(circle, #5a6a5a, transparent 70%); }
+  .mood-wary .orb--3 { opacity: 0.04; background: radial-gradient(circle, #6a7a6a, transparent 70%); }
 
   /* efficiency / routine pride */
-  .mood-hustle .orb--1 { opacity: 0.08; background: var(--green); transform: translate(-5px, 5px); }
-  .mood-hustle .orb--2 { opacity: 0.05; background: var(--pink); }
+  .mood-hustle .orb--1 { opacity: 0.08; background: radial-gradient(circle, var(--green), transparent 70%); transform: translate(-5px, 5px); }
+  .mood-hustle .orb--2 { opacity: 0.05; background: radial-gradient(circle, var(--pink), transparent 70%); }
   .mood-hustle .orb--3 { opacity: 0.03; }
 
   /* tenderness — kimmy */
-  .mood-tender .orb--1 { opacity: 0.05; background: var(--green); }
-  .mood-tender .orb--2 { opacity: 0.06; background: var(--green); transform: translate(5px, -5px); }
-  .mood-tender .orb--3 { opacity: 0.04; background: var(--green); }
+  .mood-tender .orb--1 { opacity: 0.05; background: radial-gradient(circle, var(--green), transparent 70%); }
+  .mood-tender .orb--2 { opacity: 0.06; background: radial-gradient(circle, var(--green), transparent 70%); transform: translate(5px, -5px); }
+  .mood-tender .orb--3 { opacity: 0.04; background: radial-gradient(circle, var(--green), transparent 70%); }
 
   /* exposure — outside, alert */
-  .mood-exposed .orb--1 { opacity: 0.1; background: #7a8a7a; transform: translate(-10px, 10px) scale(1.05); }
-  .mood-exposed .orb--2 { opacity: 0.04; background: #5a6a5e; }
+  .mood-exposed .orb--1 { opacity: 0.1; background: radial-gradient(circle, #7a8a7a, transparent 70%); transform: translate(-10px, 10px) scale(1.05); }
+  .mood-exposed .orb--2 { opacity: 0.04; background: radial-gradient(circle, #5a6a5e, transparent 70%); }
   .mood-exposed .orb--3 { opacity: 0.03; }
 
   /* threat — danger */
-  .mood-threat .orb--1 { opacity: 0.16; background: var(--pink); transform: translate(-20px, 15px) scale(1.1); }
-  .mood-threat .orb--2 { opacity: 0.06; background: #8a6a6a; transform: translate(10px, -10px); }
+  .mood-threat .orb--1 { opacity: 0.16; background: radial-gradient(circle, var(--pink), transparent 70%); transform: translate(-20px, 15px) scale(1.1); }
+  .mood-threat .orb--2 { opacity: 0.06; background: radial-gradient(circle, #8a6a6a, transparent 70%); transform: translate(10px, -10px); }
   .mood-threat .orb--3 { opacity: 0.02; }
 
   /* defiant — told you so */
-  .mood-defiant .orb--1 { opacity: 0.08; background: var(--pink); }
-  .mood-defiant .orb--2 { opacity: 0.06; background: var(--green); transform: translate(5px, 0); }
-  .mood-defiant .orb--3 { opacity: 0.05; background: #7a8a7a; }
+  .mood-defiant .orb--1 { opacity: 0.08; background: radial-gradient(circle, var(--pink), transparent 70%); }
+  .mood-defiant .orb--2 { opacity: 0.06; background: radial-gradient(circle, var(--green), transparent 70%); transform: translate(5px, 0); }
+  .mood-defiant .orb--3 { opacity: 0.05; background: radial-gradient(circle, #7a8a7a, transparent 70%); }
 
   /* paranoid — tingle, anxiety */
-  .mood-paranoid .orb--1 { opacity: 0.14; background: #6a7a6a; transform: translate(-15px, 10px) scale(1.08); }
-  .mood-paranoid .orb--2 { opacity: 0.08; background: #5a6a5a; transform: translate(10px, -8px); }
-  .mood-paranoid .orb--3 { opacity: 0.06; background: #5a6a5a; }
+  .mood-paranoid .orb--1 { opacity: 0.14; background: radial-gradient(circle, #6a7a6a, transparent 70%); transform: translate(-15px, 10px) scale(1.08); }
+  .mood-paranoid .orb--2 { opacity: 0.08; background: radial-gradient(circle, #5a6a5a, transparent 70%); transform: translate(10px, -8px); }
+  .mood-paranoid .orb--3 { opacity: 0.06; background: radial-gradient(circle, #5a6a5a, transparent 70%); }
 
   /* sanctuary — inside the bus */
-  .mood-sanctuary .orb--1 { opacity: 0.05; background: var(--green); }
-  .mood-sanctuary .orb--2 { opacity: 0.04; background: var(--green); }
-  .mood-sanctuary .orb--3 { opacity: 0.06; background: #7a8a7a; transform: translate(0, -5px); }
+  .mood-sanctuary .orb--1 { opacity: 0.05; background: radial-gradient(circle, var(--green), transparent 70%); }
+  .mood-sanctuary .orb--2 { opacity: 0.04; background: radial-gradient(circle, var(--green), transparent 70%); }
+  .mood-sanctuary .orb--3 { opacity: 0.06; background: radial-gradient(circle, #7a8a7a, transparent 70%); transform: translate(0, -5px); }
 
   /* violence */
-  .mood-violence .orb--1 { opacity: 0.2; background: var(--pink); transform: translate(-25px, 15px) scale(1.15); }
-  .mood-violence .orb--2 { opacity: 0.08; background: #8a6a6a; transform: translate(15px, -10px); }
+  .mood-violence .orb--1 { opacity: 0.2; background: radial-gradient(circle, var(--pink), transparent 70%); transform: translate(-25px, 15px) scale(1.15); }
+  .mood-violence .orb--2 { opacity: 0.08; background: radial-gradient(circle, #8a6a6a, transparent 70%); transform: translate(15px, -10px); }
   .mood-violence .orb--3 { opacity: 0.02; }
 
   /* witness — still, watching */
-  .mood-witness .orb--1 { opacity: 0.04; background: #6a7a6a; }
-  .mood-witness .orb--2 { opacity: 0.03; background: #5a6a5e; }
+  .mood-witness .orb--1 { opacity: 0.04; background: radial-gradient(circle, #6a7a6a, transparent 70%); }
+  .mood-witness .orb--2 { opacity: 0.03; background: radial-gradient(circle, #5a6a5e, transparent 70%); }
   .mood-witness .orb--3 { opacity: 0.02; }
 
   /* end — closed curtain */
-  .mood-closed .orb--1 { opacity: 0.03; background: var(--cream); transform: translate(0, -5px); }
+  .mood-closed .orb--1 { opacity: 0.03; background: radial-gradient(circle, var(--cream), transparent 70%); transform: translate(0, -5px); }
   .mood-closed .orb--2 { opacity: 0.02; }
   .mood-closed .orb--3 { opacity: 0.02; }
 
