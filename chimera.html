@@ -173,7 +173,7 @@
   .stage {
     position: fixed; inset: 0; z-index: 1;
     display: flex; flex-direction: column; align-items: center; justify-content: center;
-    padding: 0 8vw; opacity: 0; transition: opacity 1.2s ease;
+    padding: 0 8vw; opacity: 0; transition: opacity 0.4s ease;
   }
   .stage.active { opacity: 1; }
   .fragment-display {
@@ -192,9 +192,9 @@
   .frag.first { transition: opacity 1.8s ease, transform 1.8s ease; }
   .frag.fading { opacity: 0; transform: translateY(-4px); transition: opacity 1.3s ease, transform 1.3s ease; }
 
-  .title-card { text-align: center; opacity: 0; transition: opacity 2s ease; }
+  .title-card { text-align: center; opacity: 0; transition: opacity 1s ease; }
   .title-card.visible { opacity: 1; }
-  .title-card.fading { opacity: 0; transition: opacity 1.8s ease; }
+  .title-card.fading { opacity: 0; transition: opacity 1s ease; }
   .tc-label { font-family: var(--sans); font-size: 10px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--cream-ghost); margin-bottom: 24px; }
   .tc-title { font-family: var(--brand); font-size: clamp(36px, 6vw, 64px); font-weight: 700; color: var(--cream); margin-bottom: 16px; }
   .tc-author { font-family: var(--sans); font-size: 14px; color: var(--cream-dim); letter-spacing: 0.05em; }
@@ -607,7 +607,7 @@ document.addEventListener('keydown', unlockAudio);
 document.addEventListener('touchend', unlockAudio);
 startRoomTone();
 
-setTimeout(() => showCurrent(), 800);
+showCurrent();
 
 function renderTitleCard() {
   display.innerHTML = `
@@ -651,7 +651,7 @@ function showCurrent() {
     setMood('still');
     requestAnimationFrame(() => { requestAnimationFrame(() => { document.getElementById('currentEl').classList.add('visible'); }); });
     timeoutId = setTimeout(() => fadeAndAdvance(), 7000);
-    setTimeout(() => topBar.classList.add('visible'), 3000);
+    setTimeout(() => topBar.classList.add('visible'), 1200);
   } else if (currentIndex >= story.fragments.length) {
     renderEndCard();
     setMood('close');
