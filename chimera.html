@@ -2,12 +2,13 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>linger</title>
 <script>(function(){var t=localStorage.getItem('linger-theme');if(t==='light')document.documentElement.setAttribute('data-theme','light');})()</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;1,8..60,300;1,8..60,400&family=Space+Grotesk:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;1,8..60,300;1,8..60,400&family=Space+Grotesk:wght@300;400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;1,8..60,300;1,8..60,400&family=Space+Grotesk:wght@300;400;500&display=swap" rel="stylesheet"></noscript>
 <style>
 
   :root {
@@ -52,7 +53,7 @@
     width: 100vw;
     user-select: none;
     cursor: none;
-    -webkit-tap-highlight-color: transparent;
+    -webkit-tap-highlight-color: rgba(212,160,160,0.1);
     transition: background-color 0.6s ease, color 0.6s ease;
   }
   body.show-cursor { cursor: default; }
@@ -226,7 +227,7 @@
   .ctrl-btn {
     background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.08);
     color: var(--cream-ghost); font-family: var(--sans); font-size: 11px; letter-spacing: 0.08em;
-    padding: 8px 18px; border-radius: 4px; cursor: pointer; transition: all 0.3s; -webkit-appearance: none;
+    padding: 8px 18px; border-radius: 4px; cursor: pointer; transition: all 0.3s; -webkit-appearance: none; touch-action: manipulation;
   }
   .ctrl-btn:hover { background: rgba(255,255,255,0.1); color: var(--cream-dim); border-color: rgba(255,255,255,0.15); }
   .ctrl-btn--active { background: rgba(139,171,144,0.15); border-color: rgba(139,171,144,0.3); color: var(--green); }
@@ -325,7 +326,7 @@
 
   /* ─── MOBILE LANDSCAPE ─── */
   @media (orientation: landscape) and (max-height: 500px) {
-    body { height: 100dvh; }
+    body { height: var(--app-height, 100dvh); }
     .stage { padding: 0 14vw; }
     .fragment-display { min-height: 60px; }
     .frag { font-size: clamp(15px, 3.5vh, 22px); line-height: 1.4; }
@@ -404,7 +405,10 @@
   setVH();
   window.addEventListener('resize', setVH);
   window.addEventListener('orientationchange', function() {
-    setTimeout(setVH, 150);
+    setVH();
+    setTimeout(setVH, 100);
+    setTimeout(setVH, 300);
+    setTimeout(setVH, 500);
   });
 })();
 
@@ -584,15 +588,22 @@ stage.classList.add('active');
 progressBar.classList.add('active');
 hasStarted = true;
 
+var audioUnlocked = false;
 function unlockAudio() {
-  if (ambientAudio && ambientAudio.paused) {
+  if (audioUnlocked || !ambientAudio) return;
+  if (ambientAudio.paused) {
     ambientAudio.volume = MAX_VOLUME;
-    ambientAudio.play().then(function() { ambientPlaying = true; }).catch(function() {});
+    ambientAudio.play().then(function() {
+      ambientPlaying = true;
+      audioUnlocked = true;
+      document.removeEventListener('click', unlockAudio);
+      document.removeEventListener('keydown', unlockAudio);
+      document.removeEventListener('touchend', unlockAudio);
+    }).catch(function() {});
   }
 }
 document.addEventListener('click', unlockAudio);
 document.addEventListener('keydown', unlockAudio);
-document.addEventListener('touchstart', unlockAudio);
 document.addEventListener('touchend', unlockAudio);
 startRoomTone();
 
