@@ -545,25 +545,16 @@ var ambientFadeTimer = null;
 })();
 
 function startRoomTone() {
-  if (ambientPlaying || !ambientAudio) return;
-  ambientPlaying = true;
-  ambientAudio.volume = 0;
-  var playPromise = ambientAudio.play();
-  if (playPromise !== undefined) {
-    playPromise.then(function() {
-      console.log('[linger] ambient audio playing');
-      var vol = 0;
-      ambientFadeTimer = setInterval(function() {
-        vol += MAX_VOLUME / 40;
-        if (vol >= MAX_VOLUME) {
-          vol = MAX_VOLUME;
-          clearInterval(ambientFadeTimer);
-          ambientFadeTimer = null;
-        }
-        try { ambientAudio.volume = vol; } catch(e) {}
-      }, 100);
+  if (!ambientAudio) return;
+  ambientAudio.volume = MAX_VOLUME;
+  var p = ambientAudio.play();
+  if (p !== undefined) {
+    p.then(function() {
+      ambientPlaying = true;
+      setTimeout(function() {
+        if (ambientAudio.paused) ambientAudio.play();
+      }, 200);
     }).catch(function(err) {
-      console.warn('[linger] ambient play blocked:', err.message);
       ambientPlaying = false;
     });
   }
@@ -590,15 +581,17 @@ stage.classList.add('active');
 progressBar.classList.add('active');
 hasStarted = true;
 
-startRoomTone();
-
 function unlockAudio() {
-  if (!ambientPlaying) startRoomTone();
+  if (ambientAudio && ambientAudio.paused) {
+    ambientAudio.volume = MAX_VOLUME;
+    ambientAudio.play().then(function() { ambientPlaying = true; }).catch(function() {});
+  }
 }
-document.addEventListener('click', unlockAudio, { once: true });
-document.addEventListener('keydown', unlockAudio, { once: true });
-document.addEventListener('touchstart', unlockAudio, { once: true });
-document.addEventListener('touchend', unlockAudio, { once: true });
+document.addEventListener('click', unlockAudio);
+document.addEventListener('keydown', unlockAudio);
+document.addEventListener('touchstart', unlockAudio);
+document.addEventListener('touchend', unlockAudio);
+startRoomTone();
 
 setTimeout(() => showCurrent(), 800);
 

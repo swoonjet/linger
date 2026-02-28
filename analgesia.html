@@ -564,31 +564,23 @@ var ambientFadeTimer = null;
 })();
 
 function startRoomTone() {
-  if (ambientPlaying || !ambientAudio) return;
-  ambientPlaying = true;
-  ambientAudio.volume = 0;
-  var playPromise = ambientAudio.play();
-  if (playPromise !== undefined) {
-    playPromise.then(function() {
-      console.log('[linger] ambient audio playing, duration:', ambientAudio.duration, 'readyState:', ambientAudio.readyState);
-      // Skip fade, set volume directly to verify audio works
-      ambientAudio.volume = MAX_VOLUME;
-      console.log('[linger] volume set directly to', MAX_VOLUME, 'currentTime:', ambientAudio.currentTime, 'paused:', ambientAudio.paused, 'muted:', ambientAudio.muted);
-      // Also fade in over 4 seconds
-      var vol = 0;
-      ambientFadeTimer = setInterval(function() {
-        vol += MAX_VOLUME / 40;
-        if (vol >= MAX_VOLUME) {
-          vol = MAX_VOLUME;
-          clearInterval(ambientFadeTimer);
-          ambientFadeTimer = null;
+  if (!ambientAudio) return;
+  ambientAudio.volume = MAX_VOLUME;
+  var p = ambientAudio.play();
+  if (p !== undefined) {
+    p.then(function() {
+      ambientPlaying = true;
+      console.log('[linger] audio started, vol:', ambientAudio.volume, 'paused:', ambientAudio.paused);
+      // Safari workaround: re-play if browser paused it
+      setTimeout(function() {
+        if (ambientAudio.paused) {
+          console.log('[linger] audio was paused by browser, retrying...');
+          ambientAudio.play();
         }
-        try { ambientAudio.volume = vol; } catch(e) {}
-      }, 100);
+      }, 200);
     }).catch(function(err) {
-      console.warn('[linger] ambient play blocked:', err.message);
+      console.warn('[linger] play blocked:', err.message);
       ambientPlaying = false;
-      // Will retry on next user gesture
     });
   }
 }
@@ -613,18 +605,22 @@ stage.classList.add('active');
 progressBar.classList.add('active');
 hasStarted = true;
 
-// Try to play immediately (works if page was navigated to via user click)
-startRoomTone();
-
-// Also listen for first user gesture as fallback
+// Don't auto-play — wait for user gesture (required by Safari)
 function unlockAudio() {
-  if (!ambientPlaying) startRoomTone();
+  if (ambientAudio && ambientAudio.paused) {
+    ambientAudio.volume = MAX_VOLUME;
+    ambientAudio.play().then(function() {
+      ambientPlaying = true;
+      console.log('[linger] audio unlocked via gesture, vol:', ambientAudio.volume, 'paused:', ambientAudio.paused);
+    }).catch(function() {});
+  }
 }
-document.addEventListener('click', unlockAudio, { once: true });
-document.addEventListener('keydown', unlockAudio, { once: true });
-document.addEventListener('touchstart', unlockAudio, { once: true });
-// Extra: touchend sometimes works when touchstart doesn't
-document.addEventListener('touchend', unlockAudio, { once: true });
+document.addEventListener('click', unlockAudio);
+document.addEventListener('keydown', unlockAudio);
+document.addEventListener('touchstart', unlockAudio);
+document.addEventListener('touchend', unlockAudio);
+// Also try auto-start (works when navigated via user click from index)
+startRoomTone();
 
 setTimeout(() => showCurrent(), 800);
 
