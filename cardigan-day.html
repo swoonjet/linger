@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>linger</title>
+<script>(function(){var t=localStorage.getItem('linger-theme');if(t==='light')document.documentElement.setAttribute('data-theme','light');})()</script>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;1,8..60,300;1,8..60,400&family=Space+Grotesk:wght@300;400;500&display=swap');
 
@@ -25,8 +26,23 @@
     --sans: 'Space Grotesk', -apple-system, sans-serif;
   }
 
+  [data-theme="light"] {
+    --void: #f5f2ec;
+    --surface: #ebe7e0;
+    --border: rgba(42,40,36,0.08);
+    --text-ghost: rgba(42,40,36,0.18);
+    --cream: #2a2824;
+    --cream-dim: rgba(42,40,36,0.55);
+    --cream-ghost: rgba(42,40,36,0.15);
+    --burnt-orange: #c45a30;
+    --sage: #5a8a5e;
+    --lavender: #7a6daa;
+    --ochre: #b8962e;
+  }
+
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
+  html { transition: background-color 0.6s ease; background: var(--void); }
   body {
     background: var(--void);
     color: var(--cream);
@@ -39,6 +55,7 @@
     user-select: none;
     cursor: none;
     -webkit-tap-highlight-color: transparent;
+    transition: background-color 0.6s ease, color 0.6s ease;
   }
   body.show-cursor { cursor: default; }
 
@@ -325,6 +342,9 @@
     opacity: 1;
     transform: translateY(0);
   }
+  .frag.first {
+    transition: opacity 1.6s ease, transform 1.6s ease;
+  }
   .frag.fading {
     opacity: 0;
     transform: translateY(-4px);
@@ -335,10 +355,10 @@
   .title-card {
     text-align: center;
     opacity: 0;
-    transition: opacity 1.4s ease;
+    transition: opacity 2s ease;
   }
   .title-card.visible { opacity: 1; }
-  .title-card.fading { opacity: 0; transition: opacity 1.3s ease; }
+  .title-card.fading { opacity: 0; transition: opacity 1.8s ease; }
   .tc-label {
     font-family: var(--sans);
     font-size: 10px;
@@ -495,6 +515,60 @@
     color: var(--burnt-orange);
   }
 
+  /* ─── LIGHT MODE OVERRIDES ─── */
+  [data-theme="light"] .ctrl-btn {
+    background: rgba(0,0,0,0.04);
+    border-color: rgba(0,0,0,0.08);
+  }
+  [data-theme="light"] .ctrl-btn:hover {
+    background: rgba(0,0,0,0.08);
+    border-color: rgba(0,0,0,0.12);
+  }
+  [data-theme="light"] .ctrl-btn--active {
+    background: rgba(196,90,48,0.1);
+    border-color: rgba(196,90,48,0.25);
+  }
+  [data-theme="light"] .ec-back {
+    border-color: rgba(42,40,36,0.1);
+  }
+  [data-theme="light"] .ec-back:hover {
+    border-color: rgba(42,40,36,0.2);
+  }
+
+  /* ─── THEME TOGGLE ─── */
+  .theme-toggle {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 50;
+    width: 28px;
+    height: 28px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    -webkit-appearance: none;
+    pointer-events: none;
+  }
+  .theme-toggle.visible { opacity: 0.2; pointer-events: auto; }
+  .theme-toggle:hover { opacity: 0.5; }
+  .theme-toggle svg {
+    width: 16px;
+    height: 16px;
+    fill: none;
+    stroke: var(--cream);
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: stroke 0.6s ease;
+  }
+  .theme-toggle .icon-sun { display: none; }
+  .theme-toggle .icon-moon { display: block; }
+  [data-theme="light"] .theme-toggle .icon-sun { display: block; }
+  [data-theme="light"] .theme-toggle .icon-moon { display: none; }
+
   @media (max-width: 600px) {
     .stage { padding: 0 6vw; }
     .top-bar { padding: 16px 5vw; }
@@ -503,6 +577,7 @@
     .start-story-title { font-size: clamp(24px, 7vw, 40px); }
     .controls { bottom: 20px; }
     .ctrl-btn { padding: 10px 20px; font-size: 12px; }
+    .theme-toggle { bottom: 16px; right: 16px; }
   }
 </style>
 </head>
@@ -552,7 +627,26 @@
   <button class="ctrl-btn" id="btnRestart">Restart</button>
 </div>
 
+<button class="theme-toggle" id="themeToggle" aria-label="Toggle light mode">
+  <svg class="icon-moon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+  <svg class="icon-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+</button>
+
 <script>
+// ═══ THEME TOGGLE ═══
+const themeToggle = document.getElementById('themeToggle');
+themeToggle.addEventListener('click', function(e) {
+  e.stopPropagation();
+  var isLight = document.documentElement.getAttribute('data-theme') === 'light';
+  if (isLight) {
+    document.documentElement.removeAttribute('data-theme');
+    localStorage.setItem('linger-theme', 'dark');
+  } else {
+    document.documentElement.setAttribute('data-theme', 'light');
+    localStorage.setItem('linger-theme', 'light');
+  }
+});
+
 // ═══ STORY DATA ═══
 const story = {
   title: "Cardigan Day",
@@ -662,57 +756,68 @@ const FADE_OUT = 700;
 const GAP = 400;
 const MAX_VOLUME = 0.12;
 
-// ═══ MOBILE-SAFE ROOM TONE via Web Audio API ═══
+// ═══ ROOM TONE — hybrid <audio> + Web Audio API for universal compat ═══
+let audioEl = null;
 let audioCtx = null;
-let audioBuffer = null;
-let sourceNode = null;
 let gainNode = null;
-let audioReady = false;
+let audioConnected = false;
+let audioStarted = false;
 
-async function initAudio() {
+function initAudio() {
   try {
-    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    gainNode = audioCtx.createGain();
-    gainNode.gain.value = 0;
-    gainNode.connect(audioCtx.destination);
-
-    const response = await fetch('room-tone.mp3');
-    const arrayBuffer = await response.arrayBuffer();
-    audioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
-    audioReady = true;
-  } catch (e) {
-    // audio not critical — fail silently
-  }
+    audioEl = new Audio('room-tone.mp3');
+    audioEl.loop = true;
+    audioEl.volume = 0;
+    audioEl.preload = 'auto';
+  } catch (e) {}
 }
 
 function startRoomTone() {
-  if (!audioReady || !audioCtx) return;
+  if (!audioEl || audioStarted) return;
+  audioStarted = true;
 
-  // resume context (required on mobile after user gesture)
-  if (audioCtx.state === 'suspended') {
-    audioCtx.resume();
+  try {
+    // Try Web Audio API for smooth gain ramp
+    if (!audioCtx) {
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      gainNode = audioCtx.createGain();
+      gainNode.gain.value = 0;
+      var src = audioCtx.createMediaElementSource(audioEl);
+      src.connect(gainNode);
+      gainNode.connect(audioCtx.destination);
+      audioConnected = true;
+    }
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+    audioEl.play().catch(function(){});
+    gainNode.gain.setValueAtTime(0, audioCtx.currentTime);
+    gainNode.gain.linearRampToValueAtTime(MAX_VOLUME, audioCtx.currentTime + 4);
+  } catch (e) {
+    // Fallback: plain <audio> without Web Audio API
+    audioEl.volume = 0;
+    audioEl.play().catch(function(){});
+    var v = 0;
+    var fade = setInterval(function() {
+      v += MAX_VOLUME / 40;
+      if (v >= MAX_VOLUME) { v = MAX_VOLUME; clearInterval(fade); }
+      audioEl.volume = v;
+    }, 100);
   }
-
-  sourceNode = audioCtx.createBufferSource();
-  sourceNode.buffer = audioBuffer;
-  sourceNode.loop = true;
-  sourceNode.connect(gainNode);
-  sourceNode.start(0);
-
-  // fade in over 4 seconds to max volume
-  gainNode.gain.setValueAtTime(0, audioCtx.currentTime);
-  gainNode.gain.linearRampToValueAtTime(MAX_VOLUME, audioCtx.currentTime + 4);
 }
 
 function fadeOutRoomTone() {
-  if (!audioCtx || !gainNode || !sourceNode) return;
-  gainNode.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 6);
-  setTimeout(() => {
-    try { sourceNode.stop(); } catch(e) {}
-  }, 7000);
+  if (!audioEl) return;
+  if (audioConnected && audioCtx && gainNode) {
+    gainNode.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 6);
+    setTimeout(function() { try { audioEl.pause(); } catch(e) {} }, 7000);
+  } else {
+    var fade = setInterval(function() {
+      var v = audioEl.volume - (MAX_VOLUME / 60);
+      if (v <= 0) { v = 0; clearInterval(fade); audioEl.pause(); }
+      audioEl.volume = v;
+    }, 100);
+  }
 }
 
-// Pre-load audio immediately
 initAudio();
 
 // ═══ AUTO-START ═══
@@ -733,7 +838,7 @@ document.addEventListener('click', unlockAudio, { once: true });
 document.addEventListener('keydown', unlockAudio, { once: true });
 document.addEventListener('touchstart', unlockAudio, { once: true });
 
-setTimeout(() => showCurrent(), 400);
+setTimeout(() => showCurrent(), 800);
 
 // ═══ ENGINE ═══
 function renderTitleCard() {
@@ -748,7 +853,8 @@ function renderTitleCard() {
 
 function renderFragment(index) {
   const f = story.fragments[index];
-  display.innerHTML = `<div class="frag" id="currentEl">${f.text}</div>`;
+  const firstClass = index === 0 ? ' first' : '';
+  display.innerHTML = `<div class="frag${firstClass}" id="currentEl">${f.text}</div>`;
 }
 
 function renderEndCard() {
@@ -792,8 +898,8 @@ function showCurrent() {
         document.getElementById('currentEl').classList.add('visible');
       });
     });
-    timeoutId = setTimeout(() => fadeAndAdvance(), 5000);
-    setTimeout(() => topBar.classList.add('visible'), 2000);
+    timeoutId = setTimeout(() => fadeAndAdvance(), 7000);
+    setTimeout(() => topBar.classList.add('visible'), 3000);
   } else if (currentIndex >= story.fragments.length) {
     renderEndCard();
     setMood('free');
@@ -856,11 +962,12 @@ btnRestart.addEventListener('click', () => {
 let mouseTimer;
 document.addEventListener('mousemove', () => {
   document.body.classList.add('show-cursor');
-  if (hasStarted) controls.classList.add('visible');
+  if (hasStarted) { controls.classList.add('visible'); themeToggle.classList.add('visible'); }
   clearTimeout(mouseTimer);
   mouseTimer = setTimeout(() => {
     if (!isPaused) {
       controls.classList.remove('visible');
+      themeToggle.classList.remove('visible');
       document.body.classList.remove('show-cursor');
     }
   }, 2500);
@@ -883,10 +990,10 @@ document.addEventListener('keydown', (e) => {
 });
 
 document.addEventListener('touchstart', () => {
-  if (hasStarted) controls.classList.add('visible');
+  if (hasStarted) { controls.classList.add('visible'); themeToggle.classList.add('visible'); }
   clearTimeout(mouseTimer);
   mouseTimer = setTimeout(() => {
-    if (!isPaused) controls.classList.remove('visible');
+    if (!isPaused) { controls.classList.remove('visible'); themeToggle.classList.remove('visible'); }
   }, 3000);
 });
 </script>

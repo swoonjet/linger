@@ -4,6 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>linger</title>
+<script>
+  // Apply theme before paint to prevent flash
+  (function() {
+    var t = localStorage.getItem('linger-theme');
+    if (t === 'light') document.documentElement.setAttribute('data-theme', 'light');
+  })();
+</script>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;1,8..60,300;1,8..60,400&family=Space+Grotesk:wght@300;400;500&display=swap');
 
@@ -23,9 +30,45 @@
     --reading: 'Source Serif 4', Georgia, serif;
     --brand: 'Playfair Display', Georgia, serif;
     --sans: 'Space Grotesk', -apple-system, sans-serif;
+    --tagline-color: rgba(237,232,223,0.35);
+    --bottom-color: rgba(237,232,223,0.2);
+    --accent-bg: rgba(212,102,58,0.08);
+    --accent-border: rgba(212,102,58,0.15);
+    --cta-border: rgba(237,232,223,0.08);
+    --cta-hover-border: rgba(212,102,58,0.3);
+    --cta-hover-bg: rgba(212,102,58,0.06);
+    --card-hover-border: rgba(237,232,223,0.08);
+  }
+
+  [data-theme="light"] {
+    --void: #f5f2ec;
+    --surface: #ebe7e0;
+    --raised: #e3dfd8;
+    --border: rgba(42,40,36,0.08);
+    --text-ghost: rgba(42,40,36,0.18);
+    --cream: #2a2824;
+    --cream-dim: rgba(42,40,36,0.55);
+    --cream-ghost: rgba(42,40,36,0.15);
+    --burnt-orange: #c45a30;
+    --sage: #5a8a5e;
+    --lavender: #7a6daa;
+    --ochre: #b8962e;
+    --tagline-color: rgba(42,40,36,0.35);
+    --bottom-color: rgba(42,40,36,0.2);
+    --accent-bg: rgba(196,90,48,0.08);
+    --accent-border: rgba(196,90,48,0.18);
+    --cta-border: rgba(42,40,36,0.1);
+    --cta-hover-border: rgba(196,90,48,0.35);
+    --cta-hover-bg: rgba(196,90,48,0.06);
+    --card-hover-border: rgba(42,40,36,0.12);
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html {
+    transition: background-color 0.6s ease;
+    background: var(--void);
+  }
 
   body {
     background: var(--void);
@@ -35,6 +78,7 @@
     overflow-x: hidden;
     font-weight: 300;
     line-height: 1.7;
+    transition: background-color 0.6s ease, color 0.6s ease;
   }
 
   a { color: inherit; text-decoration: none; }
@@ -51,6 +95,7 @@
     position: absolute;
     border-radius: 50%;
     filter: blur(160px);
+    transition: opacity 1s ease;
   }
   .orb--1 {
     width: 600px; height: 600px;
@@ -73,6 +118,10 @@
     opacity: 0.03;
     animation: drift3 22s ease-in-out infinite alternate;
   }
+  [data-theme="light"] .orb--1 { opacity: 0.04; }
+  [data-theme="light"] .orb--2 { opacity: 0.025; }
+  [data-theme="light"] .orb--3 { opacity: 0.02; }
+
   @keyframes drift1 { to { transform: translate(-20px, 15px); } }
   @keyframes drift2 { to { transform: translate(15px, -10px); } }
   @keyframes drift3 { to { transform: translate(-10px, -15px); } }
@@ -103,15 +152,17 @@
     opacity: 0;
     transform: translateY(8px);
     animation: fadeUp 1.6s ease 0.2s forwards;
+    transition: color 0.6s ease;
   }
   .header-tagline {
     font-family: var(--brand);
     font-size: clamp(11px, 1.4vw, 14px);
     font-style: italic;
-    color: var(--cream-ghost);
+    color: var(--tagline-color);
     opacity: 0;
     animation: fadeUp 1.4s ease 0.7s forwards;
     margin-bottom: 28px;
+    transition: color 0.6s ease;
   }
   .header-desc {
     font-family: var(--reading);
@@ -121,6 +172,7 @@
     line-height: 1.8;
     opacity: 0;
     animation: fadeUp 1.3s ease 1s forwards;
+    transition: color 0.6s ease;
   }
 
   @keyframes fadeUp {
@@ -164,7 +216,7 @@
     transition: opacity 0.5s ease;
   }
   .story-card:hover {
-    border-color: rgba(237,232,223,0.08);
+    border-color: var(--card-hover-border);
     background: var(--raised);
     transform: translateY(-2px);
   }
@@ -185,11 +237,11 @@
   }
   .sc-accent--live {
     color: var(--burnt-orange);
-    background: rgba(212,102,58,0.08);
-    border: 1px solid rgba(212,102,58,0.15);
+    background: var(--accent-bg);
+    border: 1px solid var(--accent-border);
   }
   .sc-accent--soon {
-    color: rgba(237,232,223,0.25);
+    color: var(--cream-ghost);
     background: rgba(237,232,223,0.03);
     border: 1px solid rgba(237,232,223,0.06);
   }
@@ -201,6 +253,7 @@
     font-style: italic;
     color: var(--cream);
     margin-bottom: 10px;
+    transition: color 0.6s ease;
   }
   .sc-author {
     font-family: var(--sans);
@@ -229,13 +282,13 @@
   }
   .sc-cta--read {
     color: var(--cream-ghost);
-    border: 1px solid rgba(237,232,223,0.08);
+    border: 1px solid var(--cta-border);
     background: none;
   }
   .story-card:hover .sc-cta--read {
     color: var(--cream-dim);
-    border-color: rgba(212,102,58,0.3);
-    background: rgba(212,102,58,0.06);
+    border-color: var(--cta-hover-border);
+    background: var(--cta-hover-bg);
   }
   .sc-cta--soon {
     color: var(--text-ghost);
@@ -255,9 +308,42 @@
     font-family: var(--reading);
     font-size: clamp(14px, 1.6vw, 16px);
     font-style: italic;
-    color: rgba(237,232,223,0.2);
+    color: var(--bottom-color);
     max-width: 360px;
+    transition: color 0.6s ease;
   }
+
+  /* ─── THEME TOGGLE ─── */
+  .theme-toggle {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 50;
+    width: 28px;
+    height: 28px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    opacity: 0.35;
+    transition: opacity 0.4s ease;
+    -webkit-appearance: none;
+  }
+  .theme-toggle:hover { opacity: 0.6; }
+  .theme-toggle svg {
+    width: 16px;
+    height: 16px;
+    fill: none;
+    stroke: var(--cream);
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: stroke 0.6s ease;
+  }
+  .theme-toggle .icon-sun { display: none; }
+  .theme-toggle .icon-moon { display: block; }
+  [data-theme="light"] .theme-toggle .icon-sun { display: block; }
+  [data-theme="light"] .theme-toggle .icon-moon { display: none; }
 
   /* ─── RESPONSIVE ─── */
   @media (max-width: 760px) {
@@ -269,6 +355,7 @@
     }
     .story-card { min-height: auto; padding: 28px 24px; }
     .bottom { padding-top: 48px; }
+    .theme-toggle { bottom: 16px; right: 16px; }
   }
 </style>
 </head>
@@ -307,13 +394,13 @@
         <span class="sc-cta sc-cta--read">Begin</span>
       </a>
 
-      <div class="story-card story-card--soon2">
-        <span class="sc-accent sc-accent--soon">Coming soon</span>
+      <a href="chimera.html" class="story-card story-card--soon2">
+        <span class="sc-accent sc-accent--live">Live</span>
         <div class="sc-title">Chimera</div>
         <div class="sc-author">Jon T</div>
         <div class="sc-duration">~15 min</div>
-        <span class="sc-cta sc-cta--soon">Soon</span>
-      </div>
+        <span class="sc-cta sc-cta--read">Begin</span>
+      </a>
 
     </div>
   </div>
@@ -323,6 +410,24 @@
   </div>
 
 </div>
+
+<button class="theme-toggle" id="themeToggle" aria-label="Toggle light mode">
+  <svg class="icon-moon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+  <svg class="icon-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+</button>
+
+<script>
+document.getElementById('themeToggle').addEventListener('click', function() {
+  var isLight = document.documentElement.getAttribute('data-theme') === 'light';
+  if (isLight) {
+    document.documentElement.removeAttribute('data-theme');
+    localStorage.setItem('linger-theme', 'dark');
+  } else {
+    document.documentElement.setAttribute('data-theme', 'light');
+    localStorage.setItem('linger-theme', 'light');
+  }
+});
+</script>
 
 </body>
 </html>

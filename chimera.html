@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>linger</title>
+<script>(function(){var t=localStorage.getItem('linger-theme');if(t==='light')document.documentElement.setAttribute('data-theme','light');})()</script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;1,8..60,300;1,8..60,400&family=Space+Grotesk:wght@300;400;500&display=swap');
+
+  :root {
+    --void: #08080a;
+    --surface: #111114;
+    --border: #1e1e22;
+    --text-ghost: #2a2a2e;
+    --cream: #ede8df;
+    --cream-dim: rgba(237,232,223,0.6);
+    --cream-ghost: rgba(237,232,223,0.15);
+    --burnt-orange: #d4663a;
+    --sage: #7a9e7e;
+    --lavender: #9b8ec4;
+    --ochre: #c9a84c;
+    --reading: 'Source Serif 4', Georgia, serif;
+    --brand: 'Playfair Display', Georgia, serif;
+    --sans: 'Space Grotesk', -apple-system, sans-serif;
+  }
+
+  [data-theme="light"] {
+    --void: #f5f2ec;
+    --surface: #ebe7e0;
+    --border: rgba(42,40,36,0.08);
+    --text-ghost: rgba(42,40,36,0.18);
+    --cream: #2a2824;
+    --cream-dim: rgba(42,40,36,0.55);
+    --cream-ghost: rgba(42,40,36,0.15);
+    --burnt-orange: #c45a30;
+    --sage: #5a8a5e;
+    --lavender: #7a6daa;
+    --ochre: #b8962e;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { transition: background-color 0.6s ease; background: var(--void); }
+  body {
+    background: var(--void);
+    color: var(--cream);
+    font-family: var(--reading);
+    -webkit-font-smoothing: antialiased;
+    overflow: hidden;
+    height: 100vh;
+    height: 100dvh;
+    width: 100vw;
+    user-select: none;
+    cursor: none;
+    -webkit-tap-highlight-color: transparent;
+    transition: background-color 0.6s ease, color 0.6s ease;
+  }
+  body.show-cursor { cursor: default; }
+
+  /* ─── START PAGE ─── */
+  .start-page {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    background: var(--void);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    opacity: 1;
+    transition: opacity 1.8s ease;
+  }
+  .start-page.hidden { opacity: 0; pointer-events: none; }
+
+  .start-ambient {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+  .start-ambient .s-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(160px);
+    opacity: 0;
+    transition: opacity 4s ease, transform 12s ease;
+  }
+  .start-ambient .s-orb--1 {
+    width: 600px; height: 600px;
+    background: var(--sage);
+    top: -25%; right: -15%;
+  }
+  .start-ambient .s-orb--2 {
+    width: 450px; height: 450px;
+    background: var(--lavender);
+    bottom: -20%; left: -12%;
+  }
+  .start-ambient .s-orb--3 {
+    width: 300px; height: 300px;
+    background: #c4a0a0;
+    top: 50%; left: 30%;
+  }
+  .start-page.active .s-orb--1 { opacity: 0.06; transform: translate(-10px, 10px); }
+  .start-page.active .s-orb--2 { opacity: 0.04; transform: translate(10px, -5px); }
+  .start-page.active .s-orb--3 { opacity: 0.03; transform: translate(5px, -10px); }
+
+  /* ─── AMBIENT ─── */
+  .ambient {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+  .ambient .orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(140px);
+    opacity: 0;
+    transition: opacity 8s ease, transform 14s ease, background 10s ease;
+  }
+  .orb--1 { width: 500px; height: 500px; background: var(--sage); top: -20%; right: -10%; }
+  .orb--2 { width: 400px; height: 400px; background: var(--lavender); bottom: -25%; left: -10%; }
+  .orb--3 { width: 350px; height: 350px; background: #c4a0a0; top: 40%; left: 20%; }
+
+  /* stillness — looking at trees, quiet observation */
+  .mood-still .orb--1 { opacity: 0.05; background: var(--sage); transform: translate(0,0); }
+  .mood-still .orb--2 { opacity: 0.03; background: #6a7a8a; }
+  .mood-still .orb--3 { opacity: 0.02; background: #7a8a7a; }
+
+  /* drift — perception loosening, sky/canopy inversion */
+  .mood-drift .orb--1 { opacity: 0.06; background: #7a9a9e; transform: translate(-5px, 5px); }
+  .mood-drift .orb--2 { opacity: 0.05; background: var(--lavender); transform: translate(3px, -3px); }
+  .mood-drift .orb--3 { opacity: 0.03; background: #8a8aaa; }
+
+  /* weight — atmospheric heaviness and lightness */
+  .mood-weight .orb--1 { opacity: 0.08; background: #8a8a9a; transform: translate(-3px, 8px) scale(1.03); }
+  .mood-weight .orb--2 { opacity: 0.06; background: #6a6a8a; transform: translate(5px, -5px); }
+  .mood-weight .orb--3 { opacity: 0.04; background: var(--lavender); }
+
+  /* sense — tactile, seeing truly, rolling the eye */
+  .mood-sense .orb--1 { opacity: 0.06; background: var(--sage); transform: translate(-5px, 3px); }
+  .mood-sense .orb--2 { opacity: 0.04; background: #9a8a7a; }
+  .mood-sense .orb--3 { opacity: 0.05; background: var(--ochre); transform: translate(3px, -5px); }
+
+  /* spark — energy, mind, pink sparking, encounter */
+  .mood-spark .orb--1 { opacity: 0.1; background: #c4a0a0; transform: translate(-8px, 5px) scale(1.05); }
+  .mood-spark .orb--2 { opacity: 0.07; background: var(--lavender); transform: translate(5px, -3px); }
+  .mood-spark .orb--3 { opacity: 0.05; background: #b89090; }
+
+  /* meet — another traveler, shared space */
+  .mood-meet .orb--1 { opacity: 0.08; background: var(--lavender); transform: translate(-5px, 3px); }
+  .mood-meet .orb--2 { opacity: 0.08; background: #c4a0a0; transform: translate(8px, -5px) scale(1.03); }
+  .mood-meet .orb--3 { opacity: 0.06; background: var(--ochre); transform: translate(-3px, 3px); }
+
+  /* simmer — harmonic space, prismatic, building heat */
+  .mood-simmer .orb--1 { opacity: 0.12; background: #b89090; transform: translate(-10px, 8px) scale(1.06); }
+  .mood-simmer .orb--2 { opacity: 0.09; background: var(--lavender); transform: translate(8px, -8px) scale(1.03); }
+  .mood-simmer .orb--3 { opacity: 0.07; background: var(--ochre); transform: translate(-5px, 5px); }
+
+  /* entwine — physical intimacy, bodies */
+  .mood-entwine .orb--1 { opacity: 0.14; background: #c4a0a0; transform: translate(-12px, 10px) scale(1.08); }
+  .mood-entwine .orb--2 { opacity: 0.1; background: var(--burnt-orange); transform: translate(10px, -8px) scale(1.05); }
+  .mood-entwine .orb--3 { opacity: 0.08; background: #b89090; transform: translate(-5px, 8px); }
+
+  /* close — end, shared space */
+  .mood-close .orb--1 { opacity: 0.04; background: var(--lavender); transform: translate(0, -3px); }
+  .mood-close .orb--2 { opacity: 0.03; background: #c4a0a0; }
+  .mood-close .orb--3 { opacity: 0.02; }
+
+  /* ─── STAGE ─── */
+  .stage {
+    position: fixed; inset: 0; z-index: 1;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 0 8vw; opacity: 0; transition: opacity 1.2s ease;
+  }
+  .stage.active { opacity: 1; }
+  .fragment-display {
+    max-width: 680px; text-align: center; min-height: 160px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .frag {
+    font-family: var(--reading);
+    font-size: clamp(26px, 3.8vw, 42px);
+    font-weight: 400; line-height: 1.5; color: var(--cream);
+    opacity: 0; transform: translateY(6px);
+    transition: opacity 1.2s ease, transform 1.2s ease;
+    text-wrap: balance;
+  }
+  .frag.visible { opacity: 1; transform: translateY(0); }
+  .frag.first { transition: opacity 1.8s ease, transform 1.8s ease; }
+  .frag.fading { opacity: 0; transform: translateY(-4px); transition: opacity 1.3s ease, transform 1.3s ease; }
+
+  .title-card { text-align: center; opacity: 0; transition: opacity 2s ease; }
+  .title-card.visible { opacity: 1; }
+  .title-card.fading { opacity: 0; transition: opacity 1.8s ease; }
+  .tc-label { font-family: var(--sans); font-size: 10px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--cream-ghost); margin-bottom: 24px; }
+  .tc-title { font-family: var(--brand); font-size: clamp(36px, 6vw, 64px); font-weight: 400; color: var(--cream); margin-bottom: 16px; font-style: italic; }
+  .tc-author { font-family: var(--sans); font-size: 14px; color: var(--cream-dim); letter-spacing: 0.05em; }
+  .tc-duration { font-family: var(--sans); font-size: 11px; color: var(--cream-ghost); margin-top: 8px; letter-spacing: 0.1em; }
+
+  .end-card { text-align: center; opacity: 0; transition: opacity 2s ease; }
+  .end-card.visible { opacity: 1; }
+  .ec-wordmark { font-family: var(--brand); font-size: 28px; color: var(--cream-ghost); margin-bottom: 24px; letter-spacing: 0.03em; }
+  .ec-tagline { font-family: var(--brand); font-size: 18px; font-style: italic; color: var(--burnt-orange); opacity: 0.6; margin-bottom: 40px; }
+  .ec-back {
+    font-family: var(--sans); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--text-ghost); text-decoration: none; border: 1px solid rgba(237,232,223,0.06);
+    padding: 10px 24px; border-radius: 3px; transition: all 0.4s;
+    opacity: 0; animation: fadeIn 1.5s ease 2s forwards;
+  }
+  .ec-back:hover { color: var(--cream-dim); border-color: rgba(237,232,223,0.12); }
+  @keyframes fadeIn { to { opacity: 1; } }
+
+  .progress-bar { position: fixed; bottom: 0; left: 0; right: 0; height: 2px; background: var(--text-ghost); z-index: 10; opacity: 0; transition: opacity 0.8s ease; }
+  .progress-bar.active { opacity: 1; }
+  .progress-fill { height: 100%; width: 0%; background: var(--sage); transition: width 0.6s ease; opacity: 0.6; }
+
+  .top-bar { position: fixed; top: 0; left: 0; right: 0; z-index: 10; padding: 20px 6vw; display: flex; align-items: center; justify-content: space-between; opacity: 0; transition: opacity 0.6s; }
+  .top-bar.visible { opacity: 1; }
+  .tb-mark { font-family: var(--brand); font-size: 16px; color: var(--cream-ghost); letter-spacing: 0.03em; text-decoration: none; }
+  .tb-meta { font-family: var(--sans); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--cream-ghost); }
+
+  .controls { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); z-index: 10; display: flex; gap: 12px; opacity: 0; transition: opacity 0.4s; }
+  .controls.visible { opacity: 1; }
+  .ctrl-btn {
+    background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.08);
+    color: var(--cream-ghost); font-family: var(--sans); font-size: 11px; letter-spacing: 0.08em;
+    padding: 8px 18px; border-radius: 4px; cursor: pointer; transition: all 0.3s; -webkit-appearance: none;
+  }
+  .ctrl-btn:hover { background: rgba(255,255,255,0.1); color: var(--cream-dim); border-color: rgba(255,255,255,0.15); }
+  .ctrl-btn--active { background: rgba(122,158,126,0.15); border-color: rgba(122,158,126,0.3); color: var(--sage); }
+
+  /* ─── LIGHT MODE OVERRIDES ─── */
+  [data-theme="light"] .ctrl-btn {
+    background: rgba(0,0,0,0.04);
+    border-color: rgba(0,0,0,0.08);
+  }
+  [data-theme="light"] .ctrl-btn:hover {
+    background: rgba(0,0,0,0.08);
+    border-color: rgba(0,0,0,0.12);
+  }
+  [data-theme="light"] .ctrl-btn--active {
+    background: rgba(90,138,94,0.1);
+    border-color: rgba(90,138,94,0.25);
+  }
+  [data-theme="light"] .ec-back {
+    border-color: rgba(42,40,36,0.1);
+  }
+  [data-theme="light"] .ec-back:hover {
+    border-color: rgba(42,40,36,0.2);
+  }
+
+  /* ─── THEME TOGGLE ─── */
+  .theme-toggle {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 50;
+    width: 28px;
+    height: 28px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    -webkit-appearance: none;
+    pointer-events: none;
+  }
+  .theme-toggle.visible { opacity: 0.2; pointer-events: auto; }
+  .theme-toggle:hover { opacity: 0.5; }
+  .theme-toggle svg {
+    width: 16px;
+    height: 16px;
+    fill: none;
+    stroke: var(--cream);
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: stroke 0.6s ease;
+  }
+  .theme-toggle .icon-sun { display: none; }
+  .theme-toggle .icon-moon { display: block; }
+  [data-theme="light"] .theme-toggle .icon-sun { display: block; }
+  [data-theme="light"] .theme-toggle .icon-moon { display: none; }
+
+  @media (max-width: 600px) {
+    .stage { padding: 0 6vw; }
+    .top-bar { padding: 16px 5vw; }
+    .frag { font-size: clamp(20px, 5vw, 30px); }
+    .controls { bottom: 20px; }
+    .ctrl-btn { padding: 10px 20px; font-size: 12px; }
+    .theme-toggle { bottom: 16px; right: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="start-page" id="startPage">
+  <div class="start-ambient">
+    <div class="s-orb s-orb--1"></div>
+    <div class="s-orb s-orb--2"></div>
+    <div class="s-orb s-orb--3"></div>
+  </div>
+</div>
+
+<div class="ambient" id="ambient">
+  <div class="orb orb--1"></div>
+  <div class="orb orb--2"></div>
+  <div class="orb orb--3"></div>
+</div>
+
+<div class="stage" id="stage">
+  <div class="fragment-display" id="display"></div>
+</div>
+
+<div class="top-bar" id="topBar">
+  <a href="index.html" class="tb-mark">linger</a>
+  <span class="tb-meta" id="tbMeta"></span>
+</div>
+
+<div class="progress-bar" id="progressBar">
+  <div class="progress-fill" id="progressFill"></div>
+</div>
+
+<div class="controls" id="controls">
+  <button class="ctrl-btn" id="btnPause">Pause</button>
+  <button class="ctrl-btn" id="btnRestart">Restart</button>
+</div>
+
+<button class="theme-toggle" id="themeToggle" aria-label="Toggle light mode">
+  <svg class="icon-moon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+  <svg class="icon-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+</button>
+
+<script>
+// ═══ THEME TOGGLE ═══
+const themeToggle = document.getElementById('themeToggle');
+themeToggle.addEventListener('click', function(e) {
+  e.stopPropagation();
+  var isLight = document.documentElement.getAttribute('data-theme') === 'light';
+  if (isLight) {
+    document.documentElement.removeAttribute('data-theme');
+    localStorage.setItem('linger-theme', 'dark');
+  } else {
+    document.documentElement.setAttribute('data-theme', 'light');
+    localStorage.setItem('linger-theme', 'light');
+  }
+});
+
+const story = {
+  title: "Chimera",
+  author: "Jon T",
+  duration: "15 min",
+  fragments: [
+    // ═══ OBSERVATION — looking at trees ═══
+    { text: "I\u2019m looking at the tops of trees like I do", mood: "still", hold: 4000 },
+    { text: "up here in the top nook of the house", mood: "still", hold: 3600 },
+
+    // ═══ INVERSION — shifting perception ═══
+    { text: "I change my point of view", mood: "drift", hold: 3200 },
+    { text: "and imagine the branches and leaves as the lower level ground cover", mood: "drift", hold: 4600 },
+    { text: "and the bluegreywhite field", mood: "drift", hold: 3000 },
+    { text: "an infinite canopy forever sinking sinking into the background", mood: "drift", hold: 5000 },
+    { text: "pulling pulling into the foreground", mood: "drift", hold: 3800 },
+    { text: "invisibly or imperceptibly", mood: "drift", hold: 3200 },
+
+    // ═══ BREATH — atmospheric weight ═══
+    { text: "a breath rises", mood: "weight", hold: 3400 },
+    { text: "how is the sky so heavy and light at the same time", mood: "weight", hold: 4600 },
+    { text: "atmospheric superposition focus shifting", mood: "weight", hold: 4200 },
+    { text: "through layers of clarity and density", mood: "weight", hold: 3800 },
+    { text: "hardness and softness", mood: "weight", hold: 3000 },
+    { text: "thickness and thinness", mood: "weight", hold: 3000 },
+    { text: "then falls", mood: "weight", hold: 2800 },
+
+    // ═══ SEEING — trying to see truly ═══
+    { text: "I roll my eye like a marble in a cup", mood: "sense", hold: 4400 },
+    { text: "thinking of how to describe what I really see", mood: "sense", hold: 4200 },
+    { text: "and not what I want it to be", mood: "sense", hold: 3600 },
+    { text: "so when I tilt my head just a tiny bit", mood: "sense", hold: 3800 },
+    { text: "unstiffen my gaze and wander there", mood: "sense", hold: 3800 },
+
+    // ═══ MIND — energy mass, sparking ═══
+    { text: "I see-feel the strength of a mind", mood: "spark", hold: 4200 },
+    { text: "an energy mass pink sparking", mood: "spark", hold: 3600 },
+    { text: "tissue fluttering", mood: "spark", hold: 2800 },
+    { text: "vacuum popping", mood: "spark", hold: 2800 },
+    { text: "drum thrumming thought machine", mood: "spark", hold: 3600 },
+
+    // ═══ CONNECTION — another traveler ═══
+    { text: "now shared with another traveler", mood: "meet", hold: 4200 },
+    { text: "changing the view and tilting their head in a complimentary direction", mood: "meet", hold: 5000 },
+    { text: "perhaps to kiss", mood: "meet", hold: 3400 },
+    { text: "or peer eye to eye into the honeycomb nebula", mood: "meet", hold: 4600 },
+    { text: "discovering future artifacts and imagined histories", mood: "meet", hold: 4800 },
+
+    // ═══ SIMMER — the space between ═══
+    { text: "and when the harmonic space between us simmers and stews", mood: "simmer", hold: 5000 },
+    { text: "it looks like sap in the water", mood: "simmer", hold: 3600 },
+    { text: "prismatic and unpredictable", mood: "simmer", hold: 3400 },
+    { text: "spiraling in on and around itself like how I imagine", mood: "simmer", hold: 4400 },
+
+    // ═══ ENTWINE — bodies ═══
+    { text: "your leg around my neck and my arm around your waist", mood: "entwine", hold: 4800 },
+    { text: "and your knees on my ears and my mouth on your face", mood: "entwine", hold: 4600 },
+    { text: "and our tongues sharing space", mood: "entwine", hold: 4400 },
+  ]
+};
+
+// ═══ DOM ═══
+const startPage = document.getElementById('startPage');
+const display = document.getElementById('display');
+const ambient = document.getElementById('ambient');
+const stage = document.getElementById('stage');
+const progressBar = document.getElementById('progressBar');
+const progressFill = document.getElementById('progressFill');
+const topBar = document.getElementById('topBar');
+const tbMeta = document.getElementById('tbMeta');
+const controls = document.getElementById('controls');
+const btnPause = document.getElementById('btnPause');
+const btnRestart = document.getElementById('btnRestart');
+
+let currentIndex = -1;
+let isPaused = false;
+let timeoutId = null;
+let hasStarted = false;
+
+const FADE_OUT = 800;
+const GAP = 500;
+const MAX_VOLUME = 0.12;
+
+// ═══ ROOM TONE — hybrid <audio> + Web Audio API for universal compat ═══
+let audioEl = null;
+let audioCtx = null;
+let gainNode = null;
+let audioConnected = false;
+let audioStarted = false;
+
+function initAudio() {
+  try {
+    audioEl = new Audio('room-tone.mp3');
+    audioEl.loop = true;
+    audioEl.volume = 0;
+    audioEl.preload = 'auto';
+  } catch (e) {}
+}
+
+function startRoomTone() {
+  if (!audioEl || audioStarted) return;
+  audioStarted = true;
+  try {
+    if (!audioCtx) {
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      gainNode = audioCtx.createGain();
+      gainNode.gain.value = 0;
+      var src = audioCtx.createMediaElementSource(audioEl);
+      src.connect(gainNode);
+      gainNode.connect(audioCtx.destination);
+      audioConnected = true;
+    }
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+    audioEl.play().catch(function(){});
+    gainNode.gain.setValueAtTime(0, audioCtx.currentTime);
+    gainNode.gain.linearRampToValueAtTime(MAX_VOLUME, audioCtx.currentTime + 4);
+  } catch (e) {
+    audioEl.volume = 0;
+    audioEl.play().catch(function(){});
+    var v = 0;
+    var fade = setInterval(function() {
+      v += MAX_VOLUME / 40;
+      if (v >= MAX_VOLUME) { v = MAX_VOLUME; clearInterval(fade); }
+      audioEl.volume = v;
+    }, 100);
+  }
+}
+
+function fadeOutRoomTone() {
+  if (!audioEl) return;
+  if (audioConnected && audioCtx && gainNode) {
+    gainNode.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 6);
+    setTimeout(function() { try { audioEl.pause(); } catch(e) {} }, 7000);
+  } else {
+    var fade = setInterval(function() {
+      var v = audioEl.volume - (MAX_VOLUME / 60);
+      if (v <= 0) { v = 0; clearInterval(fade); audioEl.pause(); }
+      audioEl.volume = v;
+    }, 100);
+  }
+}
+
+initAudio();
+
+// ═══ AUTO-START ═══
+startPage.style.display = 'none';
+stage.classList.add('active');
+progressBar.classList.add('active');
+hasStarted = true;
+
+function unlockAudio() {
+  startRoomTone();
+  document.removeEventListener('click', unlockAudio);
+  document.removeEventListener('keydown', unlockAudio);
+  document.removeEventListener('touchstart', unlockAudio);
+}
+document.addEventListener('click', unlockAudio, { once: true });
+document.addEventListener('keydown', unlockAudio, { once: true });
+document.addEventListener('touchstart', unlockAudio, { once: true });
+
+setTimeout(() => showCurrent(), 800);
+
+function renderTitleCard() {
+  display.innerHTML = `
+    <div class="title-card" id="currentEl">
+      <div class="tc-label">linger presents</div>
+      <div class="tc-title">${story.title}</div>
+      <div class="tc-author">${story.author}</div>
+      <div class="tc-duration">${story.duration}</div>
+    </div>`;
+}
+function renderFragment(index) {
+  const f = story.fragments[index];
+  const firstClass = index === 0 ? ' first' : '';
+  display.innerHTML = `<div class="frag${firstClass}" id="currentEl">${f.text}</div>`;
+}
+function renderEndCard() {
+  display.innerHTML = `
+    <div class="end-card" id="currentEl">
+      <div class="ec-wordmark">linger</div>
+      <div class="ec-tagline">Attention, rewarded.</div>
+      <a href="index.html" class="ec-back">Back to stories</a>
+    </div>`;
+}
+function setMood(mood) { ambient.className = 'ambient mood-' + (mood || 'still'); }
+function updateProgress() {
+  const total = story.fragments.length;
+  const pct = currentIndex < 0 ? 0 : Math.min(((currentIndex + 1) / total) * 100, 100);
+  progressFill.style.width = pct + '%';
+}
+function updateMeta() {
+  if (currentIndex < 0) tbMeta.textContent = '';
+  else if (currentIndex >= story.fragments.length) tbMeta.textContent = 'fin';
+  else tbMeta.textContent = (currentIndex + 1) + ' / ' + story.fragments.length;
+}
+
+function showCurrent() {
+  updateProgress();
+  updateMeta();
+  if (currentIndex < 0) {
+    renderTitleCard();
+    setMood('still');
+    requestAnimationFrame(() => { requestAnimationFrame(() => { document.getElementById('currentEl').classList.add('visible'); }); });
+    timeoutId = setTimeout(() => fadeAndAdvance(), 7000);
+    setTimeout(() => topBar.classList.add('visible'), 3000);
+  } else if (currentIndex >= story.fragments.length) {
+    renderEndCard();
+    setMood('close');
+    progressFill.style.width = '100%';
+    requestAnimationFrame(() => { requestAnimationFrame(() => { document.getElementById('currentEl').classList.add('visible'); }); });
+    setTimeout(() => fadeOutRoomTone(), 3000);
+  } else {
+    const f = story.fragments[currentIndex];
+    renderFragment(currentIndex);
+    setMood(f.mood);
+    requestAnimationFrame(() => { requestAnimationFrame(() => { document.getElementById('currentEl').classList.add('visible'); }); });
+    timeoutId = setTimeout(() => fadeAndAdvance(), f.hold);
+  }
+}
+
+function fadeAndAdvance() {
+  const el = document.getElementById('currentEl');
+  if (!el) return;
+  el.classList.remove('visible');
+  el.classList.add('fading');
+  timeoutId = setTimeout(() => { currentIndex++; showCurrent(); }, FADE_OUT + GAP);
+}
+
+btnPause.addEventListener('click', () => {
+  if (isPaused) { isPaused = false; btnPause.textContent = 'Pause'; btnPause.classList.remove('ctrl-btn--active'); showCurrent(); }
+  else { isPaused = true; btnPause.textContent = 'Resume'; btnPause.classList.add('ctrl-btn--active'); clearTimeout(timeoutId); }
+});
+btnRestart.addEventListener('click', () => {
+  clearTimeout(timeoutId); isPaused = false; btnPause.textContent = 'Pause'; btnPause.classList.remove('ctrl-btn--active');
+  currentIndex = -1; topBar.classList.remove('visible'); showCurrent();
+});
+
+let mouseTimer;
+document.addEventListener('mousemove', () => {
+  document.body.classList.add('show-cursor');
+  if (hasStarted) { controls.classList.add('visible'); themeToggle.classList.add('visible'); }
+  clearTimeout(mouseTimer);
+  mouseTimer = setTimeout(() => { if (!isPaused) { controls.classList.remove('visible'); themeToggle.classList.remove('visible'); document.body.classList.remove('show-cursor'); } }, 2500);
+});
+document.addEventListener('keydown', (e) => {
+  if (e.code === 'Space') { e.preventDefault(); btnPause.click(); }
+  if (e.code === 'ArrowRight' && !isPaused) { clearTimeout(timeoutId); fadeAndAdvance(); }
+  if (e.code === 'KeyR') btnRestart.click();
+});
+document.addEventListener('touchstart', () => {
+  if (hasStarted) { controls.classList.add('visible'); themeToggle.classList.add('visible'); }
+  clearTimeout(mouseTimer);
+  mouseTimer = setTimeout(() => { if (!isPaused) { controls.classList.remove('visible'); themeToggle.classList.remove('visible'); } }, 3000);
+});
+</script>
+</body>
+</html>
