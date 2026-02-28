@@ -545,7 +545,7 @@ var ambientFadeTimer = null;
 
 (function createAmbient() {
   ambientAudio = document.createElement('audio');
-  ambientAudio.src = 'ambient.mp3';
+  ambientAudio.src = 'tone-deep-presence.mp3';
   ambientAudio.loop = true;
   ambientAudio.volume = 0;
   ambientAudio.preload = 'auto';
@@ -554,7 +554,7 @@ var ambientFadeTimer = null;
   // Append to DOM — some mobile browsers need this
   ambientAudio.style.display = 'none';
   document.body.appendChild(ambientAudio);
-  console.log('[linger] ambient audio element created, src: ambient.mp3');
+  console.log('[linger] ambient audio element created, src: tone-deep-presence.mp3');
   ambientAudio.addEventListener('canplaythrough', function() {
     console.log('[linger] ambient audio ready to play');
   }, { once: true });
