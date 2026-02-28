@@ -328,6 +328,7 @@
 <div class="controls" id="controls">
   <button class="ctrl-btn" id="btnPause">Pause</button>
   <button class="ctrl-btn" id="btnRestart">Restart</button>
+  <button class="ctrl-btn" id="btnShare">Share</button>
 </div>
 
 <button class="fs-toggle" id="fsToggle" aria-label="Toggle fullscreen">
@@ -535,7 +536,7 @@ let hasStarted = false;
 
 const FADE_OUT = 700;
 const GAP = 400;
-const MAX_VOLUME = 0.25;
+const MAX_VOLUME = 0.1;
 
 // ═══ ROOM TONE — plain <audio> element, no Web Audio API ═══
 // Simple and universal: works on file://, http, https, mobile, desktop.
@@ -697,6 +698,22 @@ btnPause.addEventListener('click', () => {
 btnRestart.addEventListener('click', () => {
   clearTimeout(timeoutId); isPaused = false; btnPause.textContent = 'Pause'; btnPause.classList.remove('ctrl-btn--active');
   currentIndex = -1; topBar.classList.remove('visible'); showCurrent();
+});
+document.getElementById('btnShare').addEventListener('click', () => {
+  // Pause the reading
+  if (!isPaused) { isPaused = true; btnPause.textContent = 'Resume'; btnPause.classList.add('ctrl-btn--active'); clearTimeout(timeoutId); }
+  // Get current phrase text
+  var el = document.getElementById('currentEl');
+  var phrase = el ? el.textContent.trim() : '';
+  var shareData = { title: 'linger — ' + story.title, text: phrase ? '"' + phrase + '"' : story.title, url: window.location.href };
+  if (navigator.share) {
+    navigator.share(shareData).catch(function() {});
+  } else {
+    navigator.clipboard.writeText(shareData.text + ' — ' + shareData.url).then(function() {
+      var btn = document.getElementById('btnShare');
+      btn.textContent = 'Copied'; setTimeout(function() { btn.textContent = 'Share'; }, 1500);
+    });
+  }
 });
 
 let mouseTimer;
