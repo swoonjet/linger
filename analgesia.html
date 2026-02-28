@@ -535,7 +535,7 @@ let hasStarted = false;
 
 const FADE_OUT = 700;
 const GAP = 400;
-const MAX_VOLUME = 0.7;
+const MAX_VOLUME = 1.0;
 
 // ═══ ROOM TONE — plain <audio> element, no Web Audio API ═══
 // Simple and universal: works on file://, http, https, mobile, desktop.
@@ -570,8 +570,11 @@ function startRoomTone() {
   var playPromise = ambientAudio.play();
   if (playPromise !== undefined) {
     playPromise.then(function() {
-      console.log('[linger] ambient audio playing');
-      // Fade in over 4 seconds
+      console.log('[linger] ambient audio playing, duration:', ambientAudio.duration, 'readyState:', ambientAudio.readyState);
+      // Skip fade, set volume directly to verify audio works
+      ambientAudio.volume = MAX_VOLUME;
+      console.log('[linger] volume set directly to', MAX_VOLUME, 'currentTime:', ambientAudio.currentTime, 'paused:', ambientAudio.paused, 'muted:', ambientAudio.muted);
+      // Also fade in over 4 seconds
       var vol = 0;
       ambientFadeTimer = setInterval(function() {
         vol += MAX_VOLUME / 40;
