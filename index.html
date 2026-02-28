@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>linger — Cardigan Day</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;1,8..60,300;1,8..60,400&family=Space+Grotesk:wght@300;400;500&display=swap');
+
+  :root {
+    --void: #08080a;
+    --surface: #111114;
+    --border: #1e1e22;
+    --text-ghost: #2a2a2e;
+    --cream: #ede8df;
+    --cream-dim: rgba(237,232,223,0.6);
+    --cream-ghost: rgba(237,232,223,0.15);
+    --burnt-orange: #d4663a;
+    --sage: #7a9e7e;
+    --lavender: #9b8ec4;
+    --ochre: #c9a84c;
+    --sickly: #a8a044;
+    --reading: 'Source Serif 4', Georgia, serif;
+    --brand: 'Playfair Display', Georgia, serif;
+    --sans: 'Space Grotesk', -apple-system, sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--void);
+    color: var(--cream);
+    font-family: var(--reading);
+    -webkit-font-smoothing: antialiased;
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+    user-select: none;
+    cursor: none;
+  }
+  body.show-cursor { cursor: default; }
+
+  /* ─── START PAGE ─── */
+  .start-page {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    background: var(--void);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    opacity: 1;
+    transition: opacity 1.8s ease;
+  }
+  .start-page.hidden {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .start-ambient {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+  .start-ambient .s-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(160px);
+    opacity: 0;
+    transition: opacity 4s ease, transform 12s ease;
+  }
+  .start-ambient .s-orb--1 {
+    width: 600px; height: 600px;
+    background: var(--burnt-orange);
+    top: -25%; right: -15%;
+  }
+  .start-ambient .s-orb--2 {
+    width: 450px; height: 450px;
+    background: var(--lavender);
+    bottom: -20%; left: -12%;
+  }
+  .start-ambient .s-orb--3 {
+    width: 300px; height: 300px;
+    background: var(--sage);
+    top: 50%; left: 30%;
+  }
+  .start-page.active .s-orb--1 { opacity: 0.07; transform: translate(-10px, 10px); }
+  .start-page.active .s-orb--2 { opacity: 0.05; transform: translate(10px, -5px); }
+  .start-page.active .s-orb--3 { opacity: 0.04; transform: translate(5px, -10px); }
+
+  .start-content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    max-width: 560px;
+    padding: 0 6vw;
+  }
+
+  .start-wordmark {
+    font-family: var(--brand);
+    font-size: clamp(42px, 8vw, 72px);
+    font-weight: 400;
+    color: var(--cream);
+    letter-spacing: 0.04em;
+    margin-bottom: 12px;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 1.6s ease 0.3s, transform 1.6s ease 0.3s;
+  }
+  .start-page.active .start-wordmark {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .start-tagline {
+    font-family: var(--brand);
+    font-size: clamp(14px, 2.2vw, 18px);
+    font-style: italic;
+    color: var(--burnt-orange);
+    opacity: 0;
+    transform: translateY(6px);
+    transition: opacity 1.4s ease 1s, transform 1.4s ease 1s;
+    margin-bottom: 64px;
+  }
+  .start-page.active .start-tagline {
+    opacity: 0.7;
+    transform: translateY(0);
+  }
+
+  .start-divider {
+    width: 40px;
+    height: 1px;
+    background: var(--cream-ghost);
+    margin: 0 auto 48px;
+    opacity: 0;
+    transition: opacity 1.2s ease 1.6s;
+  }
+  .start-page.active .start-divider { opacity: 1; }
+
+  .start-story-title {
+    font-family: var(--brand);
+    font-size: clamp(28px, 5vw, 48px);
+    font-weight: 400;
+    font-style: italic;
+    color: var(--cream);
+    margin-bottom: 14px;
+    opacity: 0;
+    transform: translateY(6px);
+    transition: opacity 1.4s ease 2s, transform 1.4s ease 2s;
+  }
+  .start-page.active .start-story-title {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .start-author {
+    font-family: var(--sans);
+    font-size: clamp(12px, 1.6vw, 15px);
+    color: var(--cream-dim);
+    letter-spacing: 0.06em;
+    margin-bottom: 8px;
+    opacity: 0;
+    transition: opacity 1.2s ease 2.4s;
+  }
+  .start-page.active .start-author { opacity: 1; }
+
+  .start-duration {
+    font-family: var(--sans);
+    font-size: 11px;
+    color: var(--cream-ghost);
+    letter-spacing: 0.12em;
+    margin-bottom: 56px;
+    opacity: 0;
+    transition: opacity 1.2s ease 2.6s;
+  }
+  .start-page.active .start-duration { opacity: 1; }
+
+  .start-begin {
+    font-family: var(--sans);
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--cream-ghost);
+    background: none;
+    border: 1px solid rgba(237,232,223,0.08);
+    padding: 14px 36px;
+    border-radius: 3px;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 1.2s ease 3.2s, border-color 0.5s ease, color 0.5s ease, background 0.5s ease;
+  }
+  .start-page.active .start-begin { opacity: 1; }
+  .start-begin:hover {
+    border-color: rgba(212,102,58,0.4);
+    color: var(--cream-dim);
+    background: rgba(212,102,58,0.06);
+  }
+
+  .start-hint {
+    font-family: var(--sans);
+    font-size: 10px;
+    color: var(--text-ghost);
+    letter-spacing: 0.1em;
+    margin-top: 16px;
+    opacity: 0;
+    transition: opacity 1s ease 3.8s;
+  }
+  .start-page.active .start-hint { opacity: 1; }
+
+  /* ─── AMBIENT ─── */
+  .ambient {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+  .ambient .orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(140px);
+    opacity: 0;
+    transition: opacity 7s ease, transform 12s ease, background 9s ease;
+  }
+  .orb--1 {
+    width: 500px; height: 500px;
+    background: var(--ochre);
+    top: -20%; right: -10%;
+  }
+  .orb--2 {
+    width: 400px; height: 400px;
+    background: var(--lavender);
+    bottom: -25%; left: -10%;
+  }
+  .orb--3 {
+    width: 350px; height: 350px;
+    background: var(--sage);
+    top: 40%; left: 20%;
+  }
+
+  /* morning warmth */
+  .mood-cozy .orb--1 { opacity: 0.1; background: var(--ochre); transform: translate(0,0); }
+  .mood-cozy .orb--2 { opacity: 0.04; background: var(--lavender); }
+  .mood-cozy .orb--3 { opacity: 0.06; background: var(--sage); }
+
+  /* playful aldous moment */
+  .mood-playful .orb--1 { opacity: 0.08; background: var(--ochre); }
+  .mood-playful .orb--2 { opacity: 0.08; background: var(--lavender); transform: translate(10px, -10px); }
+  .mood-playful .orb--3 { opacity: 0.06; background: var(--sage); }
+
+  /* disruption begins */
+  .mood-uneasy .orb--1 { opacity: 0.12; background: var(--burnt-orange); transform: translate(-20px, 10px) scale(1.05); }
+  .mood-uneasy .orb--2 { opacity: 0.04; }
+  .mood-uneasy .orb--3 { opacity: 0.03; }
+
+  /* panic and loss */
+  .mood-panic .orb--1 { opacity: 0.2; background: var(--burnt-orange); transform: translate(-30px, 20px) scale(1.15); }
+  .mood-panic .orb--2 { opacity: 0.06; background: #8b5e5e; transform: translate(20px, -15px); }
+  .mood-panic .orb--3 { opacity: 0.02; }
+
+  /* the yellow stain / contamination */
+  .mood-sick .orb--1 { opacity: 0.06; background: var(--sickly); }
+  .mood-sick .orb--2 { opacity: 0.1; background: var(--sickly); transform: translate(0, -20px) scale(1.1); }
+  .mood-sick .orb--3 { opacity: 0.14; background: #7a7a3a; transform: translate(-10px, 10px) scale(1.05); }
+
+  /* collapse */
+  .mood-collapse .orb--1 { opacity: 0.03; }
+  .mood-collapse .orb--2 { opacity: 0.03; }
+  .mood-collapse .orb--3 { opacity: 0.03; }
+
+  /* the pipes / drone */
+  .mood-drone .orb--1 { opacity: 0.08; background: #6a6a6a; transform: translate(-10px, 5px); }
+  .mood-drone .orb--2 { opacity: 0.12; background: #7a7a3a; transform: translate(5px, -15px) scale(1.08); }
+  .mood-drone .orb--3 { opacity: 0.06; background: #6a6a6a; }
+
+  /* the gas / fog */
+  .mood-fog .orb--1 { opacity: 0.18; background: #8a8a7a; transform: translate(-20px, 10px) scale(1.2); }
+  .mood-fog .orb--2 { opacity: 0.15; background: #8a8a7a; transform: translate(20px, -10px) scale(1.15); }
+  .mood-fog .orb--3 { opacity: 0.12; background: #7a7a6a; transform: translate(0, 0) scale(1.1); }
+
+  /* dissolution */
+  .mood-dissolve .orb--1 { opacity: 0.1; background: #9a6a6a; transform: translate(-10px, 20px) scale(1.1); }
+  .mood-dissolve .orb--2 { opacity: 0.08; background: #8a7a6a; }
+  .mood-dissolve .orb--3 { opacity: 0.04; }
+
+  /* free */
+  .mood-free .orb--1 { opacity: 0.06; background: var(--cream); transform: translate(0, -10px); }
+  .mood-free .orb--2 { opacity: 0.04; background: var(--cream); }
+  .mood-free .orb--3 { opacity: 0.03; }
+
+  /* ─── STAGE ─── */
+  .stage {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0 8vw;
+    opacity: 0;
+    transition: opacity 1.2s ease;
+  }
+  .stage.active { opacity: 1; }
+
+  .fragment-display {
+    max-width: 680px;
+    text-align: center;
+    min-height: 160px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .frag {
+    font-family: var(--reading);
+    font-size: clamp(26px, 3.8vw, 42px);
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--cream);
+    opacity: 0;
+    transform: translateY(6px);
+    transition: opacity 1s ease, transform 1s ease;
+    text-wrap: balance;
+  }
+  .frag.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .frag.fading {
+    opacity: 0;
+    transform: translateY(-4px);
+    transition: opacity 1.1s ease, transform 1.1s ease;
+  }
+
+  /* ─── TITLE CARD ─── */
+  .title-card {
+    text-align: center;
+    opacity: 0;
+    transition: opacity 1.4s ease;
+  }
+  .title-card.visible { opacity: 1; }
+  .title-card.fading { opacity: 0; transition: opacity 1.3s ease; }
+  .tc-label {
+    font-family: var(--sans);
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--cream-ghost);
+    margin-bottom: 24px;
+  }
+  .tc-title {
+    font-family: var(--brand);
+    font-size: clamp(36px, 6vw, 64px);
+    font-weight: 400;
+    color: var(--cream);
+    margin-bottom: 16px;
+    font-style: italic;
+  }
+  .tc-author {
+    font-family: var(--sans);
+    font-size: 14px;
+    color: var(--cream-dim);
+    letter-spacing: 0.05em;
+  }
+  .tc-duration {
+    font-family: var(--sans);
+    font-size: 11px;
+    color: var(--cream-ghost);
+    margin-top: 8px;
+    letter-spacing: 0.1em;
+  }
+
+  /* ─── END CARD ─── */
+  .end-card {
+    text-align: center;
+    opacity: 0;
+    transition: opacity 2s ease;
+  }
+  .end-card.visible { opacity: 1; }
+  .ec-wordmark {
+    font-family: var(--brand);
+    font-size: 28px;
+    color: var(--cream-ghost);
+    margin-bottom: 24px;
+    letter-spacing: 0.03em;
+  }
+  .ec-tagline {
+    font-family: var(--brand);
+    font-size: 18px;
+    font-style: italic;
+    color: var(--burnt-orange);
+    opacity: 0.6;
+  }
+
+  /* ─── PROGRESS ─── */
+  .progress-bar {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--text-ghost);
+    z-index: 10;
+    opacity: 0;
+    transition: opacity 0.8s ease;
+  }
+  .progress-bar.active { opacity: 1; }
+  .progress-fill {
+    height: 100%;
+    width: 0%;
+    background: var(--burnt-orange);
+    transition: width 0.6s ease;
+    opacity: 0.6;
+  }
+
+  /* ─── TOP BAR ─── */
+  .top-bar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 10;
+    padding: 20px 6vw;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    opacity: 0;
+    transition: opacity 0.6s;
+  }
+  .top-bar.visible { opacity: 1; }
+  .tb-mark {
+    font-family: var(--brand);
+    font-size: 16px;
+    color: var(--cream-ghost);
+    letter-spacing: 0.03em;
+  }
+  .tb-meta {
+    font-family: var(--sans);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--cream-ghost);
+  }
+
+  /* ─── CONTROLS ─── */
+  .controls {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    display: flex;
+    gap: 12px;
+    opacity: 0;
+    transition: opacity 0.4s;
+  }
+  .controls.visible { opacity: 1; }
+  .controls:hover { opacity: 1 !important; }
+  .ctrl-btn {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.08);
+    color: var(--cream-ghost);
+    font-family: var(--sans);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    padding: 8px 18px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+  .ctrl-btn:hover {
+    background: rgba(255,255,255,0.1);
+    color: var(--cream-dim);
+    border-color: rgba(255,255,255,0.15);
+  }
+  .ctrl-btn--active {
+    background: rgba(212,102,58,0.15);
+    border-color: rgba(212,102,58,0.3);
+    color: var(--burnt-orange);
+  }
+
+  @media (max-width: 600px) {
+    .stage { padding: 0 6vw; }
+    .top-bar { padding: 16px 5vw; }
+    .frag { font-size: clamp(20px, 5vw, 30px); }
+    .start-wordmark { font-size: clamp(36px, 10vw, 56px); }
+    .start-story-title { font-size: clamp(24px, 7vw, 40px); }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══ START PAGE ═══ -->
+<div class="start-page" id="startPage">
+  <div class="start-ambient">
+    <div class="s-orb s-orb--1"></div>
+    <div class="s-orb s-orb--2"></div>
+    <div class="s-orb s-orb--3"></div>
+  </div>
+  <div class="start-content">
+    <div class="start-wordmark">linger</div>
+    <div class="start-tagline">Attention, rewarded.</div>
+    <div class="start-divider"></div>
+    <div class="start-story-title">Cardigan Day</div>
+    <div class="start-author">Jon Toews</div>
+    <div class="start-duration">~12 min</div>
+    <button class="start-begin" id="btnBegin">Begin</button>
+    <div class="start-hint">or press space</div>
+  </div>
+</div>
+
+<!-- ═══ READING EXPERIENCE ═══ -->
+<div class="ambient" id="ambient">
+  <div class="orb orb--1"></div>
+  <div class="orb orb--2"></div>
+  <div class="orb orb--3"></div>
+</div>
+
+<div class="stage" id="stage">
+  <div class="fragment-display" id="display"></div>
+</div>
+
+<div class="top-bar" id="topBar">
+  <span class="tb-mark">linger</span>
+  <span class="tb-meta" id="tbMeta"></span>
+</div>
+
+<div class="progress-bar" id="progressBar">
+  <div class="progress-fill" id="progressFill"></div>
+</div>
+
+<div class="controls" id="controls">
+  <button class="ctrl-btn" id="btnPause">Pause</button>
+  <button class="ctrl-btn" id="btnRestart">Restart</button>
+</div>
+
+<!-- ═══ ROOM TONE AUDIO ═══ -->
+<audio id="roomTone" loop preload="auto">
+  <source src="room-tone.wav" type="audio/wav">
+</audio>
+
+<script>
+// ═══ STORY DATA ═══
+const story = {
+  title: "Cardigan Day",
+  author: "Jon Toews",
+  duration: "12 min",
+  fragments: [
+    // ═══ ACT I: COZY MORNING ═══
+    { text: "Thursday, is cardigan day.", mood: "cozy", hold: 3200 },
+    { text: "Beige.", mood: "cozy", hold: 2400 },
+    { text: "I like it better than turtleneck day. Monday.", mood: "cozy", hold: 3800 },
+    { text: "Yesterday was wooly Wednesday and I wore my peacoat with the collar up, a young Brando, as the fog moved in.", mood: "cozy", hold: 5800 },
+
+    { text: "This morning at 7:45 AM I\u2019m counting the last drips from my coffee maker,", mood: "cozy", hold: 4600 },
+    { text: "my hands smoothing the bedcovers and scanning for debris,", mood: "cozy", hold: 4200 },
+    { text: "humming my morning psalm to my ceramic menagerie.", mood: "cozy", hold: 4000 },
+
+    // ═══ ALDOUS ═══
+    { text: "In the center of the collection is Aldous, the sassiest unicorn.", mood: "playful", hold: 4400 },
+    { text: "He\u2019s got a spiral horn and a gilded tail.", mood: "playful", hold: 3600 },
+    { text: "I kick up my leg behind me as I scoot by indicating my playful acknowledgement of his flare and finger wagging flamboyance.", mood: "playful", hold: 6200 },
+    { text: "He winks, a trick of light when he\u2019s lined up just right as the sun hits the window.", mood: "playful", hold: 4800 },
+    { text: "Ting!", mood: "playful", hold: 2200 },
+
+    // ═══ RITUAL ═══
+    { text: "I pour a cup in my Mishigami U Alumni mug and sit at the breakfast nook in my cozy one bedroom flat like I do every morning.", mood: "cozy", hold: 5600 },
+    { text: "Reciting my affirmations, checking my posture, and visualizing my intention for the day.", mood: "cozy", hold: 4800 },
+    { text: "More than ritual, it\u2019s my power and positioning in an imperfect world.", mood: "cozy", hold: 4600 },
+
+    // ═══ ACT II: DISRUPTION ═══
+    { text: "The spoon on saucer rattle gives me a twitch.", mood: "uneasy", hold: 3800 },
+    { text: "They are renovating somewhere in the building.", mood: "uneasy", hold: 3600 },
+    { text: "Then I hear the fragile plinks of my mythic showcase shimmying in vibrating pirouettes across the mid-century plane.", mood: "uneasy", hold: 5800 },
+
+    { text: "Greggy the tiniest unicorn is about to drop, so I lunge toward the shelf but it\u2019s too late.", mood: "panic", hold: 5000 },
+    { text: "His stubby head point hits the parquet, his neck breaks.", mood: "panic", hold: 4200 },
+    { text: "He eyes me sadly as his face spins away under the side table.", mood: "panic", hold: 4400 },
+    { text: "I can feel the buzz through my buttocks and notice the pull string of my floor lamp swinging in jagged obliques.", mood: "panic", hold: 5200 },
+
+    { text: "Maybe it\u2019s seismic.", mood: "uneasy", hold: 2800 },
+    { text: "So I think about going to the window but notice Toughy and Grace are also about to careen from the heavens.", mood: "panic", hold: 5200 },
+    { text: "I can only catch one.", mood: "panic", hold: 3000 },
+
+    // ═══ THE STAIN ═══
+    { text: "From this vantage, I can see into the bathroom and am perturbed by the presence of a light yellow stain on the wall, under my sink.", mood: "sick", hold: 5800 },
+    { text: "I hold Grace tight. Maybe too tight because I feel something crack between my fingers.", mood: "panic", hold: 4800 },
+
+    { text: "I want to cry.", mood: "panic", hold: 2600 },
+    { text: "I want to change apartments.", mood: "panic", hold: 2800 },
+    { text: "I want to get as far away from the dirty dirty thing as possible.", mood: "sick", hold: 4600 },
+    { text: "I will call Miss Ursula, the building manager and make an official complaint.", mood: "uneasy", hold: 4600 },
+
+    { text: "Turns out poor Toughy wasn\u2019t so tough", mood: "panic", hold: 3400 },
+    { text: "I roll onto my stomach and count the pieces of his shattered body skittering to the staccato machinations infecting the warm peace of my home.", mood: "panic", hold: 6400 },
+
+    { text: "I shift my legs and kneel, steadying myself with a palm pressing into the floor,", mood: "panic", hold: 4600 },
+    { text: "when I feel the needling stab of a porcelain shard puncturing the skin.", mood: "panic", hold: 4800 },
+    { text: "Pulling out the sliver of unicorn foreleg, I am transfixed by the bubble of blood bursting into my hand.", mood: "panic", hold: 5400 },
+
+    // ═══ COLLAPSE ═══
+    { text: "A film drifts in my vision.", mood: "collapse", hold: 3400 },
+    { text: "And the light blinks out as I collapse into the wee rubble.", mood: "collapse", hold: 4600 },
+
+    // ═══ ACT III: AWAKENING ═══
+    { text: "A humming rouses me from my brief departure,", mood: "drone", hold: 3800 },
+    { text: "I can feel a nasty tone resonate in my wishbone.", mood: "drone", hold: 4000 },
+    { text: "Still facing the abomination in yellow seeping through my bathroom wall, I raise my head off the floor.", mood: "sick", hold: 5400 },
+    { text: "Sour bile drips from my lips and hangs from my chin.", mood: "sick", hold: 4200 },
+    { text: "The morning, now a ruin of anxious perturbances,", mood: "sick", hold: 3800 },
+    { text: "I must postpone my complaint call, and cover the unsightly blemish, before I get on with my barely recoverable routine.", mood: "sick", hold: 5800 },
+
+    // ═══ THE PIPES ═══
+    { text: "But something compels me to find the source of the skeletal vibrato articulating through my flat.", mood: "drone", hold: 5400 },
+    { text: "Though my eyes are still teary, I am sure I can see the s-trap under my sink jitter in spastic micro-movements,", mood: "drone", hold: 5600 },
+    { text: "a gaussian dance in steel.", mood: "drone", hold: 3200 },
+
+    { text: "Crawling toward the disturbing epicentre,", mood: "drone", hold: 3600 },
+    { text: "I can\u2019t stop drooling, sinuous saliva swinging under my chin,", mood: "drone", hold: 4600 },
+    { text: "crushed unicorn grinding into my kneecaps,", mood: "drone", hold: 3600 },
+    { text: "the ochre stain now browning into focus,", mood: "sick", hold: 3600 },
+    { text: "and the pipes, without a doubt, the sonic fount of tension, I find vexing me with it\u2019s cold drone lament.", mood: "drone", hold: 5800 },
+
+    // ═══ THE GAS ═══
+    { text: "The reverberation has loosened the fittings under the sink,", mood: "drone", hold: 4200 },
+    { text: "and against my better judgement, I unscrew the hardware easily,", mood: "drone", hold: 4200 },
+    { text: "my fingers stinging, an electrified tremor that fizzes into my nervous system.", mood: "drone", hold: 4800 },
+
+    { text: "I hear the hissing first, a sibilance of hot noise ramping up.", mood: "fog", hold: 4600 },
+    { text: "Then, as I pull the pipes apart, the whining exhalation is replaced by gaseous clouds of off-gray vapour billowing into my face.", mood: "fog", hold: 6200 },
+    { text: "It\u2019s strangely numbing and smells like my miscellany drawer of old keys and coins.", mood: "fog", hold: 5200 },
+
+    { text: "It\u2019s too late, but I cover my face with my back pocket handkerchief and try to reverse elbow knee my way back out of the room.", mood: "fog", hold: 5800 },
+    { text: "The fog is filling the space but I manage to escape and pull the door closed behind me.", mood: "fog", hold: 4800 },
+    { text: "That\u2019s when I notice the humming has stopped", mood: "fog", hold: 3600 },
+    { text: "or at least is dampened by the thick pillows that now insulate me from the contamination zone.", mood: "fog", hold: 5200 },
+    { text: "I watch it start to curl under the door but manage to plunder my wicker laundry basket and jam some dirty clothes along the gap.", mood: "fog", hold: 5800 },
+
+    // ═══ DISSOLUTION ═══
+    { text: "Still on the floor, I back into the far wall by the book nook still covering my face.", mood: "dissolve", hold: 4800 },
+    { text: "My eyes are swelling and leaking fluid.", mood: "dissolve", hold: 3600 },
+    { text: "They don\u2019t feel like tears. More like oozing hot syrup.", mood: "dissolve", hold: 4200 },
+    { text: "I try and wipe it away with my covering when I notice a sudden rush in my sinuses.", mood: "dissolve", hold: 4800 },
+    { text: "Reflexively, I press into my face but it feels soft\u2014gooey.", mood: "dissolve", hold: 4200 },
+    { text: "I pull the cloth away and lay it out on my lap.", mood: "dissolve", hold: 3600 },
+    { text: "My vision is getting fuzzier but I can just make out my nose and upper lip jiggling in a pile of flesh.", mood: "dissolve", hold: 5600 },
+
+    { text: "And for a moment, I think I can reconstruct it, glue the pieces back like my fractured figurines,", mood: "dissolve", hold: 5400 },
+    { text: "but then as I maneuver to my feet,", mood: "free", hold: 3200 },
+    { text: "I am possessed with the feeling that I don\u2019t need these pieces.", mood: "free", hold: 4400 },
+    { text: "Perhaps they are only obfuscation, a guard hiding the real me.", mood: "free", hold: 4600 },
+    { text: "I feel free and unfettered by the burden of my facade,", mood: "free", hold: 4400 },
+    { text: "as I peel off my remaining lip and drop it into my coffee mug.", mood: "free", hold: 5200 },
+
+    { text: "Splat.", mood: "free", hold: 3600 },
+  ]
+};
+
+// ═══ DOM ═══
+const startPage = document.getElementById('startPage');
+const btnBegin = document.getElementById('btnBegin');
+const display = document.getElementById('display');
+const ambient = document.getElementById('ambient');
+const stage = document.getElementById('stage');
+const progressBar = document.getElementById('progressBar');
+const progressFill = document.getElementById('progressFill');
+const topBar = document.getElementById('topBar');
+const tbMeta = document.getElementById('tbMeta');
+const controls = document.getElementById('controls');
+const btnPause = document.getElementById('btnPause');
+const btnRestart = document.getElementById('btnRestart');
+const roomTone = document.getElementById('roomTone');
+
+let currentIndex = -1;
+let isPaused = false;
+let timeoutId = null;
+let hasStarted = false;
+
+const FADE_OUT = 700;
+const GAP = 400;
+
+// ═══ ROOM TONE ═══
+function startRoomTone() {
+  roomTone.volume = 0;
+  const playPromise = roomTone.play();
+  if (playPromise !== undefined) {
+    playPromise.catch(() => {});
+  }
+  // fade in over 3 seconds
+  let vol = 0;
+  const fadeIn = setInterval(() => {
+    vol += 0.01;
+    if (vol >= 0.35) {
+      vol = 0.35;
+      clearInterval(fadeIn);
+    }
+    roomTone.volume = vol;
+  }, 30);
+}
+
+function fadeOutRoomTone() {
+  let vol = roomTone.volume;
+  const fadeOut = setInterval(() => {
+    vol -= 0.005;
+    if (vol <= 0) {
+      vol = 0;
+      roomTone.pause();
+      clearInterval(fadeOut);
+    }
+    roomTone.volume = vol;
+  }, 30);
+}
+
+// ═══ START PAGE ═══
+setTimeout(() => startPage.classList.add('active'), 100);
+
+function beginExperience() {
+  if (hasStarted) return;
+  hasStarted = true;
+
+  startPage.classList.add('hidden');
+  startRoomTone();
+
+  setTimeout(() => {
+    stage.classList.add('active');
+    progressBar.classList.add('active');
+    startPage.style.display = 'none';
+    showCurrent();
+  }, 1800);
+}
+
+btnBegin.addEventListener('click', beginExperience);
+
+// ═══ ENGINE ═══
+function renderTitleCard() {
+  display.innerHTML = `
+    <div class="title-card" id="currentEl">
+      <div class="tc-label">linger presents</div>
+      <div class="tc-title">${story.title}</div>
+      <div class="tc-author">${story.author}</div>
+      <div class="tc-duration">${story.duration}</div>
+    </div>`;
+}
+
+function renderFragment(index) {
+  const f = story.fragments[index];
+  display.innerHTML = `<div class="frag" id="currentEl">${f.text}</div>`;
+}
+
+function renderEndCard() {
+  display.innerHTML = `
+    <div class="end-card" id="currentEl">
+      <div class="ec-wordmark">linger</div>
+      <div class="ec-tagline">Attention, rewarded.</div>
+    </div>`;
+}
+
+function setMood(mood) {
+  ambient.className = 'ambient mood-' + (mood || 'cozy');
+}
+
+function updateProgress() {
+  const total = story.fragments.length;
+  const pct = currentIndex < 0 ? 0 : Math.min(((currentIndex + 1) / total) * 100, 100);
+  progressFill.style.width = pct + '%';
+}
+
+function updateMeta() {
+  if (currentIndex < 0) {
+    tbMeta.textContent = '';
+  } else if (currentIndex >= story.fragments.length) {
+    tbMeta.textContent = 'fin';
+  } else {
+    tbMeta.textContent = (currentIndex + 1) + ' / ' + story.fragments.length;
+  }
+}
+
+function showCurrent() {
+  updateProgress();
+  updateMeta();
+
+  if (currentIndex < 0) {
+    renderTitleCard();
+    setMood('cozy');
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        document.getElementById('currentEl').classList.add('visible');
+      });
+    });
+    timeoutId = setTimeout(() => fadeAndAdvance(), 5000);
+    setTimeout(() => topBar.classList.add('visible'), 2000);
+  } else if (currentIndex >= story.fragments.length) {
+    renderEndCard();
+    setMood('free');
+    progressFill.style.width = '100%';
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        document.getElementById('currentEl').classList.add('visible');
+      });
+    });
+    // fade out room tone at end
+    setTimeout(() => fadeOutRoomTone(), 3000);
+  } else {
+    const f = story.fragments[currentIndex];
+    renderFragment(currentIndex);
+    setMood(f.mood);
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        document.getElementById('currentEl').classList.add('visible');
+      });
+    });
+    timeoutId = setTimeout(() => fadeAndAdvance(), f.hold);
+  }
+}
+
+function fadeAndAdvance() {
+  const el = document.getElementById('currentEl');
+  if (!el) return;
+  el.classList.remove('visible');
+  el.classList.add('fading');
+  timeoutId = setTimeout(() => {
+    currentIndex++;
+    showCurrent();
+  }, FADE_OUT + GAP);
+}
+
+// ═══ CONTROLS ═══
+btnPause.addEventListener('click', () => {
+  if (isPaused) {
+    isPaused = false;
+    btnPause.textContent = 'Pause';
+    btnPause.classList.remove('ctrl-btn--active');
+    showCurrent();
+  } else {
+    isPaused = true;
+    btnPause.textContent = 'Resume';
+    btnPause.classList.add('ctrl-btn--active');
+    clearTimeout(timeoutId);
+  }
+});
+
+btnRestart.addEventListener('click', () => {
+  clearTimeout(timeoutId);
+  isPaused = false;
+  btnPause.textContent = 'Pause';
+  btnPause.classList.remove('ctrl-btn--active');
+  currentIndex = -1;
+  topBar.classList.remove('visible');
+  showCurrent();
+});
+
+let mouseTimer;
+document.addEventListener('mousemove', () => {
+  document.body.classList.add('show-cursor');
+  if (hasStarted) controls.classList.add('visible');
+  clearTimeout(mouseTimer);
+  mouseTimer = setTimeout(() => {
+    if (!isPaused) {
+      controls.classList.remove('visible');
+      document.body.classList.remove('show-cursor');
+    }
+  }, 2500);
+});
+
+document.addEventListener('keydown', (e) => {
+  if (e.code === 'Space') {
+    e.preventDefault();
+    if (!hasStarted) {
+      beginExperience();
+    } else {
+      btnPause.click();
+    }
+  }
+  if (e.code === 'ArrowRight' && hasStarted && !isPaused) {
+    clearTimeout(timeoutId);
+    fadeAndAdvance();
+  }
+  if (e.code === 'KeyR' && hasStarted) { btnRestart.click(); }
+});
+
+document.addEventListener('touchstart', () => {
+  if (hasStarted) controls.classList.add('visible');
+  clearTimeout(mouseTimer);
+  mouseTimer = setTimeout(() => {
+    if (!isPaused) controls.classList.remove('visible');
+  }, 3000);
+});
+</script>
+
+</body>
+</html>
