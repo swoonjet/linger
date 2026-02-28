@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>linger</title>
+<script>(function(){var t=localStorage.getItem('linger-theme');if(t==='light')document.documentElement.setAttribute('data-theme','light');})()</script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;1,8..60,300;1,8..60,400&family=Space+Grotesk:wght@300;400;500&display=swap');
+
+  :root {
+    --void: #08080a;
+    --surface: #111114;
+    --border: #1e1e22;
+    --text-ghost: #2a2a2e;
+    --cream: #ede8df;
+    --cream-dim: rgba(237,232,223,0.6);
+    --cream-ghost: rgba(237,232,223,0.15);
+    --burnt-orange: #d4663a;
+    --sage: #7a9e7e;
+    --lavender: #9b8ec4;
+    --ochre: #c9a84c;
+    --reading: 'Source Serif 4', Georgia, serif;
+    --brand: 'Playfair Display', Georgia, serif;
+    --sans: 'Space Grotesk', -apple-system, sans-serif;
+  }
+
+  [data-theme="light"] {
+    --void: #f5f2ec;
+    --surface: #ebe7e0;
+    --border: rgba(42,40,36,0.08);
+    --text-ghost: rgba(42,40,36,0.18);
+    --cream: #2a2824;
+    --cream-dim: rgba(42,40,36,0.55);
+    --cream-ghost: rgba(42,40,36,0.15);
+    --burnt-orange: #c45a30;
+    --sage: #5a8a5e;
+    --lavender: #7a6daa;
+    --ochre: #b8962e;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { transition: background-color 0.6s ease; background: var(--void); }
+  body {
+    background: var(--void);
+    color: var(--cream);
+    font-family: var(--reading);
+    -webkit-font-smoothing: antialiased;
+    overflow: hidden;
+    height: 100vh;
+    height: 100dvh;
+    width: 100vw;
+    user-select: none;
+    cursor: none;
+    -webkit-tap-highlight-color: transparent;
+    transition: background-color 0.6s ease, color 0.6s ease;
+  }
+  body.show-cursor { cursor: default; }
+
+  /* ─── START PAGE (hidden, auto-start) ─── */
+  .start-page { display: none; }
+
+  /* ─── AMBIENT ─── */
+  .ambient {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+  .ambient .orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(140px);
+    opacity: 0;
+    transition: opacity 8s ease, transform 14s ease, background 10s ease;
+  }
+  .orb--1 { width: 500px; height: 500px; background: var(--lavender); top: -20%; right: -10%; }
+  .orb--2 { width: 400px; height: 400px; background: var(--burnt-orange); bottom: -25%; left: -10%; }
+  .orb--3 { width: 350px; height: 350px; background: #8a6a7a; top: 40%; left: 20%; }
+
+  /* haze — waking, disoriented, sulfurous */
+  .mood-haze .orb--1 { opacity: 0.06; background: #7a7a6a; transform: translate(0,0); }
+  .mood-haze .orb--2 { opacity: 0.04; background: #6a6a5a; }
+  .mood-haze .orb--3 { opacity: 0.03; background: #7a7a6a; }
+
+  /* presence — noticing her, purple underwear, cocoa neck */
+  .mood-presence .orb--1 { opacity: 0.08; background: var(--lavender); transform: translate(-5px, 3px); }
+  .mood-presence .orb--2 { opacity: 0.05; background: #8a6a7a; transform: translate(3px, -3px); }
+  .mood-presence .orb--3 { opacity: 0.04; background: var(--ochre); }
+
+  /* ache — body pain, wound, bandage */
+  .mood-ache .orb--1 { opacity: 0.1; background: var(--burnt-orange); transform: translate(-8px, 5px) scale(1.05); }
+  .mood-ache .orb--2 { opacity: 0.06; background: #8a5a5a; transform: translate(5px, -3px); }
+  .mood-ache .orb--3 { opacity: 0.03; }
+
+  /* tender — care, aloe, soothing */
+  .mood-tender .orb--1 { opacity: 0.06; background: var(--sage); transform: translate(-3px, 3px); }
+  .mood-tender .orb--2 { opacity: 0.06; background: var(--lavender); transform: translate(5px, -5px); }
+  .mood-tender .orb--3 { opacity: 0.05; background: var(--sage); transform: translate(-3px, 3px); }
+
+  /* heat — intimacy building, straddle, moaning */
+  .mood-heat .orb--1 { opacity: 0.12; background: #a06a7a; transform: translate(-10px, 8px) scale(1.06); }
+  .mood-heat .orb--2 { opacity: 0.08; background: var(--burnt-orange); transform: translate(8px, -5px) scale(1.03); }
+  .mood-heat .orb--3 { opacity: 0.06; background: var(--lavender); transform: translate(-5px, 5px); }
+
+  /* drift — pills, slipping under, heavy body */
+  .mood-drift .orb--1 { opacity: 0.08; background: var(--lavender); transform: translate(-5px, 10px) scale(1.04); }
+  .mood-drift .orb--2 { opacity: 0.06; background: #7a6a8a; transform: translate(5px, -8px); }
+  .mood-drift .orb--3 { opacity: 0.04; background: #6a6a7a; }
+
+  /* dread — scalpel, surgical tools, realization */
+  .mood-dread .orb--1 { opacity: 0.14; background: #5a6a8a; transform: translate(-12px, 5px) scale(1.08); }
+  .mood-dread .orb--2 { opacity: 0.04; background: #4a4a5a; }
+  .mood-dread .orb--3 { opacity: 0.02; }
+
+  /* fever — final entanglement, Möbius, infinity */
+  .mood-fever .orb--1 { opacity: 0.16; background: #a06a7a; transform: translate(-15px, 10px) scale(1.1); }
+  .mood-fever .orb--2 { opacity: 0.1; background: var(--lavender); transform: translate(10px, -8px) scale(1.06); }
+  .mood-fever .orb--3 { opacity: 0.08; background: var(--burnt-orange); transform: translate(-8px, 8px) scale(1.03); }
+
+  /* close — end */
+  .mood-close .orb--1 { opacity: 0.03; background: var(--lavender); transform: translate(0, -3px); }
+  .mood-close .orb--2 { opacity: 0.02; }
+  .mood-close .orb--3 { opacity: 0.02; }
+
+  /* ─── STAGE ─── */
+  .stage {
+    position: fixed; inset: 0; z-index: 1;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 0 8vw; opacity: 0; transition: opacity 1.2s ease;
+  }
+  .stage.active { opacity: 1; }
+  .fragment-display {
+    max-width: 680px; text-align: center; min-height: 160px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .frag {
+    font-family: var(--reading);
+    font-size: clamp(26px, 3.8vw, 42px);
+    font-weight: 400; line-height: 1.5; color: var(--cream);
+    opacity: 0; transform: translateY(6px);
+    transition: opacity 1s ease, transform 1s ease;
+    text-wrap: balance;
+  }
+  .frag.visible { opacity: 1; transform: translateY(0); }
+  .frag.first { transition: opacity 1.6s ease, transform 1.6s ease; }
+  .frag.fading { opacity: 0; transform: translateY(-4px); transition: opacity 1.1s ease, transform 1.1s ease; }
+
+  .title-card { text-align: center; opacity: 0; transition: opacity 2s ease; }
+  .title-card.visible { opacity: 1; }
+  .title-card.fading { opacity: 0; transition: opacity 1.8s ease; }
+  .tc-label { font-family: var(--sans); font-size: 10px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--cream-ghost); margin-bottom: 24px; }
+  .tc-title { font-family: var(--brand); font-size: clamp(36px, 6vw, 64px); font-weight: 400; color: var(--cream); margin-bottom: 16px; font-style: italic; }
+  .tc-author { font-family: var(--sans); font-size: 14px; color: var(--cream-dim); letter-spacing: 0.05em; }
+  .tc-duration { font-family: var(--sans); font-size: 11px; color: var(--cream-ghost); margin-top: 8px; letter-spacing: 0.1em; }
+
+  .end-card { text-align: center; opacity: 0; transition: opacity 2s ease; }
+  .end-card.visible { opacity: 1; }
+  .ec-wordmark { font-family: var(--brand); font-size: 28px; color: var(--cream-ghost); margin-bottom: 24px; letter-spacing: 0.03em; }
+  .ec-tagline { font-family: var(--brand); font-size: 18px; font-style: italic; color: var(--burnt-orange); opacity: 0.6; margin-bottom: 40px; }
+  .ec-back {
+    font-family: var(--sans); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--text-ghost); text-decoration: none; border: 1px solid rgba(237,232,223,0.06);
+    padding: 10px 24px; border-radius: 3px; transition: all 0.4s;
+    opacity: 0; animation: fadeIn 1.5s ease 2s forwards;
+  }
+  .ec-back:hover { color: var(--cream-dim); border-color: rgba(237,232,223,0.12); }
+  @keyframes fadeIn { to { opacity: 1; } }
+
+  .progress-bar { position: fixed; bottom: 0; left: 0; right: 0; height: 2px; background: var(--text-ghost); z-index: 10; opacity: 0; transition: opacity 0.8s ease; }
+  .progress-bar.active { opacity: 1; }
+  .progress-fill { height: 100%; width: 0%; background: var(--lavender); transition: width 0.6s ease; opacity: 0.6; }
+
+  .top-bar { position: fixed; top: 0; left: 0; right: 0; z-index: 10; padding: 20px 6vw; display: flex; align-items: center; justify-content: space-between; opacity: 0; transition: opacity 0.6s; }
+  .top-bar.visible { opacity: 1; }
+  .tb-mark { font-family: var(--brand); font-size: 16px; color: var(--cream-ghost); letter-spacing: 0.03em; text-decoration: none; }
+  .tb-meta { font-family: var(--sans); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--cream-ghost); }
+
+  .controls { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); z-index: 10; display: flex; gap: 12px; opacity: 0; transition: opacity 0.4s; }
+  .controls.visible { opacity: 1; }
+  .ctrl-btn {
+    background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.08);
+    color: var(--cream-ghost); font-family: var(--sans); font-size: 11px; letter-spacing: 0.08em;
+    padding: 8px 18px; border-radius: 4px; cursor: pointer; transition: all 0.3s; -webkit-appearance: none;
+  }
+  .ctrl-btn:hover { background: rgba(255,255,255,0.1); color: var(--cream-dim); border-color: rgba(255,255,255,0.15); }
+  .ctrl-btn--active { background: rgba(155,142,196,0.15); border-color: rgba(155,142,196,0.3); color: var(--lavender); }
+
+  /* ─── LIGHT MODE OVERRIDES ─── */
+  [data-theme="light"] .ctrl-btn {
+    background: rgba(0,0,0,0.04);
+    border-color: rgba(0,0,0,0.08);
+  }
+  [data-theme="light"] .ctrl-btn:hover {
+    background: rgba(0,0,0,0.08);
+    border-color: rgba(0,0,0,0.12);
+  }
+  [data-theme="light"] .ctrl-btn--active {
+    background: rgba(122,109,170,0.1);
+    border-color: rgba(122,109,170,0.25);
+  }
+  [data-theme="light"] .ec-back {
+    border-color: rgba(42,40,36,0.1);
+  }
+  [data-theme="light"] .ec-back:hover {
+    border-color: rgba(42,40,36,0.2);
+  }
+
+  /* ─── THEME TOGGLE ─── */
+  .theme-toggle {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 50;
+    width: 28px;
+    height: 28px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    -webkit-appearance: none;
+    pointer-events: none;
+  }
+  .theme-toggle.visible { opacity: 0.2; pointer-events: auto; }
+  .theme-toggle:hover { opacity: 0.5; }
+  .theme-toggle svg {
+    width: 16px;
+    height: 16px;
+    fill: none;
+    stroke: var(--cream);
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: stroke 0.6s ease;
+  }
+  .theme-toggle .icon-sun { display: none; }
+  .theme-toggle .icon-moon { display: block; }
+  [data-theme="light"] .theme-toggle .icon-sun { display: block; }
+  [data-theme="light"] .theme-toggle .icon-moon { display: none; }
+
+  @media (max-width: 600px) {
+    .stage { padding: 0 6vw; }
+    .top-bar { padding: 16px 5vw; }
+    .frag { font-size: clamp(20px, 5vw, 30px); }
+    .controls { bottom: 20px; }
+    .ctrl-btn { padding: 10px 20px; font-size: 12px; }
+    .theme-toggle { bottom: 16px; right: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="ambient" id="ambient">
+  <div class="orb orb--1"></div>
+  <div class="orb orb--2"></div>
+  <div class="orb orb--3"></div>
+</div>
+
+<div class="stage" id="stage">
+  <div class="fragment-display" id="display"></div>
+</div>
+
+<div class="top-bar" id="topBar">
+  <a href="index.html" class="tb-mark">linger</a>
+  <span class="tb-meta" id="tbMeta"></span>
+</div>
+
+<div class="progress-bar" id="progressBar">
+  <div class="progress-fill" id="progressFill"></div>
+</div>
+
+<div class="controls" id="controls">
+  <button class="ctrl-btn" id="btnPause">Pause</button>
+  <button class="ctrl-btn" id="btnRestart">Restart</button>
+</div>
+
+<button class="theme-toggle" id="themeToggle" aria-label="Toggle light mode">
+  <svg class="icon-moon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+  <svg class="icon-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+</button>
+
+<script>
+// ═══ THEME TOGGLE ═══
+const themeToggle = document.getElementById('themeToggle');
+themeToggle.addEventListener('click', function(e) {
+  e.stopPropagation();
+  var isLight = document.documentElement.getAttribute('data-theme') === 'light';
+  if (isLight) {
+    document.documentElement.removeAttribute('data-theme');
+    localStorage.setItem('linger-theme', 'dark');
+  } else {
+    document.documentElement.setAttribute('data-theme', 'light');
+    localStorage.setItem('linger-theme', 'light');
+  }
+});
+
+const story = {
+  title: "Analgesia",
+  author: "Jon T",
+  duration: "14 min",
+  fragments: [
+    // ═══ WAKING ═══
+    { text: "I\u2019m waking up in the north side of her shadow.", mood: "haze", hold: 3800 },
+    { text: "Whoever she is.", mood: "haze", hold: 2600 },
+    { text: "I know it\u2019s north because the belt hangs low this time of year.", mood: "haze", hold: 4200 },
+    { text: "I can see it through the greasy glass beside the bed.", mood: "haze", hold: 3600 },
+    { text: "It\u2019s important to pay attention to these things.", mood: "haze", hold: 3400 },
+    { text: "Like how all the derelict dishes point to the southwest and the moss sticks on one side of the trees.", mood: "haze", hold: 5200 },
+    { text: "Useful things to remember though at the moment, I can\u2019t even remember myself.", mood: "haze", hold: 5000 },
+
+    // ═══ SULFUR ═══
+    { text: "This head feels like a dented can of botulism.", mood: "ache", hold: 4000 },
+    { text: "Maybe garbanzos.", mood: "ache", hold: 2400 },
+    { text: "Definitely something flatulent because it smells in here,", mood: "ache", hold: 3800 },
+    { text: "like sulfur springs cascading down from methane mountain after a particularly soggy spell.", mood: "ache", hold: 5400 },
+
+    // ═══ HER ═══
+    { text: "Whoever she is, she moves to the breakfast bar near the kitchen.", mood: "presence", hold: 4400 },
+    { text: "Then looks back at me, tilts her head and purrs in a smoky drawl,", mood: "presence", hold: 4600 },
+    { text: "\u201CFeelin\u2019 a little rough, love?\u201D", mood: "presence", hold: 3400 },
+    { text: "I don\u2019t answer right away.", mood: "haze", hold: 2800 },
+    { text: "Mostly because I\u2019m not sure I remember how to make the talk talk sounds.", mood: "haze", hold: 4400 },
+    { text: "She waits for a few seconds for me to answer then turns away.", mood: "presence", hold: 4000 },
+    { text: "She\u2019s got beautiful big legs that go all the way up to her hungry purple underwear.", mood: "presence", hold: 5000 },
+    { text: "A short wooly bull knit drapes on one shoulder, the other one shines with droplets of perspiration.", mood: "presence", hold: 5400 },
+    { text: "She rolls her long cocoa neck and stretches her fingers down the sides of her hips.", mood: "presence", hold: 4800 },
+
+    // ═══ TRYING TO SPEAK ═══
+    { text: "I try and say something again, but as the sounds climb out of my throat, I cough up a lump and spit it into my hand.", mood: "ache", hold: 5600 },
+    { text: "Whatever it is, I don\u2019t bother to look at it, I\u2019m feeling queasy enough already.", mood: "ache", hold: 4600 },
+    { text: "Whoever I am.", mood: "haze", hold: 2400 },
+
+    // ═══ WATER ═══
+    { text: "\u201CDrink some water, it\u2019s on the side table,\u201D she says,", mood: "tender", hold: 3600 },
+    { text: "\u201Cit\u2019ll help with your recovery\u201D", mood: "tender", hold: 3200 },
+    { text: "I contort my mouth up and down, trying to coax the elusive language again,", mood: "haze", hold: 4600 },
+    { text: "\u201Crecover um what?\u201D I manage to growl low, reaching for the water glass.", mood: "haze", hold: 4200 },
+    { text: "I sip and blink slow.", mood: "haze", hold: 2800 },
+    { text: "She\u2019s sitting beside me suddenly.", mood: "presence", hold: 3000 },
+    { text: "\u201CYou\u2019re safe here,\u201D she says, making eye contact.", mood: "tender", hold: 3600 },
+    { text: "\u201CRully?\u201D I say squinting, trying to make sure she\u2019s real.", mood: "haze", hold: 3600 },
+    { text: "One side of her mouth curls up,", mood: "presence", hold: 2800 },
+    { text: "\u201CSure baby, you\u2019re good\u201D", mood: "tender", hold: 3000 },
+
+    // ═══ THE WOUND ═══
+    { text: "And I am about to believe her,", mood: "tender", hold: 3000 },
+    { text: "when I adjust my position and feel the skin on my abdomen crease and crackle under a green t shirt I don\u2019t remember owning.", mood: "ache", hold: 5800 },
+    { text: "I feel the uncontrollable urge to scratch at the side of my gut but she grabs my hands before I can claw at my skin.", mood: "ache", hold: 5400 },
+    { text: "\u201CUh ah, no no, we don\u2019t want to be doing that,\u201D she says again, soft but firm,", mood: "tender", hold: 4800 },
+    { text: "my hands in hers, she presses them down on my thighs.", mood: "tender", hold: 3600 },
+    { text: "Now the itch feels overwhelming,", mood: "ache", hold: 3000 },
+    { text: "I wrestle a hand free, and manage to pull up the shirt and look down at a large padded bandage covering the left side of my torso.", mood: "ache", hold: 5800 },
+    { text: "\u201CWhazthis?\u201D I manage to sputter between more coughing.", mood: "ache", hold: 3800 },
+    { text: "\u201CDon\u2019t touch okay?\u201D she says,", mood: "tender", hold: 3000 },
+    { text: "\u201CI\u2019ll take care of it\u201D", mood: "tender", hold: 2600 },
+    { text: "She gives my knee a squeeze and licks her lips,", mood: "presence", hold: 3600 },
+    { text: "\u201CIt\u2019s still healing, gotta keep it clean, but if it\u2019s itching too much, we\u2019ve got a couple of options.\u201D", mood: "tender", hold: 5400 },
+    { text: "This time, I just nod, resigned to defer treatment to my caregiver.", mood: "haze", hold: 4200 },
+    { text: "What was she anyway? Nurse, captor, lover?", mood: "haze", hold: 3800 },
+
+    // ═══ ALOE ═══
+    { text: "While she gets up and walks over to an aloe vera plant in the kitchen window,", mood: "tender", hold: 4400 },
+    { text: "I sneak a feel under my shirt and rub the top of the bandage hoping it will quell the sensation,", mood: "ache", hold: 5200 },
+    { text: "but it just makes it worse.", mood: "ache", hold: 2600 },
+    { text: "\u201CStop!\u201D she snaps on her way back to me, pointing with a long thorny spear of succulent,", mood: "tender", hold: 5000 },
+    { text: "\u201CJust lie down and pull up your shirt,\u201D", mood: "tender", hold: 3200 },
+    { text: "I am in no state to do anything but obey,", mood: "haze", hold: 3400 },
+    { text: "so I tip myself over and try to lay on the pillows.", mood: "haze", hold: 3600 },
+
+    // ═══ STRADDLE ═══
+    { text: "She helps swing my legs up then straddles me on the bed covers,", mood: "heat", hold: 4400 },
+    { text: "adjusting herself on my legs with the aloe vera between her teeth.", mood: "heat", hold: 4200 },
+    { text: "I blink the strained dry blur away from my eyes and look up at her with some tears of clarity.", mood: "presence", hold: 5000 },
+    { text: "Her silver afro mullet crests across her head with curls that bounce like frosted bubbles of glycerine.", mood: "presence", hold: 5400 },
+    { text: "Her eye makeup is smudged in the corners", mood: "presence", hold: 3200 },
+    { text: "and I can just make out some piercing holes in her nose and lips where she may have worn jewelry at some point.", mood: "presence", hold: 5400 },
+
+    // ═══ THE TREATMENT ═══
+    { text: "With the plant stem still in her mouth she peels the tape away from the surgical dressing,", mood: "ache", hold: 5000 },
+    { text: "\u201CDon\u2019t look,\u201D she says through her clenched smile,", mood: "tender", hold: 3600 },
+    { text: "\u201CThis is gonna feel good,\u201D she purrs again,", mood: "heat", hold: 3600 },
+    { text: "repositioning on top of my hips and squeezing the cool succulent slime into her hand.", mood: "heat", hold: 4800 },
+    { text: "I can feel her fingers trace the backwards C-shaped sutures on my side belly and coat the wound with the aloe vera juice.", mood: "heat", hold: 5800 },
+    { text: "It stings a little at first but the soothing effect immediately follows.", mood: "tender", hold: 4400 },
+    { text: "I moan a little, satisfied and happy that the irritation is subsiding.", mood: "heat", hold: 4200 },
+    { text: "I\u2019m surprised when she makes a similar vocalization, possibly pleasing herself in the process,", mood: "heat", hold: 5000 },
+    { text: "\u201CHow\u2019s that?\u201D, she asks, again shifting on top of me and searching my face, waiting for my reply.", mood: "heat", hold: 5000 },
+    { text: "\u201CBetter,\u201D I say, \u201CBut why? What have you\u2013\u201D", mood: "ache", hold: 3800 },
+    { text: "\u201CLater love, just rest now, yeah?\u201D she interrupts and whispers,", mood: "tender", hold: 4200 },
+
+    // ═══ THE PILLS ═══
+    { text: "leaning over to my ear and reaching for an open pill bottle from the bedside,", mood: "drift", hold: 4400 },
+    { text: "\u201CHere, I\u2019ll take one and you can take two\u201D", mood: "drift", hold: 3600 },
+    { text: "She drops a tablet on her tongue to show me,", mood: "drift", hold: 3400 },
+    { text: "and then puts two between my lips, lifting my head to drink them down with the water.", mood: "drift", hold: 4800 },
+
+    // ═══ SINKING ═══
+    { text: "My eyelids fall and I feel her lips punctuate the dose with a kiss that pushes into me.", mood: "drift", hold: 5000 },
+    { text: "Her hands slide up and thread through my hair.", mood: "drift", hold: 3600 },
+    { text: "She tips to the side and whispers in my other ear, but I don\u2019t understand what she\u2019s saying.", mood: "drift", hold: 4800 },
+    { text: "My body feels so heavy.", mood: "drift", hold: 3000 },
+    { text: "She stretches out over me,", mood: "drift", hold: 2800 },
+    { text: "I can smell the citrus of bergamot and the white void of rubbing alcohol.", mood: "drift", hold: 4400 },
+    { text: "I hear sirens far away and the buzz of television a little closer.", mood: "drift", hold: 4200 },
+
+    // ═══ THE GLINT ═══
+    { text: "And just before I slip into the sub-lucid pool of lizard visions,", mood: "drift", hold: 4400 },
+    { text: "I yank my eyes open and catch the glint of something reflecting the light blue sting of streetlights on the wall.", mood: "dread", hold: 5400 },
+    { text: "I trace the light to the window sill", mood: "dread", hold: 3200 },
+    { text: "and a jar with a scalpel and various steely surgical tools soaking in a murky solution.", mood: "dread", hold: 5400 },
+
+    // ═══ FEVER DREAM ═══
+    { text: "In her shadow again, she moves over me.", mood: "fever", hold: 3800 },
+    { text: "Her mucous deposits slipping from her lips, paint me up and down like snail trails.", mood: "fever", hold: 5200 },
+    { text: "I\u2019m bending, writhing and flexing under her blanket of velour spells and hot breath.", mood: "fever", hold: 5200 },
+    { text: "We ball up like a monkey knot then unravel again and again.", mood: "fever", hold: 4600 },
+    { text: "Charge the air with ions then release in long pulses at low frequencies travelling to other antenna worlds.", mood: "fever", hold: 5800 },
+    { text: "I\u2019m pulling her ears, she\u2019s pushing my shoulders.", mood: "fever", hold: 3800 },
+    { text: "We are ribbons of skin, looping a figure eight.", mood: "fever", hold: 4200 },
+    { text: "We are M\u00F6bius.", mood: "fever", hold: 3000 },
+    { text: "And infinity.", mood: "fever", hold: 3000 },
+    { text: "Whoever we are.", mood: "close", hold: 4000 },
+  ]
+};
+
+// ═══ DOM ═══
+const display = document.getElementById('display');
+const ambient = document.getElementById('ambient');
+const stage = document.getElementById('stage');
+const progressBar = document.getElementById('progressBar');
+const progressFill = document.getElementById('progressFill');
+const topBar = document.getElementById('topBar');
+const tbMeta = document.getElementById('tbMeta');
+const controls = document.getElementById('controls');
+const btnPause = document.getElementById('btnPause');
+const btnRestart = document.getElementById('btnRestart');
+
+let currentIndex = -1;
+let isPaused = false;
+let timeoutId = null;
+let hasStarted = false;
+
+const FADE_OUT = 700;
+const GAP = 400;
+const MAX_VOLUME = 0.12;
+
+// ═══ ROOM TONE — hybrid <audio> + Web Audio API for universal compat ═══
+let audioEl = null;
+let audioCtx = null;
+let gainNode = null;
+let audioConnected = false;
+let audioStarted = false;
+
+function initAudio() {
+  try {
+    audioEl = new Audio('room-tone.mp3');
+    audioEl.loop = true;
+    audioEl.volume = 0;
+    audioEl.preload = 'auto';
+  } catch (e) {}
+}
+
+function startRoomTone() {
+  if (!audioEl || audioStarted) return;
+  audioStarted = true;
+  try {
+    if (!audioCtx) {
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      gainNode = audioCtx.createGain();
+      gainNode.gain.value = 0;
+      var src = audioCtx.createMediaElementSource(audioEl);
+      src.connect(gainNode);
+      gainNode.connect(audioCtx.destination);
+      audioConnected = true;
+    }
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+    audioEl.play().catch(function(){});
+    gainNode.gain.setValueAtTime(0, audioCtx.currentTime);
+    gainNode.gain.linearRampToValueAtTime(MAX_VOLUME, audioCtx.currentTime + 4);
+  } catch (e) {
+    audioEl.volume = 0;
+    audioEl.play().catch(function(){});
+    var v = 0;
+    var fade = setInterval(function() {
+      v += MAX_VOLUME / 40;
+      if (v >= MAX_VOLUME) { v = MAX_VOLUME; clearInterval(fade); }
+      audioEl.volume = v;
+    }, 100);
+  }
+}
+
+function fadeOutRoomTone() {
+  if (!audioEl) return;
+  if (audioConnected && audioCtx && gainNode) {
+    gainNode.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 6);
+    setTimeout(function() { try { audioEl.pause(); } catch(e) {} }, 7000);
+  } else {
+    var fade = setInterval(function() {
+      var v = audioEl.volume - (MAX_VOLUME / 60);
+      if (v <= 0) { v = 0; clearInterval(fade); audioEl.pause(); }
+      audioEl.volume = v;
+    }, 100);
+  }
+}
+
+initAudio();
+
+// ═══ AUTO-START ═══
+stage.classList.add('active');
+progressBar.classList.add('active');
+hasStarted = true;
+
+function unlockAudio() {
+  startRoomTone();
+  document.removeEventListener('click', unlockAudio);
+  document.removeEventListener('keydown', unlockAudio);
+  document.removeEventListener('touchstart', unlockAudio);
+}
+document.addEventListener('click', unlockAudio, { once: true });
+document.addEventListener('keydown', unlockAudio, { once: true });
+document.addEventListener('touchstart', unlockAudio, { once: true });
+
+setTimeout(() => showCurrent(), 800);
+
+function renderTitleCard() {
+  display.innerHTML = `
+    <div class="title-card" id="currentEl">
+      <div class="tc-label">linger presents</div>
+      <div class="tc-title">${story.title}</div>
+      <div class="tc-author">${story.author}</div>
+      <div class="tc-duration">${story.duration}</div>
+    </div>`;
+}
+function renderFragment(index) {
+  const f = story.fragments[index];
+  const firstClass = index === 0 ? ' first' : '';
+  display.innerHTML = `<div class="frag${firstClass}" id="currentEl">${f.text}</div>`;
+}
+function renderEndCard() {
+  display.innerHTML = `
+    <div class="end-card" id="currentEl">
+      <div class="ec-wordmark">linger</div>
+      <div class="ec-tagline">Attention, rewarded.</div>
+      <a href="index.html" class="ec-back">Back to stories</a>
+    </div>`;
+}
+function setMood(mood) { ambient.className = 'ambient mood-' + (mood || 'haze'); }
+function updateProgress() {
+  const total = story.fragments.length;
+  const pct = currentIndex < 0 ? 0 : Math.min(((currentIndex + 1) / total) * 100, 100);
+  progressFill.style.width = pct + '%';
+}
+function updateMeta() {
+  if (currentIndex < 0) tbMeta.textContent = '';
+  else if (currentIndex >= story.fragments.length) tbMeta.textContent = 'fin';
+  else tbMeta.textContent = (currentIndex + 1) + ' / ' + story.fragments.length;
+}
+
+function showCurrent() {
+  updateProgress();
+  updateMeta();
+  if (currentIndex < 0) {
+    renderTitleCard();
+    setMood('haze');
+    requestAnimationFrame(() => { requestAnimationFrame(() => { document.getElementById('currentEl').classList.add('visible'); }); });
+    timeoutId = setTimeout(() => fadeAndAdvance(), 7000);
+    setTimeout(() => topBar.classList.add('visible'), 3000);
+  } else if (currentIndex >= story.fragments.length) {
+    renderEndCard();
+    setMood('close');
+    progressFill.style.width = '100%';
+    requestAnimationFrame(() => { requestAnimationFrame(() => { document.getElementById('currentEl').classList.add('visible'); }); });
+    setTimeout(() => fadeOutRoomTone(), 3000);
+  } else {
+    const f = story.fragments[currentIndex];
+    renderFragment(currentIndex);
+    setMood(f.mood);
+    requestAnimationFrame(() => { requestAnimationFrame(() => { document.getElementById('currentEl').classList.add('visible'); }); });
+    timeoutId = setTimeout(() => fadeAndAdvance(), f.hold);
+  }
+}
+
+function fadeAndAdvance() {
+  const el = document.getElementById('currentEl');
+  if (!el) return;
+  el.classList.remove('visible');
+  el.classList.add('fading');
+  timeoutId = setTimeout(() => { currentIndex++; showCurrent(); }, FADE_OUT + GAP);
+}
+
+btnPause.addEventListener('click', () => {
+  if (isPaused) { isPaused = false; btnPause.textContent = 'Pause'; btnPause.classList.remove('ctrl-btn--active'); showCurrent(); }
+  else { isPaused = true; btnPause.textContent = 'Resume'; btnPause.classList.add('ctrl-btn--active'); clearTimeout(timeoutId); }
+});
+btnRestart.addEventListener('click', () => {
+  clearTimeout(timeoutId); isPaused = false; btnPause.textContent = 'Pause'; btnPause.classList.remove('ctrl-btn--active');
+  currentIndex = -1; topBar.classList.remove('visible'); showCurrent();
+});
+
+let mouseTimer;
+document.addEventListener('mousemove', () => {
+  document.body.classList.add('show-cursor');
+  if (hasStarted) { controls.classList.add('visible'); themeToggle.classList.add('visible'); }
+  clearTimeout(mouseTimer);
+  mouseTimer = setTimeout(() => { if (!isPaused) { controls.classList.remove('visible'); themeToggle.classList.remove('visible'); document.body.classList.remove('show-cursor'); } }, 2500);
+});
+document.addEventListener('keydown', (e) => {
+  if (e.code === 'Space') { e.preventDefault(); btnPause.click(); }
+  if (e.code === 'ArrowRight' && !isPaused) { clearTimeout(timeoutId); fadeAndAdvance(); }
+  if (e.code === 'KeyR') btnRestart.click();
+});
+document.addEventListener('touchstart', () => {
+  if (hasStarted) { controls.classList.add('visible'); themeToggle.classList.add('visible'); }
+  clearTimeout(mouseTimer);
+  mouseTimer = setTimeout(() => { if (!isPaused) { controls.classList.remove('visible'); themeToggle.classList.remove('visible'); } }, 3000);
+});
+</script>
+</body>
+</html>
