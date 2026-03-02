@@ -363,20 +363,28 @@
 
 // ═══ FULLSCREEN TOGGLE ═══
 const fsToggle = document.getElementById('fsToggle');
-if (!(document.fullscreenEnabled || document.webkitFullscreenEnabled)) fsToggle.style.display = 'none';
+function enterFs() {
+  var el = document.documentElement;
+  if (el.requestFullscreen) return el.requestFullscreen();
+  if (el.webkitRequestFullscreen) return el.webkitRequestFullscreen();
+  if (el.msRequestFullscreen) return el.msRequestFullscreen();
+}
+function exitFs() {
+  if (document.exitFullscreen) return document.exitFullscreen();
+  if (document.webkitExitFullscreen) return document.webkitExitFullscreen();
+  if (document.msExitFullscreen) return document.msExitFullscreen();
+}
+function isFs() {
+  return !!(document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement);
+}
 fsToggle.addEventListener('click', function(e) {
   e.stopPropagation();
-  if (!document.fullscreenElement && !document.webkitFullscreenElement) {
-    var el = document.documentElement;
-    (el.requestFullscreen || el.webkitRequestFullscreen).call(el);
-  } else {
-    (document.exitFullscreen || document.webkitExitFullscreen).call(document);
-  }
+  try { if (!isFs()) enterFs(); else exitFs(); } catch(err) {}
 });
 function updateFsIcons() {
-  var isFs = !!(document.fullscreenElement || document.webkitFullscreenElement);
-  fsToggle.querySelector('.icon-expand').style.display = isFs ? 'none' : 'block';
-  fsToggle.querySelector('.icon-compress').style.display = isFs ? 'block' : 'none';
+  var fs = isFs();
+  fsToggle.querySelector('.icon-expand').style.display = fs ? 'none' : 'block';
+  fsToggle.querySelector('.icon-compress').style.display = fs ? 'block' : 'none';
 }
 document.addEventListener('fullscreenchange', updateFsIcons);
 document.addEventListener('webkitfullscreenchange', updateFsIcons);
