@@ -48,7 +48,7 @@
     color: var(--cream);
     font-family: var(--reading);
     -webkit-font-smoothing: antialiased;
-    overflow-x: hidden;
+    overflow: hidden;
     height: 100vh;
     height: 100dvh;
     height: var(--app-height, 100dvh);
@@ -78,7 +78,7 @@
   .start-ambient {
     position: absolute;
     inset: 0;
-    overflow-x: hidden;
+    overflow: hidden;
     pointer-events: none;
   }
   .start-ambient .s-orb {
@@ -112,7 +112,7 @@
     position: fixed;
     inset: 0;
     z-index: 0;
-    overflow-x: hidden;
+    overflow: hidden;
     pointer-events: none;
   }
   .ambient .orb {
@@ -414,16 +414,6 @@
   });
 })();
 
-// ═══ MOBILE CHROME COLLAPSE ═══
-(function() {
-  var spacer = document.createElement('div');
-  spacer.style.cssText = 'height:calc(100vh + 1px);width:1px;position:absolute;top:0;left:0;pointer-events:none;';
-  document.body.appendChild(spacer);
-  setTimeout(function() { window.scrollTo(0, 1); }, 100);
-  window.addEventListener('orientationchange', function() {
-    setTimeout(function() { window.scrollTo(0, 1); }, 300);
-  });
-})();
 
 // ═══ FULLSCREEN TOGGLE ═══
 const fsToggle = document.getElementById('fsToggle');
