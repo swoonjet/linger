@@ -414,6 +414,7 @@
 
 // ═══ FULLSCREEN TOGGLE ═══
 const fsToggle = document.getElementById('fsToggle');
+if (!(document.fullscreenEnabled || document.webkitFullscreenEnabled)) fsToggle.style.display = 'none';
 function enterFs() {
   var el = document.documentElement;
   if (el.requestFullscreen) return el.requestFullscreen();
