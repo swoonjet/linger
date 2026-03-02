@@ -2,7 +2,9 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>linger</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -46,7 +48,7 @@
     color: var(--cream);
     font-family: var(--reading);
     -webkit-font-smoothing: antialiased;
-    overflow: hidden;
+    overflow-x: hidden;
     height: 100vh;
     height: 100dvh;
     height: var(--app-height, 100dvh);
@@ -66,7 +68,7 @@
     position: fixed;
     inset: 0;
     z-index: 0;
-    overflow: hidden;
+    overflow-x: hidden;
     pointer-events: none;
   }
   .ambient .orb {
@@ -352,6 +354,17 @@
     setTimeout(setVH, 100);
     setTimeout(setVH, 300);
     setTimeout(setVH, 500);
+  });
+})();
+
+// ═══ MOBILE CHROME COLLAPSE ═══
+(function() {
+  var spacer = document.createElement('div');
+  spacer.style.cssText = 'height:calc(100vh + 1px);width:1px;position:absolute;top:0;left:0;pointer-events:none;';
+  document.body.appendChild(spacer);
+  setTimeout(function() { window.scrollTo(0, 1); }, 100);
+  window.addEventListener('orientationchange', function() {
+    setTimeout(function() { window.scrollTo(0, 1); }, 300);
   });
 })();
 
