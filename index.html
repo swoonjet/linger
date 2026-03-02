@@ -345,36 +345,45 @@
 
   /* ─── RESPONSIVE ─── */
   @media (max-width: 760px) {
-    .page { padding: 8vh 5vw 60px; }
-    .header { margin-bottom: 48px; }
+    .page { padding: 6vh 4vw 60px; }
+    .header { margin-bottom: 40px; }
+    .header-wordmark { font-size: clamp(52px, 14vw, 80px); }
+    .header-tagline { font-size: clamp(12px, 3vw, 14px); }
+    .header-desc { font-size: clamp(15px, 3.8vw, 17px); max-width: 90vw; }
     .story-grid {
       grid-template-columns: 1fr;
-      gap: 16px;
+      gap: 14px;
     }
     .story-card { min-height: auto; padding: 28px 24px; }
-    .bottom { padding-top: 48px; }
+    .sc-title { font-size: clamp(20px, 5vw, 24px); }
+    .sc-author { font-size: 14px; }
+    .sc-duration { font-size: 12px; }
+    .sc-accent { font-size: 10px; }
+    .sc-cta { font-size: 12px; padding: 10px 28px; }
+    .bottom { padding-top: 40px; }
+    .bottom-note { font-size: clamp(14px, 3.6vw, 16px); }
     .theme-toggle { bottom: 16px; right: 16px; }
   }
 
   /* ─── MOBILE LANDSCAPE ─── */
   @media (orientation: landscape) and (max-height: 500px) {
-    .page { padding: 4vh 6vw 24px; min-height: auto; }
-    .header { margin-bottom: 24px; }
-    .header-wordmark { font-size: clamp(28px, 6vh, 40px); }
-    .header-tagline { font-size: 11px; }
-    .header-desc { font-size: 13px; max-width: 60vw; }
+    .page { padding: 4vh 4vw 24px; min-height: auto; }
+    .header { margin-bottom: 20px; }
+    .header-wordmark { font-size: clamp(32px, 8vh, 44px); }
+    .header-tagline { font-size: 12px; }
+    .header-desc { font-size: 14px; max-width: 70vw; }
     .story-grid {
       grid-template-columns: repeat(3, 1fr);
       gap: 12px;
     }
     .story-card { min-height: auto; padding: 20px 20px; }
-    .sc-title { font-size: 16px; }
-    .sc-author { font-size: 11px; }
-    .sc-duration { font-size: 10px; }
-    .sc-accent { font-size: 8px; margin-bottom: 16px; }
-    .sc-cta { font-size: 9px; padding: 6px 16px; }
-    .bottom { padding-top: 20px; }
-    .bottom-note { font-size: 11px; }
+    .sc-title { font-size: 18px; }
+    .sc-author { font-size: 12px; }
+    .sc-duration { font-size: 11px; }
+    .sc-accent { font-size: 9px; margin-bottom: 16px; }
+    .sc-cta { font-size: 10px; padding: 7px 18px; }
+    .bottom { padding-top: 16px; }
+    .bottom-note { font-size: 12px; }
     .theme-toggle { bottom: 10px; right: 10px; }
     .orb--1 { width: 280px; height: 280px; }
     .orb--2 { width: 220px; height: 220px; }
