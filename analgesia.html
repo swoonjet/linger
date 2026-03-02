@@ -363,6 +363,7 @@
 
 // ═══ FULLSCREEN TOGGLE ═══
 const fsToggle = document.getElementById('fsToggle');
+if (!(document.fullscreenEnabled || document.webkitFullscreenEnabled)) fsToggle.style.display = 'none';
 fsToggle.addEventListener('click', function(e) {
   e.stopPropagation();
   if (!document.fullscreenElement && !document.webkitFullscreenElement) {
