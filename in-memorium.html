@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>linger</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;1,8..60,300;1,8..60,400&family=Space+Grotesk:wght@300;400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;1,8..60,300;1,8..60,400&family=Space+Grotesk:wght@300;400;500&display=swap" rel="stylesheet"></noscript>
+<script>(function(){var t=localStorage.getItem('linger-theme');if(t==='light')document.documentElement.setAttribute('data-theme','light');})()</script>
+<style>
+
+  :root {
+    --void: #08080a;
+    --surface: #111114;
+    --border: #1e1e22;
+    --text-ghost: #2a2a2e;
+    --cream: #ede8df;
+    --cream-dim: rgba(237,232,223,0.6);
+    --cream-ghost: rgba(237,232,223,0.15);
+    --pink: #d4a0a0;
+    --green: #8bab90;
+    --reading: 'Source Serif 4', Georgia, serif;
+    --brand: 'Playfair Display', Georgia, serif;
+    --sans: 'Space Grotesk', -apple-system, sans-serif;
+  }
+
+  [data-theme="light"] {
+    --void: #f5f2ec;
+    --surface: #ebe7e0;
+    --border: rgba(42,40,36,0.08);
+    --text-ghost: rgba(42,40,36,0.18);
+    --cream: #2a2824;
+    --cream-dim: rgba(42,40,36,0.55);
+    --cream-ghost: rgba(42,40,36,0.15);
+    --pink: #b87878;
+    --green: #6a8a6e;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { transition: background-color 0.6s ease; background: var(--void); }
+  body {
+    background: var(--void);
+    color: var(--cream);
+    font-family: var(--reading);
+    -webkit-font-smoothing: antialiased;
+    overflow: hidden;
+    height: 100vh;
+    height: 100dvh;
+    height: var(--app-height, 100dvh);
+    width: 100vw;
+    user-select: none;
+    cursor: none;
+    -webkit-tap-highlight-color: rgba(212,160,160,0.1);
+    transition: background-color 0.6s ease, color 0.6s ease;
+  }
+  body.show-cursor { cursor: default; }
+
+  .start-page { display: none; }
+
+  /* ─── AMBIENT ─── */
+  .ambient {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+  .ambient .orb {
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0;
+    transition: opacity 8s ease, transform 14s ease;
+    will-change: opacity, transform;
+  }
+  .orb--1 { width: 500px; height: 500px; background: radial-gradient(circle, var(--pink), transparent 70%); top: -20%; right: -10%; }
+  .orb--2 { width: 400px; height: 400px; background: radial-gradient(circle, var(--pink), transparent 70%); bottom: -25%; left: -10%; }
+  .orb--3 { width: 350px; height: 350px; background: radial-gradient(circle, #a08888, transparent 70%); top: 40%; left: 20%; }
+
+  /* reverence — soft golden candlelight */
+  .mood-reverence .orb--1 { opacity: 0.07; background: radial-gradient(circle, #b09a60, transparent 70%); transform: translate(-3px, 2px); }
+  .mood-reverence .orb--2 { opacity: 0.04; background: radial-gradient(circle, #a08850, transparent 70%); transform: translate(2px, -2px); }
+  .mood-reverence .orb--3 { opacity: 0.03; background: radial-gradient(circle, #c0a870, transparent 70%); }
+
+  /* domestic — warm amber, cozy */
+  .mood-domestic .orb--1 { opacity: 0.08; background: radial-gradient(circle, #b09060, transparent 70%); transform: translate(-4px, 3px); }
+  .mood-domestic .orb--2 { opacity: 0.05; background: radial-gradient(circle, #c0a070, transparent 70%); transform: translate(3px, -2px); }
+  .mood-domestic .orb--3 { opacity: 0.04; background: radial-gradient(circle, #a08858, transparent 70%); }
+
+  /* dread — cold steel grey */
+  .mood-dread .orb--1 { opacity: 0.06; background: radial-gradient(circle, #6a7a8a, transparent 70%); transform: translate(-2px, 2px); }
+  .mood-dread .orb--2 { opacity: 0.04; background: radial-gradient(circle, #5a6a78, transparent 70%); }
+  .mood-dread .orb--3 { opacity: 0.03; background: radial-gradient(circle, #4a5a68, transparent 70%); }
+
+  /* catastrophe — Cherenkov blue */
+  .mood-catastrophe .orb--1 { opacity: 0.14; background: radial-gradient(circle, #4080c0, transparent 70%); transform: translate(-8px, 5px) scale(1.06); }
+  .mood-catastrophe .orb--2 { opacity: 0.08; background: radial-gradient(circle, #5090d0, transparent 70%); transform: translate(5px, -3px) scale(1.03); }
+  .mood-catastrophe .orb--3 { opacity: 0.06; background: radial-gradient(circle, #6aa0e0, transparent 70%); transform: translate(-3px, 2px); }
+
+  /* sickness — sickly yellow-green */
+  .mood-sickness .orb--1 { opacity: 0.08; background: radial-gradient(circle, #8a9a50, transparent 70%); transform: translate(-4px, 3px); }
+  .mood-sickness .orb--2 { opacity: 0.05; background: radial-gradient(circle, #7a8a48, transparent 70%); }
+  .mood-sickness .orb--3 { opacity: 0.04; background: radial-gradient(circle, #6a7a40, transparent 70%); }
+
+  /* wonder — deep blue-violet, cosmic */
+  .mood-wonder .orb--1 { opacity: 0.08; background: radial-gradient(circle, #5a4a8a, transparent 70%); transform: translate(-4px, 3px); }
+  .mood-wonder .orb--2 { opacity: 0.05; background: radial-gradient(circle, #4a3a7a, transparent 70%); transform: translate(3px, -3px); }
+  .mood-wonder .orb--3 { opacity: 0.04; background: radial-gradient(circle, #6a5a9a, transparent 70%); }
+
+  /* grief — heavy muted dark */
+  .mood-grief .orb--1 { opacity: 0.05; background: radial-gradient(circle, #6a5a4a, transparent 70%); transform: translate(-2px, 2px); }
+  .mood-grief .orb--2 { opacity: 0.03; background: radial-gradient(circle, #5a4a3a, transparent 70%); }
+  .mood-grief .orb--3 { opacity: 0.02; background: radial-gradient(circle, #4a3a30, transparent 70%); }
+
+  /* tenderness — soft green warmth */
+  .mood-tenderness .orb--1 { opacity: 0.06; background: radial-gradient(circle, var(--green), transparent 70%); transform: translate(-3px, 2px); }
+  .mood-tenderness .orb--2 { opacity: 0.05; background: radial-gradient(circle, var(--pink), transparent 70%); transform: translate(3px, -3px); }
+  .mood-tenderness .orb--3 { opacity: 0.04; background: radial-gradient(circle, var(--green), transparent 70%); }
+
+  /* haunting — cold deep dark */
+  .mood-haunting .orb--1 { opacity: 0.07; background: radial-gradient(circle, #4a5a6a, transparent 70%); transform: translate(-5px, 3px) scale(1.03); }
+  .mood-haunting .orb--2 { opacity: 0.04; background: radial-gradient(circle, #3a4a58, transparent 70%); }
+  .mood-haunting .orb--3 { opacity: 0.03; background: radial-gradient(circle, #4a4a5a, transparent 70%); }
+
+  /* longing — warm amber ache */
+  .mood-longing .orb--1 { opacity: 0.07; background: radial-gradient(circle, #b09070, transparent 70%); transform: translate(-4px, 4px); }
+  .mood-longing .orb--2 { opacity: 0.04; background: radial-gradient(circle, var(--pink), transparent 70%); transform: translate(3px, -3px); }
+  .mood-longing .orb--3 { opacity: 0.03; background: radial-gradient(circle, #a08060, transparent 70%); }
+
+  /* close — fading */
+  .mood-close .orb--1 { opacity: 0.03; background: radial-gradient(circle, #8a7a60, transparent 70%); transform: translate(0, -3px); }
+  .mood-close .orb--2 { opacity: 0.02; }
+  .mood-close .orb--3 { opacity: 0.02; }
+
+  /* ─── STAGE ─── */
+  .stage {
+    position: fixed; inset: 0; z-index: 1;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 0 8vw; opacity: 0; transition: opacity 0.4s ease;
+  }
+  .stage.active { opacity: 1; }
+  .fragment-display {
+    max-width: 680px; text-align: center; min-height: 160px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .frag {
+    font-family: var(--reading);
+    font-size: clamp(26px, 3.8vw, 42px);
+    font-weight: 400; line-height: 1.5; color: var(--cream);
+    opacity: 0; transform: translateY(6px);
+    transition: opacity 1s ease, transform 1s ease;
+    text-wrap: balance;
+  }
+  .frag.visible { opacity: 1; transform: translateY(0); }
+  .frag.first { transition: opacity 1.6s ease, transform 1.6s ease; }
+  .frag.fading { opacity: 0; transform: translateY(-4px); transition: opacity 1.1s ease, transform 1.1s ease; }
+
+  .title-card { text-align: center; opacity: 0; transition: opacity 1s ease; }
+  .title-card.visible { opacity: 1; }
+  .title-card.fading { opacity: 0; transition: opacity 1s ease; }
+  .tc-label { font-family: var(--sans); font-size: 10px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--cream-ghost); margin-bottom: 24px; }
+  .tc-title { font-family: var(--brand); font-size: clamp(36px, 6vw, 64px); font-weight: 700; color: var(--cream); margin-bottom: 16px; }
+  .tc-author { font-family: var(--sans); font-size: 14px; color: var(--cream-dim); letter-spacing: 0.05em; }
+  .tc-duration { font-family: var(--sans); font-size: 11px; color: var(--cream-ghost); margin-top: 8px; letter-spacing: 0.1em; }
+
+  .end-card { text-align: center; opacity: 0; transition: opacity 2s ease; }
+  .end-card.visible { opacity: 1; }
+  .ec-wordmark { font-family: var(--brand); font-size: 28px; color: var(--cream-ghost); margin-bottom: 24px; letter-spacing: 0.03em; }
+  .ec-tagline { font-family: var(--brand); font-size: 18px; font-style: italic; color: var(--pink); opacity: 0.6; margin-bottom: 40px; }
+  .ec-back {
+    font-family: var(--sans); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--text-ghost); text-decoration: none; border: 1px solid rgba(237,232,223,0.06);
+    padding: 10px 24px; border-radius: 3px; transition: all 0.4s;
+    opacity: 0; animation: fadeIn 1.5s ease 2s forwards;
+  }
+  .ec-back:hover { color: var(--cream-dim); border-color: rgba(237,232,223,0.12); }
+  @keyframes fadeIn { to { opacity: 1; } }
+
+  .progress-bar { position: fixed; bottom: 0; left: 0; right: 0; height: 2px; background: var(--text-ghost); z-index: 10; opacity: 0; transition: opacity 0.8s ease; }
+  .progress-bar.active { opacity: 1; }
+  .progress-fill { height: 100%; width: 0%; background: var(--pink); transition: width 0.6s ease; opacity: 0.6; }
+
+  .top-bar { position: fixed; top: 0; left: 0; right: 0; z-index: 10; padding: 20px 6vw; display: flex; align-items: center; justify-content: space-between; opacity: 0; transition: opacity 0.6s; }
+  .top-bar.visible { opacity: 1; }
+  .tb-mark { font-family: var(--brand); font-size: 16px; color: var(--cream-ghost); letter-spacing: 0.03em; text-decoration: none; }
+  .tb-meta { font-family: var(--sans); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--cream-ghost); }
+
+  .controls { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); z-index: 10; display: flex; gap: 12px; opacity: 0; transition: opacity 0.4s; }
+  .controls.visible { opacity: 1; }
+  .ctrl-btn {
+    background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.08);
+    color: var(--cream-ghost); font-family: var(--sans); font-size: 11px; letter-spacing: 0.08em;
+    padding: 8px 18px; border-radius: 4px; cursor: pointer; transition: all 0.3s; -webkit-appearance: none; touch-action: manipulation;
+  }
+  .ctrl-btn:hover { background: rgba(255,255,255,0.1); color: var(--cream-dim); border-color: rgba(255,255,255,0.15); }
+  .ctrl-btn--active { background: rgba(212,160,160,0.06); border-color: rgba(212,160,160,0.3); color: var(--pink); }
+
+  [data-theme="light"] .ctrl-btn { background: rgba(0,0,0,0.04); border-color: rgba(0,0,0,0.08); }
+  [data-theme="light"] .ctrl-btn:hover { background: rgba(0,0,0,0.08); border-color: rgba(0,0,0,0.12); }
+  [data-theme="light"] .ctrl-btn--active { background: rgba(184,120,120,0.06); border-color: rgba(184,120,120,0.35); }
+  [data-theme="light"] .ec-back { border-color: rgba(42,40,36,0.1); }
+  [data-theme="light"] .ec-back:hover { border-color: rgba(42,40,36,0.2); }
+
+  /* ─── THEME TOGGLE ─── */
+  .theme-toggle {
+    position: fixed; bottom: 24px; right: 24px; z-index: 50;
+    width: 28px; height: 28px; background: none; border: none; cursor: pointer;
+    padding: 0; opacity: 0; transition: opacity 0.4s ease;
+    -webkit-appearance: none; pointer-events: none;
+  }
+  .theme-toggle.visible, .fs-toggle.visible { opacity: 0.35; pointer-events: auto; }
+  .fs-toggle {
+    position: fixed; bottom: 24px; right: 60px; z-index: 50;
+    width: 28px; height: 28px; background: none; border: none; cursor: pointer;
+    padding: 0; opacity: 0; transition: opacity 0.4s ease;
+    -webkit-appearance: none; pointer-events: none;
+  }
+  .fs-toggle:hover { opacity: 0.5; }
+  .fs-toggle svg { width: 16px; height: 16px; fill: none; stroke: var(--cream); stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; transition: stroke 0.6s ease; }
+  .theme-toggle:hover { opacity: 0.5; }
+  .theme-toggle svg { width: 16px; height: 16px; fill: none; stroke: var(--cream); stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; transition: stroke 0.6s ease; }
+  .theme-toggle .icon-sun { display: none; }
+  .theme-toggle .icon-moon { display: block; }
+  [data-theme="light"] .theme-toggle .icon-sun { display: block; }
+  [data-theme="light"] .theme-toggle .icon-moon { display: none; }
+
+  @media (max-width: 600px) {
+    .stage { padding: 0 6vw; }
+    .top-bar { padding: 16px 5vw; }
+    .frag { font-size: clamp(24px, 6.5vw, 36px); }
+    .controls { bottom: 20px; }
+    .ctrl-btn { padding: 6px 12px; font-size: 10px; }
+    .theme-toggle { bottom: 16px; right: 16px; width: 36px; height: 36px; }
+    .fs-toggle { bottom: 16px; right: 58px; width: 36px; height: 36px; }
+  }
+
+  @media (orientation: landscape) and (max-height: 500px) {
+    body { height: var(--app-height, 100dvh); }
+    .stage { padding: 0 14vw; }
+    .fragment-display { min-height: 60px; }
+    .frag { font-size: clamp(17px, 4.5vh, 26px); line-height: 1.4; }
+    .tc-title { font-size: clamp(22px, 6vh, 36px); }
+    .tc-label { margin-bottom: 10px; font-size: 9px; }
+    .tc-author { font-size: 11px; }
+    .tc-duration { font-size: 9px; margin-top: 4px; }
+    .ec-wordmark { font-size: 18px; margin-bottom: 10px; }
+    .ec-tagline { font-size: 13px; margin-bottom: 16px; }
+    .ec-back { padding: 7px 18px; font-size: 10px; }
+    .top-bar { padding: 10px 4vw; }
+    .tb-mark { font-size: 13px; }
+    .tb-meta { font-size: 9px; }
+    .controls { bottom: 10px; gap: 8px; }
+    .ctrl-btn { padding: 4px 10px; font-size: 9px; }
+    .theme-toggle { bottom: 10px; right: 10px; }
+    .fs-toggle { bottom: 10px; right: 46px; }
+    .orb--1 { width: 280px; height: 280px; }
+    .orb--2 { width: 220px; height: 220px; }
+    .orb--3 { width: 180px; height: 180px; }
+    .progress-bar { height: 1.5px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="ambient" id="ambient">
+  <div class="orb orb--1"></div>
+  <div class="orb orb--2"></div>
+  <div class="orb orb--3"></div>
+</div>
+
+<div class="stage" id="stage">
+  <div class="fragment-display" id="display"></div>
+</div>
+
+<div class="top-bar" id="topBar">
+  <a href="index.html" class="tb-mark">linger</a>
+  <span class="tb-meta" id="tbMeta"></span>
+</div>
+
+<div class="progress-bar" id="progressBar">
+  <div class="progress-fill" id="progressFill"></div>
+</div>
+
+<div class="controls" id="controls">
+  <button class="ctrl-btn" id="btnPause">Pause</button>
+  <button class="ctrl-btn" id="btnRestart">Restart</button>
+  <button class="ctrl-btn" id="btnShare">Share</button>
+</div>
+
+<button class="fs-toggle" id="fsToggle" aria-label="Toggle fullscreen">
+  <svg class="icon-expand" viewBox="0 0 24 24"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+  <svg class="icon-compress" style="display:none" viewBox="0 0 24 24"><polyline points="4 14 10 14 10 20"/><polyline points="20 10 14 10 14 4"/><line x1="14" y1="10" x2="21" y2="3"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+</button>
+
+<button class="theme-toggle" id="themeToggle" aria-label="Toggle light mode">
+  <svg class="icon-moon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+  <svg class="icon-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+</button>
+
+<script>
+// ═══ VIEWPORT HEIGHT FIX ═══
+(function() {
+  function setVH() {
+    document.documentElement.style.setProperty('--app-height', window.innerHeight + 'px');
+  }
+  setVH();
+  window.addEventListener('resize', setVH);
+  window.addEventListener('orientationchange', function() {
+    setVH();
+    setTimeout(setVH, 100);
+    setTimeout(setVH, 300);
+    setTimeout(setVH, 500);
+  });
+})();
+
+// ═══ FULLSCREEN TOGGLE ═══
+const fsToggle = document.getElementById('fsToggle');
+if (!(document.fullscreenEnabled || document.webkitFullscreenEnabled)) fsToggle.style.display = 'none';
+function enterFs() {
+  var el = document.documentElement;
+  if (el.requestFullscreen) return el.requestFullscreen();
+  if (el.webkitRequestFullscreen) return el.webkitRequestFullscreen();
+  if (el.msRequestFullscreen) return el.msRequestFullscreen();
+}
+function exitFs() {
+  if (document.exitFullscreen) return document.exitFullscreen();
+  if (document.webkitExitFullscreen) return document.webkitExitFullscreen();
+  if (document.msExitFullscreen) return document.msExitFullscreen();
+}
+function isFs() {
+  return !!(document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement);
+}
+fsToggle.addEventListener('click', function(e) {
+  e.stopPropagation();
+  try { if (!isFs()) enterFs(); else exitFs(); } catch(err) {}
+});
+function updateFsIcons() {
+  var fs = isFs();
+  fsToggle.querySelector('.icon-expand').style.display = fs ? 'none' : 'block';
+  fsToggle.querySelector('.icon-compress').style.display = fs ? 'block' : 'none';
+}
+document.addEventListener('fullscreenchange', updateFsIcons);
+document.addEventListener('webkitfullscreenchange', updateFsIcons);
+
+// ═══ THEME TOGGLE ═══
+const themeToggle = document.getElementById('themeToggle');
+themeToggle.addEventListener('click', function(e) {
+  e.stopPropagation();
+  var isLight = document.documentElement.getAttribute('data-theme') === 'light';
+  if (isLight) {
+    document.documentElement.removeAttribute('data-theme');
+    localStorage.setItem('linger-theme', 'dark');
+  } else {
+    document.documentElement.setAttribute('data-theme', 'light');
+    localStorage.setItem('linger-theme', 'light');
+  }
+});
+
+const story = {
+  title: "In Memorium",
+  author: "Caitriana NicNeacail",
+  duration: "13 min",
+  fragments: [
+    // ═══ I — COMMUNION & DOMESTIC MORNING ═══
+    { text: "In the white-and-blue church between the half-white trees, you stand.", mood: "reverence", hold: 3400 },
+    { text: "You open your mouth, a little embarrassed by that troubling molar,", mood: "reverence", hold: 3600 },
+    { text: "but the priest doesn\u2019t mind or see,", mood: "reverence", hold: 2600 },
+    { text: "and neither does the blood and body that slips wet-soft from the spoon past teeth and tongue and down the slither-slide of your gullet.", mood: "reverence", hold: 6000 },
+    { text: "You smell garlic, your own breath\u2019s or the priest\u2019s or both, and the heaviness of incense.", mood: "reverence", hold: 4600 },
+    { text: "Out in the green spring air, birch trees whispering of summer, you pull your collar high, scratching your stubble, eyes side to side.", mood: "domestic", hold: 5400 },
+    { text: "It wouldn\u2019t do for any of the comrades to see you here.", mood: "domestic", hold: 3400 },
+    { text: "Off the bus, you slink up the concrete stairs and into the warm steam.", mood: "domestic", hold: 3600 },
+    { text: "She\u2019s slicing onions and potatoes by the sink but turns to smile at you, sunlight igniting golden curls.", mood: "domestic", hold: 5200 },
+    { text: "It\u2019s early still, the day stretching out like a field of grain.", mood: "domestic", hold: 3800 },
+    { text: "A walk in the park. A picnic by the river.", mood: "domestic", hold: 3000 },
+    { text: "Your boy runs in, you spin his body in the swarming air.", mood: "domestic", hold: 3600 },
+    { text: "Low mass, velocity high as you can handle, he\u2019s feeling that momentum like a centrifuge.", mood: "domestic", hold: 4800 },
+    { text: "Night shift this week. Treasure these daylight hours you have with them.", mood: "domestic", hold: 3800 },
+
+    // ═══ II — NIGHT SHIFT, THE TEST ═══
+    { text: "A long week, thank God it\u2019s nearly over, but don\u2019t let the old man hear you talking like that.", mood: "dread", hold: 4600 },
+    { text: "The control room smells of sweat and stale tobacco smoke.", mood: "dread", hold: 3400 },
+    { text: "There\u2019s been some screw-up with some test, the evening shift comrades are clocking off complaining.", mood: "dread", hold: 4600 },
+    { text: "It\u2019s going to be your job now. Hell. There\u2019s always something. That\u2019s just the way things are.", mood: "dread", hold: 4400 },
+    { text: "You sit and light a cigarette.", mood: "dread", hold: 2600 },
+    { text: "You draw deep: a spark of will, whatever that is, and current flows, a command crosses synapses, navigates neurons,", mood: "dread", hold: 5400 },
+    { text: "long muscle fibres like sails and ropes respond, your lungs expand, fluid dynamics does the rest.", mood: "dread", hold: 5000 },
+    { text: "High pressure to low, smoke and nicotine begin to flow.", mood: "dread", hold: 3400 },
+    { text: "Take it easy, it\u2019s going to be a long night.", mood: "dread", hold: 3200 },
+    { text: "Drink some tea. Get up to take a leak.", mood: "dread", hold: 2800 },
+    { text: "Stretch and crack your neck, feel the vertebrae roll like beads on a rope.", mood: "dread", hold: 4200 },
+    { text: "Probe that molar with your tongue, that strong wet muscle testing for wiggle.", mood: "dread", hold: 4400 },
+    { text: "A uniform force applied to a body at rest, see if it accelerates.", mood: "dread", hold: 4000 },
+    { text: "Oh-one-twenty-three-oh-four. Turn off steam to the turbines.", mood: "dread", hold: 3600 },
+    { text: "This should have been over by now.", mood: "dread", hold: 2800 },
+    { text: "High-mass metal velocity slackening, turbine momentum winding down.", mood: "dread", hold: 3800 },
+    { text: "In the water, a bubble of vapour, a void.", mood: "dread", hold: 3200 },
+    { text: "Then another, another, another, unseen and unavoided.", mood: "catastrophe", hold: 3600 },
+    { text: "Heat and more heat, growing with nowhere to go, unevacuated, exponential.", mood: "catastrophe", hold: 4400 },
+    { text: "Oh-one-twenty-three-forty.", mood: "catastrophe", hold: 2400 },
+    { text: "SCRAM!", mood: "catastrophe", hold: 2000 },
+
+    // ═══ III — THE EXPLOSION ═══
+    { text: "The moon is waning gibbous, quicksilvering the birch trees and the river where last Sunday you sat and ate dumplings and played with your boy.", mood: "catastrophe", hold: 6000 },
+    { text: "The trees shiver, leaves splaying in the night.", mood: "catastrophe", hold: 3200 },
+    { text: "One thunderclap, then another.", mood: "catastrophe", hold: 2800 },
+    { text: "Above the plant, steam plumes and then a beam of light,", mood: "catastrophe", hold: 3600 },
+    { text: "blue like souls of men and women,", mood: "catastrophe", hold: 3000 },
+    { text: "shines out of the fire: the light of atoms skinned.", mood: "catastrophe", hold: 3800 },
+    { text: "Your boy, sound asleep, hears nothing.", mood: "tenderness", hold: 3000 },
+    { text: "In your bed, your wife turns over and dreams uneasy dreams.", mood: "tenderness", hold: 3800 },
+
+    // ═══ IV — THE MORNING AFTER ═══
+    { text: "You stagger home at dawn.", mood: "sickness", hold: 2600 },
+    { text: "You\u2019re prickling all over, needles and pins and razors stabbing through the dust that silts your pores", mood: "sickness", hold: 5200 },
+    { text: "and coats the thin hairs on your arms and the thick hairs in your nose.", mood: "sickness", hold: 4000 },
+    { text: "There\u2019s been an accident, you tell her.", mood: "sickness", hold: 3000 },
+    { text: "She makes you tea. It tastes like metal.", mood: "sickness", hold: 3200 },
+    { text: "She tastes metal too, she says.", mood: "sickness", hold: 2800 },
+    { text: "You run to the bathroom and puke until the boy wakes up and comes to see if you\u2019re alright.", mood: "sickness", hold: 5000 },
+    { text: "In the sedges at the river\u2019s edge, a coot\u2019s egg cracks.", mood: "wonder", hold: 3600 },
+    { text: "The chick pushes into the rustling air, unsure.", mood: "wonder", hold: 3200 },
+    { text: "A fragment of pale shell tumbles from the nest.", mood: "wonder", hold: 3200 },
+
+    // ═══ V — EVACUATION ═══
+    { text: "Your skin is peeling, dead cells sloughing into the seams of your shirt and the seats of the bus", mood: "sickness", hold: 5000 },
+    { text: "carrying you and her and the boy away from the city.", mood: "sickness", hold: 3200 },
+    { text: "You hold his hand tight.", mood: "sickness", hold: 2400 },
+    { text: "He looks out the dirty window and watches the clouds blowing westward, high and massy.", mood: "sickness", hold: 4600 },
+
+    // ═══ VI — WHAT IS MASS ═══
+    { text: "What is mass, after all? What is matter?", mood: "wonder", hold: 3200 },
+    { text: "The void is here, at the heart.", mood: "wonder", hold: 2800 },
+    { text: "Schr\u00F6dinger saw part of it. Einstein saw a bit. Lise Meitner saw how it could split.", mood: "wonder", hold: 4600 },
+    { text: "The void is here. The clouds of unknowing are here.", mood: "wonder", hold: 3400 },
+    { text: "Plural, countable, can\u2019t-put-your-fingerable.", mood: "wonder", hold: 3000 },
+    { text: "Ninety-two plus one-hundred-and-forty-three equals two-hundred-and-thirty-five. I see U.", mood: "wonder", hold: 5000 },
+    { text: "One more to the party of probabilities. A fission expedition.", mood: "wonder", hold: 3800 },
+    { text: "For an instant, the twinkling of an eye, U become two-hundred-and-thirty-six.", mood: "wonder", hold: 4400 },
+    { text: "What happens then, to all those nucleons? Those nebulae of forces in the dark?", mood: "wonder", hold: 4400 },
+    { text: "U break.", mood: "wonder", hold: 2200 },
+    { text: "The clouds part ways. Mass becomes energy. Heat.", mood: "wonder", hold: 3400 },
+    { text: "A triumvirate of neutrons flee the wreck.", mood: "wonder", hold: 3000 },
+    { text: "U rain, one might say. Or: U ran, I um.", mood: "wonder", hold: 3600 },
+    { text: "What\u2019s next?", mood: "wonder", hold: 2000 },
+    { text: "I see U. U break.", mood: "wonder", hold: 3000 },
+
+    // ═══ VII — COMMUNION ═══
+    { text: "this is my body, broken for you", mood: "grief", hold: 4200 },
+
+    // ═══ VIII — ONCE UPON A TIME ═══
+    { text: "Once upon a time there was a star.", mood: "wonder", hold: 3200 },
+    { text: "It died, and in its dying spewed its stuff through space.", mood: "wonder", hold: 3800 },
+    { text: "The stuff was born again and died again, gravitation to fusion to explosion. Critical mass.", mood: "wonder", hold: 5000 },
+    { text: "Forces foxtrot, strip-the-willow, strong and weak and electromagnetic.", mood: "wonder", hold: 4400 },
+    { text: "In a cloud of unknowing, the stuff becomes life.", mood: "wonder", hold: 3400 },
+    { text: "Somehow the clouds, sixes and sixes and eights and eights and ones, weave hardness, softness, wetness.", mood: "wonder", hold: 5200 },
+    { text: "Somehow cells weave nuclei and walls and ribosomes,", mood: "wonder", hold: 3400 },
+    { text: "they replicate, renovate, relegate, renew, review, and somehow bodies grow.", mood: "wonder", hold: 4600 },
+    { text: "One, two, skip a few, here are you!", mood: "tenderness", hold: 2800 },
+    { text: "A dark-haired little girl picking daffodils bright and yellow in April 1986,", mood: "tenderness", hold: 4400 },
+    { text: "in those knee-high white socks that leave a pattern on your skin and itch when the elastic is just a little too tight.", mood: "tenderness", hold: 5400 },
+
+    // ═══ IX — FALLOUT ═══
+    { text: "Six years old, your cells have cycled almost a full ship of Theseus.", mood: "wonder", hold: 4000 },
+    { text: "Not the oocytes, of course. Their million\u2019s been nestled, snug as an ovarian bug since sometime in 1980.", mood: "wonder", hold: 5200 },
+    { text: "But around them burn the fires of mitosis and apoptosis.", mood: "wonder", hold: 3600 },
+    { text: "Fission, fragment, fission, fragment. This is how the wheels go round, this is how the ship stays steady on her course.", mood: "wonder", hold: 5400 },
+    { text: "The wind blows from the east that spring.", mood: "haunting", hold: 3000 },
+    { text: "That cumulonimbus crossing seas, its vapour nucleating, fusing, falling hissing pissing in a million stinging drops on hills and fields.", mood: "haunting", hold: 6000 },
+    { text: "Does it undo the ship? Does it trace unplanned-for isotopes into grass and sheep?", mood: "haunting", hold: 4600 },
+    { text: "Do we suck them in with the flavoursome fat of a fried lamb chop, torn from the bone with small sharp six-year-old teeth and swallowed with tomato ketchup oh so red?", mood: "haunting", hold: 6400 },
+    { text: "Nobody knows.", mood: "haunting", hold: 2200 },
+    { text: "In the cloud of unknowing, nobody sees how many times in the next fourteen years the double helix unzipped, zipped, unzipped, zipped,", mood: "haunting", hold: 5800 },
+    { text: "oops, missed a bit.", mood: "haunting", hold: 2600 },
+
+    // ═══ X — MOTHERHOOD ═══
+    { text: "A new millennium, fresh as a baby.", mood: "tenderness", hold: 3000 },
+    { text: "There\u2019s an egg, speckled and broken, at the edge of the pond in the park, near the birch trees inside the railings.", mood: "tenderness", hold: 5200 },
+    { text: "Shards of shell in tiny non-Euclidean triangles lie scattered in the mud.", mood: "tenderness", hold: 4200 },
+    { text: "A mother coot is leading her long-toed children through the grey water", mood: "tenderness", hold: 3800 },
+    { text: "and you pray the egg was one of them and not some other bird\u2019s disaster.", mood: "tenderness", hold: 4200 },
+    { text: "A different egg became your boy.", mood: "grief", hold: 2800 },
+    { text: "Before the cells in which it nested started multiplying too fast,", mood: "grief", hold: 3600 },
+    { text: "one in that million grew, matured, unmoored,", mood: "grief", hold: 3000 },
+    { text: "and carrying its chromosomal cargo met \u2014 the Y, unzipped.", mood: "grief", hold: 3600 },
+    { text: "That two four eight tango budded and branched until he broke forth from your bloody flesh and wailed.", mood: "grief", hold: 5400 },
+    { text: "He\u2019s blossoming now, blond hair feathering in the breeze,", mood: "tenderness", hold: 3600 },
+    { text: "laughing at the pigeons that strut and stump all iridescent and toeless in the park,", mood: "tenderness", hold: 4600 },
+    { text: "all puffed up while they woo their XX,", mood: "tenderness", hold: 3000 },
+    { text: "no I ain\u2019t got my toes no more but ain\u2019t nothing wrong with my XY sauce so how about it baby, lay some eggs together, look at me? Look at me?", mood: "tenderness", hold: 6200 },
+    { text: "You laugh at the birds with your boy, holding his hand,", mood: "tenderness", hold: 3400 },
+    { text: "and you think about your ex, cos he\u2019s gonna have to take care of your baby when you\u2019re gone,", mood: "grief", hold: 5000 },
+    { text: "and you don\u2019t know if he really can,", mood: "grief", hold: 2800 },
+    { text: "and under all of it you\u2019re asking why.", mood: "grief", hold: 3200 },
+
+    // ═══ XI — FACING DEATH ═══
+    { text: "You squeeze your baby\u2019s hand a little tighter,", mood: "grief", hold: 3200 },
+    { text: "thinking, how much of me will he remember?", mood: "grief", hold: 3400 },
+    { text: "What scraps and crumbs of photo-album memory will remain?", mood: "grief", hold: 3800 },
+    { text: "You know inside the cells are spread like head-blown dandelion seed.", mood: "grief", hold: 4200 },
+    { text: "The drugs nibble on the edges, but those cells don\u2019t die, not while you still live.", mood: "grief", hold: 4800 },
+    { text: "One two four eight, how do we proliferate? Undying ain\u2019t supposed to be like that.", mood: "grief", hold: 5000 },
+    { text: "You crouch in front of the railings with your boy while your mother takes a photo.", mood: "tenderness", hold: 4600 },
+    { text: "The birch trees behind the pond frame you in silver-grey and green.", mood: "tenderness", hold: 3800 },
+    { text: "Another child throws a slice of Mother\u2019s Pride at the dirty water.", mood: "tenderness", hold: 3800 },
+    { text: "The ducks triumph, the trees tessellate, you watch the ripples undulate and interfere until they hit the irises and muddy sedge.", mood: "tenderness", hold: 5800 },
+    { text: "It\u2019s not going to be long now.", mood: "grief", hold: 3200 },
+
+    // ═══ XII — BENEATH THE EARTH ═══
+    { text: "What you don\u2019t realise is how dark it is.", mood: "haunting", hold: 3200 },
+    { text: "You\u2019d think the consumption of all that energy, all those cells with their data-crammed nuclei, dying and undying,", mood: "haunting", hold: 5600 },
+    { text: "all those dripping lipids, those subcutaneous fats, oils sequestered in the sebaceous glands,", mood: "haunting", hold: 5000 },
+    { text: "marrow of bone and meat of muscle,", mood: "haunting", hold: 2800 },
+    { text: "that all of that released would burn with a soft blue flame", mood: "haunting", hold: 3800 },
+    { text: "like the gases rendered from those ancient animals crushed under rock and sea;", mood: "haunting", hold: 4200 },
+    { text: "like a lantern fuelled by the cetaceous sperm of Ahab\u2019s revenge;", mood: "haunting", hold: 4200 },
+    { text: "like fruiting bodies of luminous fungi in undergrowth at night, hyphae hidden away but spores ready to burst into the world;", mood: "haunting", hold: 6000 },
+    { text: "like warm phosphorescence on some far shore;", mood: "haunting", hold: 3000 },
+    { text: "like the slops and scraps from a primary-coloured primetime nuclear power plant.", mood: "haunting", hold: 4600 },
+    { text: "But conservation of that energy doesn\u2019t turn to light.", mood: "haunting", hold: 3600 },
+    { text: "That energy goes chemical to chemical, builds the bodies of a trillion microbes, fuels their exertions, exterminations, extinctions.", mood: "haunting", hold: 5800 },
+    { text: "Entropy expands. Cells slumber, slump, seep.", mood: "haunting", hold: 3400 },
+    { text: "And so it\u2019s dark in there, beneath varnished wood and beetled earth and patchy grass re-rooting, re-routing.", mood: "haunting", hold: 5400 },
+    { text: "After more time than you\u2019d think, the bones sag and untie.", mood: "haunting", hold: 3800 },
+    { text: "Humerus parts from radius from ulna, femur from tibia, vertebrae sit freed and lonely.", mood: "haunting", hold: 5000 },
+    { text: "All but the teeth.", mood: "haunting", hold: 2400 },
+    { text: "The jaws grip them even in death, mercury-filled molars and undressed incisors all in a naked grinning row.", mood: "haunting", hold: 5600 },
+    { text: "The stink is gone now. And the sting?", mood: "haunting", hold: 3200 },
+
+    // ═══ XIII — THE SON, COMMUNION ═══
+    { text: "Your boy is a man now.", mood: "longing", hold: 2800 },
+    { text: "He helps his grandad with the sheep.", mood: "longing", hold: 2800 },
+    { text: "He shaves dark stubble from his face and wears a smart blue shirt to work.", mood: "longing", hold: 4200 },
+    { text: "At weekends he plays rugby.", mood: "longing", hold: 2600 },
+    { text: "Forces meet bodies at rest or in motion, high mass, velocity high as they can handle,", mood: "longing", hold: 4800 },
+    { text: "bodies crashing, sometimes (not too often) breaking.", mood: "longing", hold: 3400 },
+    { text: "You\u2019d be proud of him.", mood: "longing", hold: 2800 },
+    { text: "In the grey-harled hard-pewed church on the hill,", mood: "reverence", hold: 3200 },
+    { text: "when the walls finish absorbing the vibrations of the psalm,", mood: "reverence", hold: 3600 },
+    { text: "the minister tears a slice of supermarket white.", mood: "reverence", hold: 3400 },
+    { text: "Do this in remembrance of me.", mood: "reverence", hold: 3200 },
+    { text: "The crumbs part soft and soundless, like old flesh.", mood: "reverence", hold: 3600 },
+    { text: "We eat.", mood: "reverence", hold: 2000 },
+    { text: "He lifts a silver cup of tawny port.", mood: "reverence", hold: 3200 },
+    { text: "We drink.", mood: "close", hold: 2600 },
+  ]
+};
+
+// ═══ DOM ═══
+const display = document.getElementById('display');
+const ambient = document.getElementById('ambient');
+const stage = document.getElementById('stage');
+const progressBar = document.getElementById('progressBar');
+const progressFill = document.getElementById('progressFill');
+const topBar = document.getElementById('topBar');
+const tbMeta = document.getElementById('tbMeta');
+const controls = document.getElementById('controls');
+const btnPause = document.getElementById('btnPause');
+const btnRestart = document.getElementById('btnRestart');
+
+let currentIndex = -1;
+let isPaused = false;
+let timeoutId = null;
+let hasStarted = false;
+
+const FADE_OUT = 700;
+const GAP = 500;
+const MAX_VOLUME = 0.1;
+
+// ═══ ROOM TONE ═══
+var ambientAudio = null;
+var ambientPlaying = false;
+var ambientFadeTimer = null;
+
+(function createAmbient() {
+  ambientAudio = document.createElement('audio');
+  ambientAudio.src = 'tone-deep-presence.mp3';
+  ambientAudio.loop = true;
+  ambientAudio.volume = 0;
+  ambientAudio.preload = 'metadata';
+  ambientAudio.setAttribute('playsinline', '');
+  ambientAudio.setAttribute('webkit-playsinline', '');
+  ambientAudio.style.display = 'none';
+  document.body.appendChild(ambientAudio);
+  ambientAudio.addEventListener('error', function(e) {
+    console.warn('[linger] ambient audio error:', ambientAudio.error);
+  });
+})();
+
+function startRoomTone() {
+  if (!ambientAudio) return;
+  ambientAudio.volume = MAX_VOLUME;
+  var p = ambientAudio.play();
+  if (p !== undefined) {
+    p.then(function() {
+      ambientPlaying = true;
+      setTimeout(function() {
+        if (ambientAudio.paused) ambientAudio.play();
+      }, 200);
+    }).catch(function(err) {
+      ambientPlaying = false;
+    });
+  }
+}
+
+function fadeOutRoomTone() {
+  if (!ambientAudio || !ambientPlaying) return;
+  if (ambientFadeTimer) { clearInterval(ambientFadeTimer); ambientFadeTimer = null; }
+  var fade = setInterval(function() {
+    var v = ambientAudio.volume - (MAX_VOLUME / 60);
+    if (v <= 0) {
+      v = 0;
+      clearInterval(fade);
+      try { ambientAudio.pause(); } catch(e) {}
+      ambientPlaying = false;
+    }
+    try { ambientAudio.volume = v; } catch(e) {}
+  }, 100);
+}
+
+// ═══ AUTO-START ═══
+stage.classList.add('active');
+progressBar.classList.add('active');
+hasStarted = true;
+
+var audioUnlocked = false;
+function unlockAudio() {
+  if (audioUnlocked || !ambientAudio) return;
+  if (ambientAudio.paused) {
+    ambientAudio.volume = MAX_VOLUME;
+    ambientAudio.play().then(function() {
+      ambientPlaying = true;
+      audioUnlocked = true;
+      document.removeEventListener('click', unlockAudio);
+      document.removeEventListener('keydown', unlockAudio);
+      document.removeEventListener('touchend', unlockAudio);
+    }).catch(function() {});
+  }
+}
+document.addEventListener('click', unlockAudio);
+document.addEventListener('keydown', unlockAudio);
+document.addEventListener('touchend', unlockAudio);
+startRoomTone();
+
+showCurrent();
+
+function renderTitleCard() {
+  display.innerHTML = `
+    <div class="title-card" id="currentEl">
+      <div class="tc-label">linger presents</div>
+      <div class="tc-title">${story.title}</div>
+      <div class="tc-author">${story.author}</div>
+      <div class="tc-duration">${story.duration}</div>
+    </div>`;
+}
+function renderFragment(index) {
+  const f = story.fragments[index];
+  const firstClass = index === 0 ? ' first' : '';
+  display.innerHTML = `<div class="frag${firstClass}" id="currentEl">${f.text}</div>`;
+}
+function renderEndCard() {
+  display.innerHTML = `
+    <div class="end-card" id="currentEl">
+      <div class="ec-wordmark">linger</div>
+      <div class="ec-tagline">Attention, rewarded.</div>
+      <a href="index.html" class="ec-back">Back to stories</a>
+    </div>`;
+}
+function setMood(mood) { ambient.className = 'ambient mood-' + (mood || 'reverence'); }
+function updateProgress() {
+  const total = story.fragments.length;
+  const pct = currentIndex < 0 ? 0 : Math.min(((currentIndex + 1) / total) * 100, 100);
+  progressFill.style.width = pct + '%';
+}
+function updateMeta() {
+  if (currentIndex < 0) tbMeta.textContent = '';
+  else if (currentIndex >= story.fragments.length) tbMeta.textContent = 'fin';
+  else tbMeta.textContent = (currentIndex + 1) + ' / ' + story.fragments.length;
+}
+
+function showCurrent() {
+  updateProgress();
+  updateMeta();
+  if (currentIndex < 0) {
+    renderTitleCard();
+    setMood('reverence');
+    requestAnimationFrame(() => { requestAnimationFrame(() => { document.getElementById('currentEl').classList.add('visible'); }); });
+    timeoutId = setTimeout(() => fadeAndAdvance(), 7000);
+    setTimeout(() => topBar.classList.add('visible'), 1200);
+  } else if (currentIndex >= story.fragments.length) {
+    renderEndCard();
+    setMood('close');
+    progressFill.style.width = '100%';
+    requestAnimationFrame(() => { requestAnimationFrame(() => { document.getElementById('currentEl').classList.add('visible'); }); });
+    setTimeout(() => fadeOutRoomTone(), 3000);
+  } else {
+    const f = story.fragments[currentIndex];
+    renderFragment(currentIndex);
+    setMood(f.mood);
+    requestAnimationFrame(() => { requestAnimationFrame(() => { document.getElementById('currentEl').classList.add('visible'); }); });
+    timeoutId = setTimeout(() => fadeAndAdvance(), f.hold);
+  }
+}
+
+function fadeAndAdvance() {
+  const el = document.getElementById('currentEl');
+  if (!el) return;
+  el.classList.remove('visible');
+  el.classList.add('fading');
+  timeoutId = setTimeout(() => { currentIndex++; showCurrent(); }, FADE_OUT + GAP);
+}
+
+btnPause.addEventListener('click', () => {
+  if (isPaused) { isPaused = false; btnPause.textContent = 'Pause'; btnPause.classList.remove('ctrl-btn--active'); showCurrent(); }
+  else { isPaused = true; btnPause.textContent = 'Resume'; btnPause.classList.add('ctrl-btn--active'); clearTimeout(timeoutId); }
+});
+btnRestart.addEventListener('click', () => {
+  clearTimeout(timeoutId); isPaused = false; btnPause.textContent = 'Pause'; btnPause.classList.remove('ctrl-btn--active');
+  currentIndex = -1; topBar.classList.remove('visible'); showCurrent();
+});
+document.getElementById('btnShare').addEventListener('click', () => {
+  if (!isPaused) { isPaused = true; btnPause.textContent = 'Resume'; btnPause.classList.add('ctrl-btn--active'); clearTimeout(timeoutId); }
+  var el = document.getElementById('currentEl');
+  var phrase = el ? el.textContent.trim() : '';
+  if (!phrase) return;
+
+  var W = 1080, H = 1080;
+  var canvas = document.createElement('canvas');
+  canvas.width = W; canvas.height = H;
+  var ctx = canvas.getContext('2d');
+
+  var bg = ctx.createRadialGradient(W/2, H/2, 0, W/2, H/2, W*0.7);
+  bg.addColorStop(0, '#111114');
+  bg.addColorStop(1, '#08080a');
+  ctx.fillStyle = bg;
+  ctx.fillRect(0, 0, W, H);
+
+  var orb = ctx.createRadialGradient(W*0.8, H*0.15, 0, W*0.8, H*0.15, 300);
+  orb.addColorStop(0, 'rgba(90,74,138,0.06)');
+  orb.addColorStop(1, 'rgba(90,74,138,0)');
+  ctx.fillStyle = orb;
+  ctx.fillRect(0, 0, W, H);
+
+  function wrapText(text, maxW) {
+    var words = text.split(' '), lines = [], line = '';
+    for (var i = 0; i < words.length; i++) {
+      var test = line ? line + ' ' + words[i] : words[i];
+      if (ctx.measureText(test).width > maxW && line) { lines.push(line); line = words[i]; }
+      else { line = test; }
+    }
+    if (line) lines.push(line);
+    return lines;
+  }
+
+  document.fonts.ready.then(function() {
+    var margin = 120;
+    var maxTextW = W - margin * 2;
+
+    ctx.fillStyle = 'rgba(90,74,138,0.15)';
+    ctx.font = 'italic 200px "Playfair Display", Georgia, serif';
+    ctx.textAlign = 'left';
+    ctx.fillText('\u201C', margin - 30, H * 0.32);
+
+    ctx.fillStyle = '#ede8df';
+    var fontSize = phrase.length > 120 ? 36 : phrase.length > 60 ? 44 : 52;
+    ctx.font = 'italic ' + fontSize + 'px "Source Serif 4", Georgia, serif';
+    ctx.textAlign = 'center';
+    var lines = wrapText(phrase, maxTextW);
+    var lineH = fontSize * 1.6;
+    var totalH = lines.length * lineH;
+    var startY = (H / 2) - (totalH / 2) + fontSize * 0.5;
+    for (var i = 0; i < lines.length; i++) {
+      ctx.fillText(lines[i], W / 2, startY + i * lineH);
+    }
+
+    var lineY = startY + lines.length * lineH + 40;
+    ctx.strokeStyle = 'rgba(90,74,138,0.3)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(W/2 - 40, lineY);
+    ctx.lineTo(W/2 + 40, lineY);
+    ctx.stroke();
+
+    ctx.fillStyle = 'rgba(90,74,138,0.5)';
+    ctx.font = 'italic 28px "Playfair Display", Georgia, serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('from ' + story.title + ' by ' + story.author, W / 2, lineY + 50);
+
+    ctx.fillStyle = 'rgba(237,232,223,0.1)';
+    ctx.font = '400 32px "Playfair Display", Georgia, serif';
+    ctx.fillText('linger', W / 2, H - 60);
+
+    canvas.toBlob(function(blob) {
+      var file = new File([blob], 'linger-' + story.title.toLowerCase().replace(/\s+/g,'-') + '.png', { type: 'image/png' });
+      if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+        navigator.share({ files: [file], title: 'linger \u2014 ' + story.title }).catch(function() {});
+      } else {
+        var a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = file.name;
+        a.click();
+        URL.revokeObjectURL(a.href);
+        var btn = document.getElementById('btnShare');
+        btn.textContent = 'Saved'; setTimeout(function() { btn.textContent = 'Share'; }, 1500);
+      }
+    }, 'image/png');
+  });
+});
+
+let mouseTimer;
+document.addEventListener('mousemove', () => {
+  document.body.classList.add('show-cursor');
+  if (hasStarted) { controls.classList.add('visible'); themeToggle.classList.add('visible'); fsToggle.classList.add('visible'); }
+  clearTimeout(mouseTimer);
+  mouseTimer = setTimeout(() => { if (!isPaused) { controls.classList.remove('visible'); themeToggle.classList.remove('visible'); fsToggle.classList.remove('visible'); document.body.classList.remove('show-cursor'); } }, 2500);
+});
+document.addEventListener('keydown', (e) => {
+  if (e.code === 'Space') { e.preventDefault(); btnPause.click(); }
+  if (e.code === 'ArrowRight' && !isPaused) { clearTimeout(timeoutId); fadeAndAdvance(); }
+  if (e.code === 'KeyR') btnRestart.click();
+  if (e.code === 'KeyF') fsToggle.click();
+});
+document.addEventListener('touchstart', () => {
+  if (hasStarted) { controls.classList.add('visible'); themeToggle.classList.add('visible'); fsToggle.classList.add('visible'); }
+  clearTimeout(mouseTimer);
+  mouseTimer = setTimeout(() => { if (!isPaused) { controls.classList.remove('visible'); themeToggle.classList.remove('visible'); fsToggle.classList.remove('visible'); } }, 3000);
+});
+</script>
+</body>
+</html>
