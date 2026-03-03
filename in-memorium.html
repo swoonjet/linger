@@ -363,9 +363,10 @@ themeToggle.addEventListener('click', function(e) {
 const story = {
   title: "In Memorium",
   author: "Caitriana NicNeacail",
-  duration: "13 min",
+  duration: "14 min",
   fragments: [
     // ═══ I — COMMUNION & DOMESTIC MORNING ═══
+    { text: "I", mood: "reverence", hold: 2200 },
     { text: "In the white-and-blue church between the half-white trees, you stand.", mood: "reverence", hold: 3400 },
     { text: "You open your mouth, a little embarrassed by that troubling molar,", mood: "reverence", hold: 3600 },
     { text: "but the priest doesn\u2019t mind or see,", mood: "reverence", hold: 2600 },
@@ -382,6 +383,7 @@ const story = {
     { text: "Night shift this week. Treasure these daylight hours you have with them.", mood: "domestic", hold: 3800 },
 
     // ═══ II — NIGHT SHIFT, THE TEST ═══
+    { text: "II", mood: "dread", hold: 2200 },
     { text: "A long week, thank God it\u2019s nearly over, but don\u2019t let the old man hear you talking like that.", mood: "dread", hold: 4600 },
     { text: "The control room smells of sweat and stale tobacco smoke.", mood: "dread", hold: 3400 },
     { text: "There\u2019s been some screw-up with some test, the evening shift comrades are clocking off complaining.", mood: "dread", hold: 4600 },
@@ -405,6 +407,7 @@ const story = {
     { text: "SCRAM!", mood: "catastrophe", hold: 2000 },
 
     // ═══ III — THE EXPLOSION ═══
+    { text: "III", mood: "catastrophe", hold: 2200 },
     { text: "The moon is waning gibbous, quicksilvering the birch trees and the river where last Sunday you sat and ate dumplings and played with your boy.", mood: "catastrophe", hold: 6000 },
     { text: "The trees shiver, leaves splaying in the night.", mood: "catastrophe", hold: 3200 },
     { text: "One thunderclap, then another.", mood: "catastrophe", hold: 2800 },
@@ -415,6 +418,7 @@ const story = {
     { text: "In your bed, your wife turns over and dreams uneasy dreams.", mood: "tenderness", hold: 3800 },
 
     // ═══ IV — THE MORNING AFTER ═══
+    { text: "IV", mood: "sickness", hold: 2200 },
     { text: "You stagger home at dawn.", mood: "sickness", hold: 2600 },
     { text: "You\u2019re prickling all over, needles and pins and razors stabbing through the dust that silts your pores", mood: "sickness", hold: 5200 },
     { text: "and coats the thin hairs on your arms and the thick hairs in your nose.", mood: "sickness", hold: 4000 },
@@ -427,12 +431,14 @@ const story = {
     { text: "A fragment of pale shell tumbles from the nest.", mood: "wonder", hold: 3200 },
 
     // ═══ V — EVACUATION ═══
+    { text: "V", mood: "sickness", hold: 2200 },
     { text: "Your skin is peeling, dead cells sloughing into the seams of your shirt and the seats of the bus", mood: "sickness", hold: 5000 },
     { text: "carrying you and her and the boy away from the city.", mood: "sickness", hold: 3200 },
     { text: "You hold his hand tight.", mood: "sickness", hold: 2400 },
     { text: "He looks out the dirty window and watches the clouds blowing westward, high and massy.", mood: "sickness", hold: 4600 },
 
     // ═══ VI — WHAT IS MASS ═══
+    { text: "VI", mood: "wonder", hold: 2200 },
     { text: "What is mass, after all? What is matter?", mood: "wonder", hold: 3200 },
     { text: "The void is here, at the heart.", mood: "wonder", hold: 2800 },
     { text: "Schr\u00F6dinger saw part of it. Einstein saw a bit. Lise Meitner saw how it could split.", mood: "wonder", hold: 4600 },
@@ -450,9 +456,11 @@ const story = {
     { text: "I see U. U break.", mood: "wonder", hold: 3000 },
 
     // ═══ VII — COMMUNION ═══
+    { text: "VII", mood: "grief", hold: 2200 },
     { text: "this is my body, broken for you", mood: "grief", hold: 4200 },
 
     // ═══ VIII — ONCE UPON A TIME ═══
+    { text: "VIII", mood: "wonder", hold: 2200 },
     { text: "Once upon a time there was a star.", mood: "wonder", hold: 3200 },
     { text: "It died, and in its dying spewed its stuff through space.", mood: "wonder", hold: 3800 },
     { text: "The stuff was born again and died again, gravitation to fusion to explosion. Critical mass.", mood: "wonder", hold: 5000 },
@@ -466,6 +474,7 @@ const story = {
     { text: "in those knee-high white socks that leave a pattern on your skin and itch when the elastic is just a little too tight.", mood: "tenderness", hold: 5400 },
 
     // ═══ IX — FALLOUT ═══
+    { text: "IX", mood: "wonder", hold: 2200 },
     { text: "Six years old, your cells have cycled almost a full ship of Theseus.", mood: "wonder", hold: 4000 },
     { text: "Not the oocytes, of course. Their million\u2019s been nestled, snug as an ovarian bug since sometime in 1980.", mood: "wonder", hold: 5200 },
     { text: "But around them burn the fires of mitosis and apoptosis.", mood: "wonder", hold: 3600 },
@@ -479,6 +488,7 @@ const story = {
     { text: "oops, missed a bit.", mood: "haunting", hold: 2600 },
 
     // ═══ X — MOTHERHOOD ═══
+    { text: "X", mood: "tenderness", hold: 2200 },
     { text: "A new millennium, fresh as a baby.", mood: "tenderness", hold: 3000 },
     { text: "There\u2019s an egg, speckled and broken, at the edge of the pond in the park, near the birch trees inside the railings.", mood: "tenderness", hold: 5200 },
     { text: "Shards of shell in tiny non-Euclidean triangles lie scattered in the mud.", mood: "tenderness", hold: 4200 },
@@ -499,6 +509,7 @@ const story = {
     { text: "and under all of it you\u2019re asking why.", mood: "grief", hold: 3200 },
 
     // ═══ XI — FACING DEATH ═══
+    { text: "XI", mood: "grief", hold: 2200 },
     { text: "You squeeze your baby\u2019s hand a little tighter,", mood: "grief", hold: 3200 },
     { text: "thinking, how much of me will he remember?", mood: "grief", hold: 3400 },
     { text: "What scraps and crumbs of photo-album memory will remain?", mood: "grief", hold: 3800 },
@@ -512,6 +523,7 @@ const story = {
     { text: "It\u2019s not going to be long now.", mood: "grief", hold: 3200 },
 
     // ═══ XII — BENEATH THE EARTH ═══
+    { text: "XII", mood: "haunting", hold: 2200 },
     { text: "What you don\u2019t realise is how dark it is.", mood: "haunting", hold: 3200 },
     { text: "You\u2019d think the consumption of all that energy, all those cells with their data-crammed nuclei, dying and undying,", mood: "haunting", hold: 5600 },
     { text: "all those dripping lipids, those subcutaneous fats, oils sequestered in the sebaceous glands,", mood: "haunting", hold: 5000 },
@@ -533,6 +545,7 @@ const story = {
     { text: "The stink is gone now. And the sting?", mood: "haunting", hold: 3200 },
 
     // ═══ XIII — THE SON, COMMUNION ═══
+    { text: "XIII", mood: "longing", hold: 2200 },
     { text: "Your boy is a man now.", mood: "longing", hold: 2800 },
     { text: "He helps his grandad with the sheep.", mood: "longing", hold: 2800 },
     { text: "He shaves dark stubble from his face and wears a smart blue shirt to work.", mood: "longing", hold: 4200 },
